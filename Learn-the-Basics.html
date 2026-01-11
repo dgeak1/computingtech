@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student HU | Know the Basics</title>
+    <style>
+        :root {
+            /* Light Mode Palette */
+            --deep-green: #0a1f0a;
+            --mid-green: #1b4d3e;
+            --accent-green: #2ecc71;
+            --light-bg: #f4f9f4;
+            --text-dark: #1a2e1a;
+            --white: #ffffff;
+            --card-bg: #ffffff;
+            --header-gradient: linear-gradient(135deg, #0a1f0a 0%, #1b4d3e 100%);
+        }
+
+        /* DARK MODE DEFINITIONS */
+        body.dark-mode {
+            --light-bg: #050a05;
+            --text-dark: #e0eadd;
+            --card-bg: #0d1b11;
+            --white: #1a2e1a;
+            --mid-green: #2ecc71;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            margin: 0;
+            transition: background 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        /* Header & Nav */
+        header {
+            background: var(--header-gradient);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .top-nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-btn:hover { background: var(--accent-green); }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid var(--accent-green);
+            color: var(--accent-green);
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Tabs */
+        .tab-menu {
+            display: flex;
+            justify-content: center;
+            background: var(--mid-green);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1.2rem 2rem;
+            color: #a9dfbf;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            color: white;
+            background: var(--deep-green);
+            border-bottom: 4px solid var(--accent-green);
+        }
+
+        /* Search & Grid */
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 20px; }
+        
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            display: block;
+            margin: 0 auto 2rem;
+            padding: 12px 25px;
+            border-radius: 30px;
+            border: 2px solid var(--mid-green);
+            background: var(--card-bg);
+            color: var(--text-dark);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent-green);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        /* Help Desk */
+        .help-bubble {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            font-size: 1.5rem;
+            z-index: 1000;
+        }
+
+        .help-panel {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 300px;
+            background: var(--card-bg);
+            border: 1px solid var(--mid-green);
+            border-radius: 15px;
+            padding: 20px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        /* Utilities */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body id="pageBody">
+
+<header>
+    <div class="top-nav">
+        <a href="index.html" class="nav-btn">🏠 Home</a>
+        <a href="#" onclick="history.back()" class="nav-btn">← Back</a>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+    
+    <h1>Know the Basics</h1>
+    <p>Everything you need to master the Student HU ecosystem.</p>
+</header>
+
+<nav class="tab-menu">
+    <button class="tab-btn active" onclick="switchTab(event, 'notes')">Notes & Manuals</button>
+    <button class="tab-btn" onclick="switchTab(event, 'guides')">Tech Guides</button>
+</nav>
+
+<div class="container">
+    <section id="notes" class="tab-content active">
+        <input type="text" class="search-box" id="search" placeholder="Search 100+ basics..." onkeyup="filterCards()">
+        <div class="grid" id="basicsGrid">
+            </div>
+    </section>
+
+    <section id="guides" class="tab-content">
+        <div class="card" style="max-width: 600px; margin: auto;">
+            <h2>Master Guide: Architecture</h2>
+            <p>Deep dive into our system's green-core infrastructure.</p>
+        </div>
+    </section>
+</div>
+
+<div class="help-bubble" onclick="toggleHelp()">?</div>
+<div class="help-panel" id="helpPanel">
+    <h3 style="margin-top: 0; color: var(--accent-green);">Live Help Desk</h3>
+    <p style="font-size: 0.9rem;">Connected to HU Support...</p>
+    <textarea placeholder="How can we help?" style="width: 100%; border-radius: 8px; padding: 8px; border: 1px solid var(--mid-green); background: var(--light-bg); color: var(--text-dark);"></textarea>
+    <button style="width: 100%; margin-top: 10px; background: var(--accent-green); border: none; padding: 10px; border-radius: 8px; color: white; cursor: pointer;">Send Message</button>
+</div>
+
+<script>
+    // 1. Generate 100 Items
+    const topics = [
+        "Git Setup", "API Security", "Database Sync", "Frontend UI", "Backend Auth",
+        "CSS Variables", "Node Modules", "Cloud Hosting", "Terminal Power", "Data Logic",
+        "React Hooks", "Error Logs", "Performance", "SSL Certs", "Unit Tests"
+    ]; // Add more to reach 100
+
+    const basicsData = [];
+    for(let i=1; i<=100; i++) {
+        const topic = topics[i % topics.length];
+        basicsData.push({
+            id: i.toString().padStart(3, '0'),
+            title: `${topic} #${i}`,
+            desc: `Essential technical manual for understanding ${topic.toLowerCase()} basics.`
+        });
+    }
+
+    function renderCards() {
+        const grid = document.getElementById('basicsGrid');
+        grid.innerHTML = basicsData.map(item => `
+            <div class="card" onclick="location.href='detail.html?id=${item.id}'">
+                <small style="color:var(--accent-green)">ID: ${item.id}</small>
+                <h3>${item.title}</h3>
+                <p>${item.desc}</p>
+            </div>
+        `).join('');
+    }
+
+    // 2. Tab & Search Logic
+    function switchTab(e, tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        e.currentTarget.classList.add('active');
+    }
+
+    function filterCards() {
+        const query = document.getElementById('search').value.toLowerCase();
+        document.querySelectorAll('.card').forEach(card => {
+            const title = card.querySelector('h3').innerText.toLowerCase();
+            card.style.display = title.includes(query) ? 'block' : 'none';
+        });
+    }
+
+    // 3. Theme & Help Desk
+    function toggleTheme() {
+        const body = document.getElementById('pageBody');
+        body.classList.toggle('dark-mode');
+        const isDark = body.classList.contains('dark-mode');
+        document.querySelector('.theme-toggle').innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+        localStorage.setItem('huTheme', isDark ? 'dark' : 'light');
+    }
+
+    function toggleHelp() {
+        const panel = document.getElementById('helpPanel');
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Load Preference
+    window.onload = () => {
+        renderCards();
+        if(localStorage.getItem('huTheme') === 'dark') toggleTheme();
+    };
+</script>
+
+</body>
+</html>
