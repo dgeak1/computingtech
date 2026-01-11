@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive Security | Gen Sec Oversight</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Cinzel:wght@700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-amber: #f59e0b;
+            --bg: #0a0a0a;
+            --card-bg: rgba(245, 158, 11, 0.03);
+            --header-bg: rgba(10, 10, 10, 0.95);
+            --border: rgba(245, 158, 11, 0.2);
+            --text: #ffffff;
+            --sub-text: #9ca3af;
+        }
+
+        [data-theme="light"] {
+            --bg: #f3f4f6;
+            --header-bg: rgba(255, 255, 255, 0.98);
+            --card-bg: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+            --text: #111827;
+            --sub-text: #4b5563;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg); color: var(--text);
+            min-height: 100vh; overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.05) 0%, transparent 80%);
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.2rem 5%; background: var(--header-bg);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .nav-btn {
+            background: var(--card-bg); border: 1px solid var(--border);
+            color: var(--primary-amber); padding: 10px 18px; border-radius: 12px;
+            cursor: pointer; text-decoration: none; font-size: 0.75rem; font-weight: 800;
+            display: flex; align-items: center; gap: 8px; transition: 0.3s;
+        }
+        .nav-btn:hover { background: var(--primary-amber); color: #000; }
+
+        .container { max-width: 1440px; margin: 40px auto; padding: 0 50px; }
+        
+        /* Grid Layout */
+        .security-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 40px; }
+
+        /* Status Cards */
+        .status-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 24px; padding: 30px; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .status-card i { font-size: 2.5rem; color: var(--primary-amber); margin-bottom: 15px; }
+        .status-val { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 800; }
+
+        /* Logs Table */
+        .log-section {
+            grid-column: span 3; background: var(--card-bg);
+            border: 1px solid var(--border); border-radius: 24px; padding: 40px; margin-top: 10px;
+        }
+        .log-table {
+            width: 100%; border-collapse: collapse; margin-top: 25px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+        }
+        .log-table th { text-align: left; color: var(--primary-amber); padding: 15px; border-bottom: 2px solid var(--border); }
+        .log-table td { padding: 15px; border-bottom: 1px solid rgba(245, 158, 11, 0.1); color: var(--sub-text); }
+        .status-pill {
+            padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800;
+            background: rgba(16, 185, 129, 0.1); color: #10b981;
+        }
+        .status-pill.warning { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+        /* Scan Animation */
+        .scanning {
+            height: 2px; width: 100%; background: var(--primary-amber);
+            position: absolute; top: 0; left: 0;
+            box-shadow: 0 0 15px var(--primary-amber);
+            animation: scan 3s linear infinite;
+        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+    </style>
+</head>
+<body oncontextmenu="return false">
+
+    <nav class="nav">
+        <div class="nav-group" style="display:flex; gap:10px;">
+            <a href="index.html" class="nav-btn"><i class="fas fa-home"></i> HOME</a>
+            <button class="nav-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i> BACK</button>
+        </div>
+        <div style="font-family: 'Cinzel'; font-size: 1.4rem; letter-spacing: 4px; color: var(--primary-amber);">SECURE<span>CORE</span></div>
+        <button class="nav-btn" onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
+    </nav>
+
+    <div class="container">
+        <header style="border-left: 5px solid var(--primary-amber); padding-left: 25px;">
+            <h1 style="font-family: 'Cinzel'; font-size: 2.8rem;">Security Oversight</h1>
+            <p style="color: var(--sub-text);">Real-time monitoring of Archive Access & Encryption Integrity.</p>
+        </header>
+
+        <div class="security-grid">
+            <div class="status-card">
+                <div class="scanning"></div>
+                <i class="fas fa-fingerprint"></i>
+                <p style="font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 5px;">ENCRYPTION LEVEL</p>
+                <div class="status-val">AES-256 BIT</div>
+                <p style="font-size: 0.65rem; color: #10b981; margin-top: 10px;"><i class="fas fa-check-circle"></i> SYSTEM PROTECTED</p>
+            </div>
+
+            <div class="status-card">
+                <i class="fas fa-users-viewfinder"></i>
+                <p style="font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 5px;">TOTAL ARCHIVE VIEWS</p>
+                <div class="status-val" id="viewCount">1,248</div>
+                <p style="font-size: 0.65rem; color: var(--sub-text); margin-top: 10px;">ACTIVE SESSIONS: 14</p>
+            </div>
+
+            <div class="status-card">
+                <i class="fas fa-shield-virus"></i>
+                <p style="font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 5px;">THREAT PROXIMITY</p>
+                <div class="status-val" style="color: #ef4444;">0.00%</div>
+                <p style="font-size: 0.65rem; color: #10b981; margin-top: 10px;">FIREWALL: STEALTH MODE</p>
+            </div>
+
+            <div class="log-section">
+                <h3 style="font-family: 'Cinzel'; color: var(--primary-amber);"><i class="fas fa-terminal"></i> LIVE ACCESS LOGS</h3>
+                <table class="log-table">
+                    <thead>
+                        <tr>
+                            <th>TIMESTAMP</th>
+                            <th>USER_ID</th>
+                            <th>RESOURCE_ACCESSED</th>
+                            <th>IP_GATEWAY</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logBody">
+                        <tr>
+                            <td>10:34:12</td>
+                            <td>STD_992</td>
+                            <td>Neural Synapse Vol. 14</td>
+                            <td>192.168.1.45</td>
+                            <td><span class="status-pill">GRANTED</span></td>
+                        </tr>
+                        <tr>
+                            <td>10:32:05</td>
+                            <td>FAC_001</td>
+                            <td>Exam Timetable Draft</td>
+                            <td>10.0.0.8</td>
+                            <td><span class="status-pill">GRANTED</span></td>
+                        </tr>
+                        <tr>
+                            <td>10:28:44</td>
+                            <td>GUEST_X</td>
+                            <td>Operating Systems Vol. 2</td>
+                            <td>172.16.254.1</td>
+                            <td><span class="status-pill warning">DENIED</span></td>
+                        </tr>
+                        <tr>
+                            <td>10:25:19</td>
+                            <td>STD_441</td>
+                            <td>Network Protocols Vol. 88</td>
+                            <td>192.168.1.22</td>
+                            <td><span class="status-pill">GRANTED</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.hasAttribute('data-theme') ? document.body.removeAttribute('data-theme') : document.body.setAttribute('data-theme', 'light');
+        }
+
+        // Simple animation to make numbers look alive
+        setInterval(() => {
+            const el = document.getElementById('viewCount');
+            let val = parseInt(el.innerText.replace(',', ''));
+            el.innerText = (val + Math.floor(Math.random() * 2)).toLocaleString();
+        }, 5000);
+    </script>
+</body>
+</html>

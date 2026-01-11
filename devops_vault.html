@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DG Vault | Polymorphic DevOps & ML</title>
+    <style>
+        body { background: #010501; color: #2ecc71; font-family: 'Courier New', monospace; margin: 0; display: flex; height: 100vh; }
+        .sidebar { width: 300px; background: #0a0f0a; border-right: 1px solid #1a331a; display: flex; flex-direction: column; }
+        .main { flex-grow: 1; display: flex; flex-direction: column; }
+        #editor { flex-grow: 1; background: #000; color: #fff; padding: 20px; outline: none; white-space: pre; overflow-y: auto; }
+        .console { height: 200px; background: #000; border-top: 1px solid #1a331a; padding: 15px; font-size: 0.8rem; overflow-y: auto; color: #00f2ff; }
+        .item { padding: 10px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.75rem; }
+        .item:hover { background: #1a331a; }
+        header { background: #0a1f0a; padding: 15px; display: flex; justify-content: space-between; border-bottom: 1px solid #2ecc71; }
+        .tag { font-size: 0.6rem; background: #2ecc71; color: black; padding: 2px 4px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div style="padding:15px; background:#111; font-size:0.7rem;">REGISTRY: 1000+ EXECUTIONS</div>
+    <div id="list" style="overflow-y:auto;"></div>
+</div>
+
+<div class="main">
+    <header>
+        <div>SYSTEM: <span id="mode" style="color:#00f2ff;">DETECTING...</span></div>
+        <div>
+            <button onclick="execute()" style="background:#2ecc71; border:none; padding:5px 15px; cursor:pointer;">RUN ML ENGINE</button>
+            <button onclick="window.location.href='index.html'" style="background:none; color:#888; border:none; cursor:pointer; margin-left:10px;">EXIT</button>
+        </div>
+    </header>
+    <div id="editor" contenteditable="true" oninput="detect()">// Select a script from registry...</div>
+    <div class="console" id="con">> Initializing DevOps Kernel...</div>
+</div>
+
+<script>
+    const scripts = Array.from({length: 1000}, (_, i) => ({
+        id: i, 
+        type: i % 2 === 0 ? "ML/PYTHON" : "DEVOPS/BASH",
+        content: i % 2 === 0 ? `import tensorflow as tf\n# ML Execution ${i}\nmodel.fit(data)` : `#!/bin/bash\n# DevOps Script ${i}\ndocker build -t hu-app:${i} .`
+    }));
+
+    function render() {
+        document.getElementById('list').innerHTML = scripts.map(s => `
+            <div class="item" onclick="load(${s.id})">
+                <span class="tag">${s.type}</span> Script_ID_${s.id}
+            </div>
+        `).join('');
+    }
+
+    function load(id) {
+        const s = scripts[id];
+        document.getElementById('editor').innerText = s.content;
+        detect();
+    }
+
+    function detect() {
+        const code = document.getElementById('editor').innerText;
+        const mode = code.includes("import") ? "ML/PYTHON" : "DEVOPS/BASH";
+        document.getElementById('mode').innerText = mode;
+        document.getElementById('mode').style.color = mode === "ML/PYTHON" ? "#2ecc71" : "#00f2ff";
+    }
+
+    function execute() {
+        const con = document.getElementById('con');
+        con.innerHTML += `<div style="color:white;">> [EXEC]: Routing to ${document.getElementById('mode').innerText} Kernel...</div>`;
+        setTimeout(() => {
+            con.innerHTML += `<div>> Success: Process Complete. 0ms latency.</div>`;
+            con.scrollTop = con.scrollHeight;
+        }, 500);
+    }
+
+    window.onload = render;
+</script>
+</body>
+</html>

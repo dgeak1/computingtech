@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS Vault | View-Only Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Cinzel:wght@700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-green: #10b981;
+            --bg: #020617;
+            --header-bg: rgba(2, 44, 34, 0.95);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text: #ffffff;
+            --sub-text: #94a3b8;
+            --border: rgba(16, 185, 129, 0.2);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --sub-text: #475569;
+            --border: rgba(16, 185, 129, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: background 0.3s, color 0.3s; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+        /* Navigation */
+        .nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 5%; background: var(--header-bg);
+            backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .nav-group { display: flex; align-items: center; gap: 12px; }
+        .nav-btn {
+            background: var(--card-bg); border: 1px solid var(--border);
+            color: var(--primary-green); padding: 8px 14px; border-radius: 10px;
+            cursor: pointer; text-decoration: none; font-size: 0.75rem; font-weight: 800;
+        }
+
+        /* Hero */
+        .header { text-align: center; padding: 40px 20px; }
+        .search-container { max-width: 600px; margin: 20px auto; }
+        .search-container input {
+            width: 100%; padding: 14px 25px; border-radius: 50px;
+            border: 1px solid var(--border); background: var(--card-bg); color: var(--text); outline: none;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px; max-width: 1200px; margin: 0 auto; padding: 20px 20px 100px;
+        }
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 20px; padding: 20px; position: relative;
+            display: flex; flex-direction: column; transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary-green); }
+        
+        .fav-icon {
+            position: absolute; top: 15px; right: 15px; cursor: pointer;
+            color: var(--sub-text); font-size: 1.2rem; transition: 0.3s; z-index: 5;
+        }
+        .fav-icon.active { color: #facc15; }
+
+        .book-icon { font-size: 2rem; color: var(--primary-green); margin-bottom: 10px; }
+        .title { font-size: 1rem; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
+        .desc { font-size: 0.8rem; color: var(--sub-text); line-height: 1.5; flex-grow: 1; }
+
+        .view-btn {
+            margin-top: 15px; padding: 12px; border-radius: 12px;
+            background: rgba(16, 185, 129, 0.1); color: var(--primary-green);
+            text-align: center; border: 1px solid var(--primary-green);
+            font-weight: 800; font-size: 0.8rem; cursor: pointer; transition: 0.3s;
+        }
+        .view-btn:hover { background: var(--primary-green); color: #022c22; }
+
+        /* SECURE READER OVERLAY */
+        .reader-overlay {
+            position: fixed; inset: 0; background: var(--bg);
+            z-index: 2000; display: none; flex-direction: column;
+        }
+        .reader-overlay.active { display: flex; }
+        
+        .reader-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; background: var(--header-bg); border-bottom: 1px solid var(--border);
+        }
+
+        .reader-content {
+            display: grid; grid-template-columns: 300px 1fr; height: calc(100vh - 70px);
+        }
+
+        .reader-sidebar {
+            background: rgba(0,0,0,0.2); border-right: 1px solid var(--border);
+            padding: 30px; overflow-y: auto;
+        }
+
+        .reader-view {
+            padding: 60px; overflow-y: auto; position: relative;
+            user-select: none; -webkit-user-select: none;
+        }
+
+        .watermark {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 6rem; color: rgba(16, 185, 129, 0.05); pointer-events: none;
+            white-space: nowrap; font-weight: 900; z-index: 0;
+        }
+
+        .manuscript {
+            font-family: 'JetBrains Mono', monospace; line-height: 1.8;
+            color: var(--sub-text); position: relative; z-index: 1;
+        }
+
+        .chapter-list { list-style: none; margin-top: 20px; }
+        .chapter-list li { 
+            padding: 12px 0; border-bottom: 1px solid var(--border); 
+            font-size: 0.75rem; color: var(--sub-text); cursor: pointer;
+        }
+        .chapter-list li:hover { color: var(--primary-green); }
+
+        /* Special Neural View styling */
+        .neural-viz {
+            border: 1px solid var(--primary-green); border-radius: 15px;
+            padding: 20px; margin: 20px 0; background: rgba(16, 185, 129, 0.05);
+        }
+    </style>
+</head>
+<body oncontextmenu="return false"> 
+
+    <nav class="nav">
+        <div class="nav-group">
+            <a href="index.html" class="nav-btn"><i class="fas fa-home"></i> HOME</a>
+            <button class="nav-btn" onclick="toggleTheme()"><i class="fas fa-adjust"></i> MODE</button>
+        </div>
+        <div style="font-family:'Cinzel'; font-size:1.1rem; letter-spacing: 2px;">TECH<span>BOOKS</span></div>
+        <div class="nav-group">
+            <button class="nav-btn" onclick="filterFavs()" id="favToggle"><i class="fas fa-star"></i> FAVORITES</button>
+        </div>
+    </nav>
+
+    <header class="header">
+        <h1 style="font-family:'Cinzel'; font-size: 2.2rem;">CS Restricted Archive</h1>
+        <p style="font-size: 0.75rem; color: var(--sub-text); letter-spacing: 1px; margin-top: 5px;">
+            <i class="fas fa-lock"></i> SECURE VIEWING ONLY • ENCRYPTION ACTIVE
+        </p>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search 100+ Computer Science manuals..." onkeyup="search()">
+        </div>
+    </header>
+
+    <main class="grid" id="bookGrid"></main>
+
+    <div class="reader-overlay" id="reader">
+        <div class="reader-nav">
+            <div>
+                <span style="color:var(--primary-green); font-size:0.6rem; font-weight:800; display:block;">SECURE SESSION ACTIVE</span>
+                <span id="doc-title" style="font-family:'Cinzel'; font-weight:bold;">Manual Title</span>
+            </div>
+            <button class="nav-btn" onclick="closeReader()" style="background:#ef4444; color:white; border:none;">CLOSE ARCHIVE</button>
+        </div>
+        
+        <div class="reader-content">
+            <aside class="reader-sidebar">
+                <div id="sidebar-icon" style="font-size: 3rem; color: var(--primary-green); margin-bottom: 20px;"></div>
+                <p style="font-weight: 800; font-size: 0.8rem; border-bottom: 1px solid var(--primary-green); display:inline-block;">CONTENTS</p>
+                <ul class="chapter-list">
+                    <li>01. Technical Introduction</li>
+                    <li>02. System Architecture</li>
+                    <li>03. Logic & Functional Data</li>
+                    <li>04. Security Implementation</li>
+                    <li>05. Practical Use Cases</li>
+                    <li>06. Research Bibliography</li>
+                </ul>
+            </aside>
+            
+            <main class="reader-view">
+                <div class="watermark">PROPERTY OF GEN SEC</div>
+                <div id="dynamic-detail-area">
+                    </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const topics = [
+            { t: "Systems Analysis & Design", d: "Software lifecycle and requirement gathering.", i: "fa-project-diagram" },
+            { t: "Operating System Kernel", d: "Memory management and shell scripting.", i: "fa-microchip" },
+            { t: "Computer Architecture", d: "Logic gates, CPU cycles, and ALU design.", i: "fa-memory" },
+            { t: "Network Security Protocols", d: "IPSec, TLS, and Firewall configurations.", i: "fa-shield-halved" },
+            { t: "Neural Synapse", d: "Deep learning models and synaptic weighting.", i: "fa-brain" }
+        ];
+
+        let favorites = JSON.parse(localStorage.getItem('cs_favs') || '[]');
+
+        function loadBooks() {
+            const grid = document.getElementById('bookGrid');
+            let html = "";
+            for(let i = 1; i <= 100; i++) {
+                const base = topics[i % topics.length];
+                const isFav = favorites.includes(i) ? 'active' : '';
+                html += `
+                    <div class="card" data-id="${i}">
+                        <i class="fas fa-star fav-icon ${isFav}" onclick="toggleFav(${i}, this)"></i>
+                        <i class="fas ${base.i} book-icon"></i>
+                        <div class="title">${base.t} Vol. ${i}</div>
+                        <div class="desc">${base.d}</div>
+                        <div class="view-btn" onclick="openReader(${i}, '${base.t}', '${base.i}')">OPEN SECURE READER</div>
+                    </div>
+                `;
+            }
+            grid.innerHTML = html;
+        }
+
+        function toggleFav(id, el) {
+            event.stopPropagation();
+            if (favorites.includes(id)) {
+                favorites = favorites.filter(item => item !== id);
+                el.classList.remove('active');
+            } else {
+                favorites.push(id);
+                el.classList.add('active');
+            }
+            localStorage.setItem('cs_favs', JSON.stringify(favorites));
+        }
+
+        function filterFavs() {
+            const btn = document.getElementById('favToggle');
+            const cards = document.querySelectorAll('.card');
+            const isFiltering = !btn.classList.contains('filtering');
+
+            if(isFiltering) {
+                btn.classList.add('filtering');
+                btn.innerHTML = '<i class="fas fa-th"></i> SHOW ALL';
+                cards.forEach(c => {
+                    const id = parseInt(c.dataset.id);
+                    c.style.display = favorites.includes(id) ? 'flex' : 'none';
+                });
+            } else {
+                btn.classList.remove('filtering');
+                btn.innerHTML = '<i class="fas fa-star"></i> FAVORITES';
+                cards.forEach(c => c.style.display = 'flex');
+            }
+        }
+
+        function toggleTheme() {
+            document.body.hasAttribute('data-theme') ? document.body.removeAttribute('data-theme') : document.body.setAttribute('data-theme', 'light');
+        }
+
+        function search() {
+            let q = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.card').forEach(c => {
+                c.style.display = c.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
+            });
+        }
+
+        function openReader(id, title, icon) {
+            const fullTitle = `${title} Vol. ${id}`;
+            document.getElementById('doc-title').innerText = fullTitle;
+            document.getElementById('sidebar-icon').className = `fas ${icon}`;
+            
+            const detailArea = document.getElementById('dynamic-detail-area');
+            
+            // ELABORATE NEURAL SYNAPSE DETAIL
+            if(title === "Neural Synapse") {
+                detailArea.innerHTML = `
+                    <h1 style="font-family:'Cinzel'; color:var(--primary-green); margin-bottom:10px;">NEURAL SYNAPSE</h1>
+                    <p style="color:var(--primary-green); font-size:0.8rem; margin-bottom:20px;">REF: AI-TECH-ARCHIVE-${id}</p>
+                    <div class="manuscript">
+                        This volume details the computational mimicry of human biological synapses. 
+                        In Vol. ${id}, we focus specifically on <strong>Synaptic Weighting</strong> and 
+                        <strong>Gradient Descent</strong> optimization.
+                    </div>
+                    
+                    <div class="neural-viz">
+                        <p style="font-size:0.6rem; font-weight:bold; margin-bottom:10px;">TOPOLOGY SIMULATION</p>
+                        <i class="fas fa-project-diagram" style="font-size:3rem; opacity:0.5;"></i>
+                        <p style="margin-top:10px; font-size:0.8rem;">Data input at layer 0 is squashed using Sigmoid: <br> f(x) = 1 / (1 + exp(-x))</p>
+                    </div>
+                    <div class="manuscript">
+                        By adjusting weights $W_{i,j}$, the system minimizes the cost function $J(\theta)$. 
+                        Consult the Faculty Lab for practical implementation of this manual's pseudo-code.
+                    </div>
+                `;
+            } else {
+                // GENERIC DETAILED VIEW FOR OTHER 95+ TITLES
+                detailArea.innerHTML = `
+                    <h1 style="font-family:'Cinzel'; margin-bottom:10px;">${title}</h1>
+                    <p style="color:var(--primary-green); font-size:0.8rem; margin-bottom:20px;">REF: CS-DOC-ID-${id}-2026</p>
+                    <div class="manuscript">
+                        This document provides the standard technical framework for <strong>${title}</strong>. 
+                        As part of Volume ${id}, students are required to analyze the core principles of 
+                        this domain within the Faculty of Computer Science.
+                        <br><br>
+                        <strong>Secure Protocol:</strong> This file is part of a restricted archive. 
+                        No parts of this document may be reproduced or screenshotted.
+                        <br><br>
+                        <strong>Key Learning Objectives:</strong><br>
+                        1. Theoretical understanding of ${title.split(' ')[0]} logic.<br>
+                        2. Security and Integrity in ${title.split(' ')[1] || 'Systems'}.<br>
+                        3. Scalability metrics in Volume ${id} environments.
+                    </div>
+                `;
+            }
+
+            document.getElementById('reader').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeReader() {
+            document.getElementById('reader').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        loadBooks();
+    </script>
+</body>
+</html>

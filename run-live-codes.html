@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Console | Equity Crew 26</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #10b981;
+            --accent-gold: #fbbf24;
+            --bg-color: #020617;
+            --text-color: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --text-color: #0f172a;
+            --glass: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(0, 0, 0, 0.05);
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0; transition: 0.4s;
+        }
+
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%; background: var(--glass); backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100;
+        }
+
+        .gold-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: black; padding: 10px 20px; border-radius: 8px;
+            font-weight: 700; border: none; cursor: pointer; text-transform: uppercase;
+        }
+
+        .container { padding: 50px 5%; max-width: 1400px; margin: auto; }
+
+        .hero-title { text-align: center; margin-bottom: 40px; }
+        .hero-title h1 { font-family: 'Oswald'; font-size: 2.5rem; color: var(--primary-green); letter-spacing: 4px; margin:0; }
+
+        .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+
+        .glass-card {
+            background: var(--glass); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 25px; box-shadow: var(--shadow);
+            backdrop-filter: blur(20px);
+        }
+
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.75rem; color: var(--accent-gold); text-transform: uppercase; }
+        
+        input, textarea {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--card-border);
+            padding: 12px; border-radius: 10px; color: #10b981; margin-bottom: 15px;
+            font-family: 'Courier New', Courier, monospace; box-sizing: border-box;
+        }
+
+        /* LIVE PREVIEW AREA */
+        #livePreview {
+            width: 100%; height: 100%; min-height: 400px;
+            background: white; border-radius: 12px; border: none;
+        }
+
+        .vault-item {
+            background: rgba(0,0,0,0.2); border: 1px solid var(--card-border);
+            margin-bottom: 20px; border-radius: 12px; overflow: hidden;
+        }
+        
+        .vault-header {
+            padding: 10px 20px; background: rgba(251, 191, 36, 0.1);
+            display: flex; justify-content: space-between; border-bottom: 1px solid var(--card-border);
+        }
+
+        .vault-content { display: grid; grid-template-columns: 1fr 1fr; height: 300px; }
+
+        .code-block { background: #1e1e1e; color: #d4d4d4; padding: 15px; overflow: auto; font-size: 0.8rem; margin: 0; }
+
+        footer {
+            margin-top: 60px; padding: 40px; text-align: center; border-top: 1px solid var(--card-border);
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <nav class="nav-bar">
+        <a href="machinelanguage.html" style="color:var(--primary-green); text-decoration:none; font-weight:bold;">← SECRETARIAT HOME</a>
+        <div>
+            <button onclick="toggleTheme()" style="background:none; border:none; color:var(--text-color); margin-right:20px; cursor:pointer;"><i id="tIcon" class="fas fa-sun"></i></button>
+            <!-- <button class="gold-btn" onclick="openVault()"><i class="fas fa-key"></i> ACCESS MACHINE LANGUAGE CONSOLE (SUBSCRIBED USER)</button> -->
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero-title">
+            <h1>LIVE CODE CONSOLE</h1>
+            <p>Write, Execute, and Secure your Snippets</p>
+        </div>
+
+        <div class="editor-grid">
+            <div class="glass-card">
+                <h2 style="font-family:'Oswald'; color:var(--primary-green); margin-top:0;">IDE TERMINAL</h2>
+                <div class="input-group">
+                    <label>Snippet Title</label>
+                    <input type="text" id="minTitle" placeholder="Project Name / Function Title">
+                    
+                    <label>Session Date</label>
+                    <input type="date" id="minDate">
+                    
+                    <label>HTML / CSS / JS Source</label>
+                    <textarea id="minText" rows="12" placeholder="<html>...</html>" oninput="updateLivePreview()"></textarea>
+                    
+                    <button class="gold-btn" style="width:100%" onclick="saveMinutes()">SAVE TO ENCRYPTED VAULT</button>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h2 style="font-family:'Oswald'; color:var(--accent-gold); margin-top:0;">LIVE RENDER</h2>
+                <iframe id="livePreview"></iframe>
+            </div>
+        </div>
+
+        <div id="adminVault" style="display:none; margin-top:50px;">
+            <h2 style="color:var(--accent-gold); font-family:'Oswald'; text-align:center;"><i class="fas fa-unlock"></i> OUTPUT VAULT DECRYPTED</h2>
+            <div id="vaultList"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div style="font-family: 'Oswald'; color: var(--primary-green);">EQUITY CREW '26</div>
+        <p style="opacity:0.5; font-size:0.7rem;">Code Execution Engine &copy; 2026</p>
+    </footer>
+
+    <script>
+        // 1. Live Preview Logic (Real-time)
+        function updateLivePreview() {
+            const code = document.getElementById('minText').value;
+            const preview = document.getElementById('livePreview').contentWindow.document;
+            preview.open();
+            preview.write(code);
+            preview.close();
+        }
+
+        // 2. Theme Toggle
+        function toggleTheme() {
+            const b = document.body;
+            const isDark = b.getAttribute('data-theme') === 'dark';
+            b.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('tIcon').className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // 3. Persistent Storage
+        let secretData = JSON.parse(localStorage.getItem('code_vault')) || [];
+
+        function saveMinutes() {
+            const title = document.getElementById('minTitle').value;
+            const text = document.getElementById('minText').value;
+            const date = document.getElementById('minDate').value;
+
+            if(!title || !text) return alert("Error: No source code detected.");
+
+            const entry = { 
+                time: new Date().toLocaleString(), 
+                sessionDate: date,
+                title: title, 
+                content: text 
+            };
+
+            secretData.push(entry);
+            localStorage.setItem('code_vault', JSON.stringify(secretData));
+            
+            alert("Code Successfully Vaulted.");
+            document.getElementById('minTitle').value = '';
+            document.getElementById('minText').value = '';
+            updateLivePreview(); // Reset preview
+        }
+
+        // 4. Decrypt Vault & Render Live Outputs
+        function openVault() {
+            const pass = prompt("Enter Administrator Access Key:");
+            if(pass === "1234") {
+                const vault = document.getElementById('adminVault');
+                const list = document.getElementById('vaultList');
+                vault.style.display = 'block';
+                
+                list.innerHTML = secretData.map((d, index) => `
+                    <div class="vault-item">
+                        <div class="vault-header">
+                            <span><b>${d.title}</b> | Compiled: ${d.time}</span>
+                            <span style="color:var(--accent-gold)">SESSION: ${d.sessionDate}</span>
+                        </div>
+                        <div class="vault-content">
+                            <pre class="code-block"><code>${escapeHTML(d.content)}</code></pre>
+                            <iframe class="vault-preview" id="vPre-${index}" style="background:white; border:none; width:100%; height:100%;"></iframe>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Inject the code into the vault iframes AFTER they are created
+                secretData.forEach((d, index) => {
+                    const vPre = document.getElementById(`vPre-${index}`).contentWindow.document;
+                    vPre.open();
+                    vPre.write(d.content);
+                    vPre.close();
+                });
+
+                window.scrollTo(0, vault.offsetTop - 100);
+            } else {
+                alert("ACCESS DENIED: Invalid Credentials.");
+            }
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
+        }
+    </script>
+</body>
+</html>

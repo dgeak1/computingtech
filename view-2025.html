@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Archive | 2025 Repository</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --dark-green: #145a32;
+            --dark-bg: #050a05;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --text-color: #f4f4f4;
+            --border: rgba(46, 204, 113, 0.2);
+        }
+
+        .light-mode {
+            --dark-bg: #f8faf8;
+            --card-bg: #ffffff;
+            --text-color: #1a1a1a;
+            --border: rgba(46, 204, 113, 0.4);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            transition: 0.4s ease;
+        }
+
+        /* Luxury Navbar */
+        .navbar {
+            padding: 1rem 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(5, 10, 5, 0.8);
+        }
+
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+        .logo span { color: var(--primary-green); }
+
+        /* Live Desk Stats */
+        .live-desk {
+            max-width: 800px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat h4 { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6; margin: 0; }
+        .stat p { font-size: 1.2rem; font-weight: 700; color: var(--primary-green); margin: 5px 0 0; }
+
+        /* Gallery Container */
+        .details-container { max-width: 800px; margin: 0 auto 100px; padding: 0 20px; }
+        
+        h1.center-green {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            color: var(--primary-green);
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+
+        /* Question Items */
+        .question-list { display: flex; flex-direction: column; gap: 15px; }
+        
+        .question-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.3s ease;
+        }
+
+        .question-title {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        
+        .question-title span { font-size: 0.9rem; font-weight: 500; opacity: 0.9; }
+
+        .view-inline-btn {
+            background: var(--primary-green);
+            color: #050a05;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .view-inline-btn:hover { transform: scale(1.05); background: #fff; }
+
+        .question-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+            background: rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .question-item.active { border-color: var(--primary-green); box-shadow: 0 0 20px rgba(46, 204, 113, 0.1); }
+        .question-item.active .question-content { max-height: 2000px; padding: 20px; transition: max-height 1s ease-in; }
+
+        .question-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Add this to your <style> block */
+.question-content img {
+    filter: blur(0.5px) contrast(90%); /* Makes it look slightly grainy/soft */
+    
+}
+.question-content img {
+    image-rendering: -webkit-optimize-contrast; /* Sharper but pixelated */
+    image-rendering: crisp-edges;
+}
+
+    /* Lowering visual quality for faster perception */
+    .question-content img {
+        max-width: 100%;
+        height: auto;
+        opacity: 0.95;
+        filter: brightness(1.05); /* Simulates a scanned look */
+    }
+    
+    /* Optional: Small "Loading" effect for educational feel */
+    .question-item.active .question-content img {
+        animation: fadeInLow 0.8s ease-in;
+    }
+
+    @keyframes fadeInLow {
+        from { filter: blur(5px); opacity: 0; }
+        to { filter: blur(0); opacity: 1; }
+    }
+</style>
+
+
+</head>
+<body>
+    
+
+    <nav class="navbar">
+        <div class="logo">School <span>Archive</span></div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <button class="mode-btn" onclick="toggleMode()"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <a href="library.html" style="color:var(--text-color); text-decoration:none; font-size: 0.8rem; font-weight: 600;">BACK</a>
+        </div>
+    </nav>
+
+    <div class="live-desk">
+        <div class="stat"><h4>Session</h4><p>2024/25</p></div>
+        <div class="stat"><h4>Files</h4><p>11 Sheets</p></div>
+        <div class="stat"><h4>Status</h4><p>Verified</p></div>
+    </div>
+
+    <main class="details-container">
+        <h1 class="center-green">Academic Repository</h1>
+        
+        <div class="question-list" id="questionList">
+            <div class="question-item">
+                <div class="question-title" onclick="toggleItem(this)"> 
+                    <span><i class="fas fa-file-image" style="margin-right:10px; color:var(--primary-green)"></i> AIT311 - Back Page</span>
+                    <button class="view-inline-btn">View</button>
+                </div>
+                <div class="question-content">
+                    <img src="20242025-AIT311-BACK.JPG" alt="Exam Sheet">
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-title" onclick="toggleItem(this)"> 
+                    <span><i class="fas fa-file-image" style="margin-right:10px; color:var(--primary-green)"></i> AIT311 - Front Page</span>
+                    <button class="view-inline-btn">View</button>
+                </div>
+                <div class="question-content">
+                    <img src="20242025-AIT311.JPG" alt="Exam Sheet">
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-title" onclick="toggleItem(this)"> 
+                    <span><i class="fas fa-file-image" style="margin-right:10px; color:var(--primary-green)"></i> AIT313 - Back Page</span>
+                    <button class="view-inline-btn">View</button>
+                </div>
+                <div class="question-content">
+                    <img src="20242025-AIT313-BACK.JPG" alt="Exam Sheet">
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-title" onclick="toggleItem(this)"> 
+                    <span><i class="fas fa-file-image" style="margin-right:10px; color:var(--primary-green)"></i> AIT313 - Front Page</span>
+                    <button class="view-inline-btn">View</button>
+                </div>
+                <div class="question-content">
+                    <img src="20242025-AIT313.JPG" alt="Exam Sheet">
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-title" onclick="toggleItem(this)"> 
+                    <span><i class="fas fa-file-image" style="margin-right:10px; color:var(--primary-green)"></i> COM216 - Page 1</span>
+                    <button class="view-inline-btn">View</button>
+                </div>
+                <div class="question-content">
+                    <img src="20242025-COM216 (1).JPG" alt="Exam Sheet">
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-title" onclick="toggleItem(this)"> 
+                    <span><i class="fas fa-file-image" style="margin-right:10px; color:var(--primary-green)"></i> SWD312 - Back Page</span>
+                    <button class="view-inline-btn">View</button>
+                </div>
+                <div class="question-content">
+                    <img src="20242025-SWD312-BACK.JPG" alt="Exam Sheet">
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-title" onclick="toggleItem(this)"> 
+                    <span><i class="fas fa-file-image" style="margin-right:10px; color:var(--primary-green)"></i> SWD312 - Front Page</span>
+                    <button class="view-inline-btn">View</button>
+                </div>
+                <div class="question-content">
+                    <img src="20242025-SWD312.JPG" alt="Exam Sheet">
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        Developed by <b>Equity Crew 26</b> &copy; 2026
+    </footer>
+
+    <script>
+        function toggleItem(element) {
+            element.parentElement.classList.toggle('active');
+            const btn = element.querySelector('.view-inline-btn');
+            btn.innerText = element.parentElement.classList.contains('active') ? 'Close' : 'View';
+        }
+
+        function toggleMode() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            body.classList.toggle('light-mode');
+            icon.className = body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    </script>
+</body>
+</html>

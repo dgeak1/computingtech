@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Center | School Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --dark-bg: #050a05;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --text-color: #f4f4f4;
+            --border: rgba(46, 204, 113, 0.15);
+            --gold: #d4af37;
+        }
+
+        .light-mode {
+            --dark-bg: #f8faf8;
+            --card-bg: #ffffff;
+            --text-color: #1a1a1a;
+            --border: rgba(46, 204, 113, 0.3);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            transition: 0.5s ease;
+            line-height: 1.6;
+        }
+
+        /* --- Navigation --- */
+        .navbar {
+            padding: 1.2rem 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(5, 10, 5, 0.8);
+        }
+
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; }
+        .logo span { color: var(--primary-green); }
+
+        .nav-links { list-style: none; display: flex; gap: 30px; margin: 0; }
+        .nav-links a { 
+            color: var(--text-color); 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            letter-spacing: 1px;
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+        .nav-links a.active { color: var(--primary-green); opacity: 1; }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 80px 8% 40px;
+            text-align: center;
+            background: radial-gradient(circle at top, rgba(46, 204, 113, 0.05) 0%, transparent 70%);
+        }
+
+        .hero h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 3.5rem; 
+            margin: 0; 
+            color: var(--primary-green);
+        }
+
+        .hero p { 
+            max-width: 600px; 
+            margin: 15px auto; 
+            opacity: 0.6; 
+            font-size: 1.1rem; 
+        }
+
+        /* --- Live Desk (Status Bar) --- */
+        .status-bar {
+            max-width: 900px;
+            margin: 0 auto 50px;
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-item { text-align: center; }
+        .status-item span { display: block; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.5; }
+        .status-item b { font-size: 1.1rem; color: var(--primary-green); }
+
+        /* --- Grid Layout --- */
+        .grid-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 0 8% 100px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary-green), transparent);
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-green);
+            background: rgba(46, 204, 113, 0.05);
+        }
+
+        .card:hover::before { opacity: 1; }
+
+        .card i { font-size: 2.5rem; color: var(--primary-green); margin-bottom: 20px; }
+        
+        .card h3 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 1.5rem; 
+            margin-bottom: 15px; 
+        }
+
+        .card p { font-size: 0.85rem; opacity: 0.5; margin-bottom: 25px; }
+
+        .card a {
+            display: inline-block;
+            padding: 12px 25px;
+            background: var(--primary-green);
+            color: #050a05;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .card a:hover {
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* --- Dark Mode Toggle --- */
+        .mode-btn { background: none; border: none; color: var(--primary-green); cursor: pointer; font-size: 1.2rem; }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid var(--border);
+            opacity: 0.5;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .status-bar { flex-direction: column; gap: 20px; margin: 0 8% 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">School <span>Archive</span></div>
+        <div style="display: flex; gap: 25px; align-items: center;">
+            <ul class="nav-links">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="request.html" class="active">REQUESTS</a></li>
+            </ul>
+            <button class="mode-btn" onclick="toggleMode()"><i class="fas fa-adjust"></i></button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>Request Center</h1>
+        <p>A digitized portal for official student documentation and faculty support. Processing is handled by the Secretariat.</p>
+    </header>
+
+    <div class="status-bar">
+        <div class="status-item">
+            <span>Current Load</span>
+            <b>Normal</b>
+        </div>
+        <div class="status-item">
+            <span>Avg. Response</span>
+            <b>48 Hours</b>
+        </div>
+        <div class="status-item">
+            <span>Portal Status</span>
+            <b>Secure</b>
+        </div>
+    </div>
+
+    <main class="grid-container">
+        <div class="card">
+            <i class="fas fa-id-card"></i>
+            <h3>ID Application</h3>
+            <p>Request new student identity cards or replacements for lost ones.</p>
+            <a href="idcard.html">Begin Application</a>
+        </div>
+
+        <div class="card">
+            <i class="fas fa-file-alt"></i>
+            <h3>Intro Letter</h3>
+            <p>Official introductory letters for internships, banks, or travel.</p>
+            <a href="intro-letter.html">Request Document</a>
+        </div>
+
+        <div class="card">
+            <i class="fas fa-hand-holding-heart"></i>
+            <h3>Crowd Fund</h3>
+            <p>Support student welfare initiatives and developmental projects.</p>
+            <a href="crowdfund.html">Contribute</a>
+        </div>
+
+        <div class="card">
+            <i class="fas fa-comment-dots"></i>
+            <h3>Feedback</h3>
+            <p>Direct channel for complaints or suggestions to the crew.</p>
+            <a href="feedback.html">Speak to Us</a>
+        </div>
+    </main>
+
+    <footer>
+        Developed by <b>Equity Crew 26</b> &copy; 2026 <br>
+        <small style="margin-top: 10px; display: block;">Official Faculty Administrative Portal</small>
+    </footer>
+
+    <script>
+        function toggleMode() {
+            document.body.classList.toggle('light-mode');
+        }
+    </script>
+</body>
+</html>

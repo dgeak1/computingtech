@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Portal | Secure Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-green: #10b981;
+            --dark-emerald: #064e3b;
+            --deep-forest: #022c22;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(16, 185, 129, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top, var(--dark-emerald), var(--deep-forest));
+            color: #ffffff; min-height: 100vh;
+        }
+
+        /* Nav & Headers */
+        .nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 8%; background: rgba(2, 44, 34, 0.95);
+            backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .logo { font-family: 'Cinzel', serif; font-size: 1.4rem; color: #fff; }
+
+        /* New Quick Access Section */
+        .quick-access {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px; max-width: 1200px; margin: 30px auto; padding: 0 20px;
+        }
+        .access-card {
+            background: var(--glass); border: 1px solid var(--border);
+            padding: 20px; border-radius: 20px; text-align: center;
+            text-decoration: none; color: white; transition: 0.3s;
+        }
+        .access-card:hover { background: rgba(16, 185, 129, 0.1); border-color: var(--primary-green); }
+        .access-card i { font-size: 1.5rem; color: var(--primary-green); margin-bottom: 10px; }
+
+        /* Admin Dashboard */
+        .admin-box {
+            max-width: 800px; margin: 40px auto; padding: 40px;
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.05), rgba(0,0,0,0.3));
+            border-radius: 30px; border: 1px solid var(--border); text-align: center;
+        }
+        .btn-main {
+            background: var(--primary-green); color: var(--deep-forest);
+            border: none; padding: 15px 40px; border-radius: 50px;
+            font-weight: 800; cursor: pointer; transition: 0.3s;
+        }
+        .btn-danger {
+            background: transparent; color: #ef4444; border: 1px solid #ef4444;
+            padding: 8px 20px; border-radius: 50px; cursor: pointer; font-size: 0.8rem;
+        }
+
+        /* Gallery Grid */
+        .gallery-container { max-width: 1200px; margin: 0 auto; padding: 20px 20px 100px; }
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .item {
+            position: relative; border-radius: 25px; overflow: hidden;
+            background: #000; border: 1px solid var(--border); aspect-ratio: 1/1;
+        }
+        .item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; cursor: pointer; }
+        .item:hover img { transform: scale(1.05); filter: brightness(0.4); }
+
+        /* Delete Badge */
+        .del-overlay {
+            position: absolute; top: 15px; right: 15px; z-index: 10;
+            opacity: 0; transition: 0.3s;
+        }
+        .item:hover .del-overlay { opacity: 1; }
+
+        /* AI Lightbox */
+        .lightbox {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            display: none; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 2000; padding: 20px; backdrop-filter: blur(15px);
+        }
+        .lightbox.active { display: flex; }
+        .lb-card { max-width: 500px; text-align: center; }
+        .lb-card img { width: 100%; border-radius: 20px; border: 1px solid var(--primary-green); }
+        .ai-quote-box {
+            margin-top: 15px; padding: 20px; background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--primary-green); border-radius: 10px;
+        }
+
+        .close-btn { position: absolute; top: 20px; right: 30px; font-size: 3rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="logo">FACULTY <span>ARCHIVE</span></div>
+        <div style="font-size: 0.7rem; color: var(--primary-green); font-weight: 800;">MANAGED BY DOLAPO</div>
+    </nav>
+
+    <div class="quick-access">
+        <a href="DolpGraceTechBook.html" class="access-card">
+            <i class="fas fa-book-open"></i>
+            <h3>TechBook</h3>
+            <p style="font-size: 0.7rem; color: #94a3b8;">Study Materials & Resources</p>
+        </a>
+        <a href="Bulletin.html" class="access-card">
+            <i class="fas fa-bullhorn"></i>
+            <h3>Bulletins</h3>
+            <p style="font-size: 0.7rem; color: #94a3b8;">Official Announcements</p>
+        </a>
+        <a href="security.html" class="access-card">
+            <i class="fas fa-bullhorn"></i>
+            <h3> Security </h3>
+            <p style="font-size: 0.7rem; color: #94a3b8;"> Check the Security Log (Public)</p>
+        </a>
+        <!-- <div class="access-card" style="cursor: default;">
+            <i class="fas fa-shield-halved"></i>
+            <h3>Security</h3>
+            <p style="font-size: 0.7rem; color: #94a3b8;">Protocol: ACTIVE</p>
+        </div> -->
+    </div>
+
+    <section class="admin-box">
+        <h2 style="font-family: 'Cinzel'; color: var(--primary-green);">General Secretary Portal</h2>
+        <p style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 25px;">Upload memories to the permanent faculty record</p>
+        <button class="btn-main" onclick="handleSecureUpload()">
+            <i class="fas fa-cloud-upload-alt"></i> UPLOAD TO ARCHIVE
+        </button>
+        <input type="file" id="file-input" style="display:none" accept="image/*">
+    </section>
+
+    <main class="gallery-container">
+        <div class="grid" id="gallery-grid">
+            </div>
+    </main>
+
+    <div class="lightbox" id="lightbox">
+        <span class="close-btn" onclick="closeLB()">&times;</span>
+        <div class="lb-card">
+            <img id="lb-img" src="">
+            <div class="ai-quote-box">
+                <p style="color: var(--primary-green); font-size: 0.6rem; font-weight: 800; margin-bottom: 5px;">AI CONTENT GENERATED</p>
+                <p id="ai-text" style="font-style: italic;">Processing metadata...</p>
+            </div>
+            <button class="btn-main" style="margin-top: 15px; width: 100%;" onclick="downloadImage()">DOWNLOAD MEMORY</button>
+        </div>
+    </div>
+
+    <script>
+        const MASTER_KEY = "DolapoAdmin";
+        const QUOTES = [
+            "Leadership is the capacity to translate vision into reality.",
+            "Legacy is not what we leave for people, but what we leave in them.",
+            "Innovation distinguishes between a leader and a follower.",
+            "A snapshot of excellence in our academic journey.",
+            "Community is built on shared moments and digital records.",
+            "The future belongs to those who archive their growth today."
+        ];
+
+        const grid = document.getElementById('gallery-grid');
+        const fileIn = document.getElementById('file-input');
+
+        // --- AUTH & UPLOAD ---
+        function handleSecureUpload() {
+            if(prompt("GEN SEC VERIFICATION: Enter Password:") === MASTER_KEY) fileIn.click();
+            else alert("Unauthorized Access.");
+        }
+
+        fileIn.onchange = (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const id = Date.now();
+                    const src = event.target.result;
+                    savePhoto(id, src);
+                    renderPhoto(id, src);
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // --- RENDER & DELETE ---
+        function renderPhoto(id, src) {
+            const div = document.createElement('div');
+            div.className = 'item';
+            div.innerHTML = `
+                <div class="del-overlay">
+                    <button class="btn-danger" onclick="deleteArchive(${id})"><i class="fas fa-trash"></i> DELETE</button>
+                </div>
+                <img src="${src}" onclick="openLB('${src}')">
+            `;
+            grid.prepend(div);
+        }
+
+        function deleteArchive(id) {
+            event.stopPropagation();
+            if(prompt("SECURE DELETE: Enter Admin Password:") === MASTER_KEY) {
+                let data = JSON.parse(localStorage.getItem('faculty_archive') || '[]');
+                data = data.filter(item => item.id !== id);
+                localStorage.setItem('faculty_archive', JSON.stringify(data));
+                location.reload(); // Refresh to update grid
+            } else {
+                alert("Incorrect Key. Delete request ignored.");
+            }
+        }
+
+        // --- LIGHTBOX & AI ---
+        function openLB(src) {
+            document.getElementById('lb-img').src = src;
+            const text = document.getElementById('ai-text');
+            document.getElementById('lightbox').classList.add('active');
+            
+            text.innerText = "Analyzing visual signatures...";
+            setTimeout(() => {
+                text.innerText = `"${QUOTES[Math.floor(Math.random() * QUOTES.length)]}"`;
+            }, 800);
+        }
+
+        function closeLB() { document.getElementById('lightbox').classList.remove('active'); }
+
+        function downloadImage() {
+            const a = document.createElement('a');
+            a.href = document.getElementById('lb-img').src;
+            a.download = `Archive_${Date.now()}.png`;
+            a.click();
+        }
+
+        // --- STORAGE ---
+        function savePhoto(id, src) {
+            const data = JSON.parse(localStorage.getItem('faculty_archive') || '[]');
+            data.push({id, src});
+            localStorage.setItem('faculty_archive', JSON.stringify(data));
+        }
+
+        window.onload = () => {
+            const saved = JSON.parse(localStorage.getItem('faculty_archive') || '[]');
+            saved.forEach(item => renderPhoto(item.id, item.src));
+        };
+    </script>
+</body>
+</html>

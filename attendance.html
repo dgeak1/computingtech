@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exco Attendance Records | OGS</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root { --green-dark: #145a32; --green-light: #22c55e; --vault-gold: #c6a355; }
+        
+        /* THE VAULT STYLING */
+        .vault-box {
+            background: #1a1a1a; color: white; padding: 25px; border-radius: 15px;
+            border: 2px solid var(--vault-gold); margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: 0.4s;
+        }
+        .vault-header { color: var(--vault-gold); display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .vault-input { background: #333; border: 1px solid var(--vault-gold); color: white; padding: 10px; border-radius: 5px; width: 200px; }
+        .vault-btn { background: var(--vault-gold); color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        
+        /* EDITING MODE STYLES */
+        .edit-mode .edit-only { display: inline-block !important; }
+        .edit-only { display: none; }
+        .status-toggle { cursor: pointer; padding: 4px 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 0.8rem; }
+        .editable-name { border-bottom: 1px dashed #ccc; cursor: text; }
+
+        .attendance-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
+        .attendance-table th, .attendance-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .attendance-table th { background-color: #f4f4f4; color: var(--green-dark); }
+        
+        @media print { .navbar, .hero, .vault-box, .edit-only, .main-footer, #click-counter-box { display: none !important; } }
+    </style>
+</head>
+<body id="mainBody">
+
+    <nav class="navbar">
+        <div class="logo">School <span>Hub</span></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="meeting.html">Entry Page</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <h1>Exco Attendance Archive</h1>
+        <p>Official Database | Office of the General Secretary</p>
+    </header>
+
+    <main class="grid-container">
+        
+        <div class="vault-box" id="vault">
+            <div class="vault-header">
+                <i class="ph ph-lock-key" style="font-size: 2rem;"></i>
+                <h2 style="margin: 0; letter-spacing: 2px;">THE SECRETARIAT VAULT</h2>
+            </div>
+            
+            <div id="vaultAuth">
+                <p style="font-size: 0.8rem; opacity: 0.7;">Enter Passkey to unlock editing and deletion tools.</p>
+                <input type="password" id="vaultKey" class="vault-input" placeholder="••••••••">
+                <button class="vault-btn" onclick="unlockVault()">UNLOCK VAULT</button>
+            </div>
+
+            <div id="vaultTools" style="display: none;">
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <p style="color: var(--vault-gold);">Vault Unlocked. You can now edit rows directly in the table.</p>
+                    <button class="vault-btn" style="background: #e63946; color: white;" onclick="location.reload()">LOCK VAULT</button>
+                    <button class="vault-btn" onclick="window.print()">PRINT FULL SHEET</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between;">
+                <div id="attendance-records" style="flex: 1;">
+                    <p>Scanning database...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <span>Developed by <b>Equity Crew 26</b> &copy; 2026</span>
+        </div>
+    </footer>
+
+    <script>
+    let isVaultUnlocked = false;
+
+    // --- 1. UNLOCK LOGIC ---
+    function unlockVault() {
+        const key = document.getElementById('vaultKey').value;
+        if (key === "DolapoGenSec26") {
+            isVaultUnlocked = true;
+            document.getElementById('vaultAuth').style.display = 'none';
+            document.getElementById('vaultTools').style.display = 'block';
+            document.getElementById('mainBody').classList.add('edit-mode');
+            document.getElementById('vault').style.borderColor = "#22c55e";
+            loadAttendance(); // Re-render with edit buttons
+            alert("VAULT UNLOCKED: Editing mode enabled.");
+        } else {
+            alert("ACCESS DENIED: Invalid Passkey.");
+        }
+    }
+
+    // --- 2. LOAD RECORDS ---
+    function loadAttendance() {
+        const recordsDiv = document.getElementById('attendance-records');
+        const allWeeks = JSON.parse(localStorage.getItem('excoAttendanceByWeek') || '{}');
+        const weekKeys = Object.keys(allWeeks);
+
+        if (weekKeys.length === 0) {
+            recordsDiv.innerHTML = '<p>No records found.</p>';
+            return;
+        }
+
+        let html = '';
+        weekKeys.sort((a, b) => b - a).forEach(weekKey => {
+            html += `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:30px; border-bottom: 2px solid var(--green-dark);">
+                    <h3 style="color:var(--green-dark)">WEEK ${weekKey}</h3>
+                    <button class="edit-only vault-btn" style="padding:5px 10px; background:#e63946; color:white;" onclick="deleteWeek('${weekKey}')">Delete Week</button>
+                </div>
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Position</th>
+                            <th>Status</th>
+                            <th class="edit-only">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            
+            allWeeks[weekKey].forEach((row, index) => {
+                html += `
+                    <tr>
+                        <td>${row.date}</td>
+                        <td>
+                            <span contenteditable="${isVaultUnlocked}" class="${isVaultUnlocked ? 'editable-name' : ''}" 
+                                  onblur="updateEntry('${weekKey}', ${index}, 'name', this.innerText)">
+                                ${row.name}
+                            </span>
+                        </td>
+                        <td>${row.position}</td>
+                        <td>
+                            ${isVaultUnlocked ? 
+                                `<button class="status-toggle" onclick="toggleStatus('${weekKey}', ${index})">${row.present ? '✔️ Present' : '✗ Absent'}</button>` : 
+                                (row.present ? '✔️ Present' : '✗ Absent')
+                            }
+                        </td>
+                        <td class="edit-only">
+                            <button onclick="deleteRow('${weekKey}', ${index})" style="color:red; border:none; background:none; cursor:pointer;">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+            html += '</tbody></table>';
+        });
+        recordsDiv.innerHTML = html;
+    }
+
+    // --- 3. EDIT/UPDATE LOGIC ---
+    function updateEntry(weekKey, index, field, value) {
+        let data = JSON.parse(localStorage.getItem('excoAttendanceByWeek'));
+        data[weekKey][index][field] = value;
+        localStorage.setItem('excoAttendanceByWeek', JSON.stringify(data));
+    }
+
+    function toggleStatus(weekKey, index) {
+        let data = JSON.parse(localStorage.getItem('excoAttendanceByWeek'));
+        data[weekKey][index].present = !data[weekKey][index].present;
+        data[weekKey][index].absent = !data[weekKey][index].present;
+        localStorage.setItem('excoAttendanceByWeek', JSON.stringify(data));
+        loadAttendance();
+    }
+
+    function deleteRow(weekKey, index) {
+        if (confirm("Permanently delete this entry?")) {
+            let data = JSON.parse(localStorage.getItem('excoAttendanceByWeek'));
+            data[weekKey].splice(index, 1);
+            if (data[weekKey].length === 0) delete data[weekKey];
+            localStorage.setItem('excoAttendanceByWeek', JSON.stringify(data));
+            loadAttendance();
+        }
+    }
+
+    function deleteWeek(weekKey) {
+        if (confirm(`Delete the ENTIRE archive for Week ${weekKey}?`)) {
+            let data = JSON.parse(localStorage.getItem('excoAttendanceByWeek'));
+            delete data[weekKey];
+            localStorage.setItem('excoAttendanceByWeek', JSON.stringify(data));
+            loadAttendance();
+        }
+    }
+
+    window.onload = loadAttendance;
+    </script>
+</body>
+</html>

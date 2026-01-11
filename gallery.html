@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Gallery | Faculty Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --gold: #d4af37;
+            --primary: #10b981;
+            --bg: #020617;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --header-bg: #000000;
+            --border: rgba(212, 175, 55, 0.2);
+            --text: #f8fafc;
+            --sub-text: #94a3b8;
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+            --text: #0f172a;
+            --sub-text: #475569;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: 0.3s, color 0.3s; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+        /* Navigation */
+        .navbar { 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 5%; background: var(--header-bg); border-bottom: 1px solid var(--border); 
+            position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px);
+        }
+        .nav-group { display: flex; gap: 15px; align-items: center; }
+        .nav-link { color: var(--text); text-decoration: none; font-weight: 800; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; }
+
+        /* Admin Panel */
+        .admin-panel { 
+            max-width: 1400px; margin: 30px auto; padding: 40px; 
+            background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border); 
+            text-align: center; 
+        }
+        .upload-btn { 
+            background: var(--gold); color: #000; border: none; padding: 14px 30px; 
+            border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        .upload-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        /* Gallery Grid */
+        .gallery-wrap { max-width: 1400px; margin: 0 auto; padding: 20px 40px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+
+        .item { 
+            position: relative; border-radius: 20px; overflow: hidden; 
+            background: #000; border: 1px solid var(--border); aspect-ratio: 16/10; 
+            cursor: pointer; group: hover;
+        }
+        .item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .item:hover img { transform: scale(1.05); filter: brightness(0.5); }
+
+        /* Overlay Delete Trigger */
+        .delete-trigger {
+            position: absolute; top: 15px; right: 15px; background: rgba(239, 68, 68, 0.9);
+            color: white; width: 35px; height: 35px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: 0.3s; z-index: 10;
+        }
+        .item:hover .delete-trigger { opacity: 1; }
+
+        /* Lightbox Styles */
+        .lightbox {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            display: none; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 2000; padding: 40px;
+        }
+        .lightbox.active { display: flex; }
+        .lb-content { position: relative; max-width: 800px; width: 100%; text-align: center; }
+        .lb-content img { width: 100%; border-radius: 20px; border: 1px solid var(--gold); margin-bottom: 25px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
+        
+        .ai-quote-box {
+            background: rgba(212, 175, 55, 0.05); padding: 25px; border-radius: 15px; 
+            border-left: 4px solid var(--gold); font-style: italic; color: #fff; position: relative;
+        }
+        .close-box { position: absolute; top: -60px; right: 0; font-size: 2.5rem; color: white; cursor: pointer; }
+
+        /* Theme Toggle Button */
+        .theme-btn {
+            background: var(--card-bg); border: 1px solid var(--border);
+            color: var(--gold); width: 40px; height: 40px; border-radius: 10px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+    </style>
+</head>
+<body oncontextmenu ="return false">
+
+    <nav class="navbar">
+        <div class="nav-group">
+            <a href="index.html" class="nav-link"><i class="fas fa-home"></i> HOME</a>
+            <button class="nav-link" style="background:none; border:none; cursor:pointer;" onclick="history.back()"><i class="fas fa-arrow-left"></i> BACK</button>
+        </div>
+        
+        <div style="font-family:'Cinzel'; color:var(--gold); font-size:1.4rem; letter-spacing: 2px;">AI<span>ARCHIVE</span></div>
+
+        <div class="nav-group">
+            <button class="theme-btn" onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
+            <a href="index.html" class="nav-link" style="color:var(--gold)">EXIT</a>
+        </div>
+    </nav>
+
+    <div class="admin-panel">
+        <h2 style="font-family:'Cinzel'; color:var(--gold); margin-bottom:15px; letter-spacing: 1px;">Archive Oversight</h2>
+        <p style="color:var(--sub-text); margin-bottom:25px; font-size:0.9rem;">The General Secretary portal for managing visual faculty memories.</p>
+        <button class="upload-btn" onclick="triggerSecureUpload()">+ UPLOAD NEW MEMORY</button>
+        <input type="file" id="real-file" style="display:none" accept="image/*">
+    </div>
+
+    <div class="gallery-wrap">
+        <div class="grid" id="gallery-grid"></div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <div class="lb-content">
+            <span class="close-box" onclick="closeLightbox()">&times;</span>
+            <img id="lb-img" src="">
+            <div class="ai-quote-box">
+                <p id="ai-quote-text">"Analyzing visual memory..."</p>
+            </div>
+            <div style="margin-top:20px; display:flex; gap:15px; justify-content:center;">
+                <button class="upload-btn" style="background:transparent; border:1px solid var(--gold); color:var(--gold);" onclick="downloadCurrent()">Download Image</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const MASTER_PASS = "DolapoAdmin";
+        const quotes = [
+
+        // Sample Quotes "Every expert was once a beginner. Keep learning!",
+            "Your potential is endless. Go out and prove it.",
+            "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+            "The only way to do great work is to love what you do.",
+            "Believe you can and you're halfway there.",
+            "The future belongs to those who believe in the beauty of their dreams.",
+            "Don't watch the clock; do what it does. Keep going.",
+            "The best way to predict the future is to create it.",
+            "It does not matter how slowly you go as long as you do not stop.",
+            "What you get by achieving your goals is not as important as what you become by achieving your goals.",
+            "Strive for progress, not perfection.",
+            "The mind is everything. What you think you become.",
+            "Challenges are what make life interesting and overcoming them is what makes life meaningful.",
+            "You are stronger than you think.",
+            "The beautiful thing about learning is that no one can take it away from you.",
+            "Push yourself, because no one else is going to do it for you.",
+            "Great things never come from comfort zones.",
+            "Dream it. Wish it. Do it.",
+            "Success is the sum of small efforts repeated day in and day out.",
+            "The harder you work for something, the greater you'll feel when you achieve it.",
+            "Don't stop when you're tired. Stop when you're done.",
+            "Wake up with determination, go to bed with satisfaction.",
+            "Do something today that your future self will thank you for.",
+            "Little things make big days.",
+            "It's going to be hard, but hard does not mean impossible.",
+            "The only limit to our realization of tomorrow will be our doubts of today.",
+            "Sometimes later becomes never. Do it now.",
+            "Great works are performed not by strength but by perseverance.",
+            "Learning is a treasure that will follow its owner everywhere.",
+            "The journey of a thousand miles begins with a single step.",
+            "Innovation distinguishes between a leader and a follower.",
+            "The road to success and the road to failure are almost exactly the same.",
+            "Opportunities don't happen, you create them.",
+            "Always do your best. What you plant now, you will harvest later.",
+            "To be successful, you have to have your heart in your business, and your business in your heart.",
+            "I find that the harder I work, the more luck I seem to have.",
+            "Success is walking from failure to failure with no loss of enthusiasm.",
+            "If you are not willing to risk the usual, you will have to settle for the ordinary.",
+            "Give yourself a break. Recharge and come back stronger.",
+            "Your attitude, not your aptitude, will determine your altitude.",
+            "You can't cross the sea merely by standing and staring at the water.",
+            "The future depends on what you do today.",
+            "The only true wisdom is in knowing you know nothing.",
+            "The roots of education are bitter, but the fruit is sweet.",
+            "Education is the most powerful weapon which you can use to change the world.",
+            "The mind is not a vessel to be filled, but a fire to be kindled.",
+            "Live as if you were to die tomorrow. Learn as if you were to live forever.",
+            "Develop a passion for learning. If you do, you will never cease to grow.",
+            "Learning never exhausts the mind.",
+            "Study hard, for the well-being of your generation depends on it.",
+            "Your brain is the most powerful weapon you have. Train it well.",
+            "Knowledge is power. Information is liberating. Education is the premise of progress.",
+            "Failure is the opportunity to begin again more intelligently.",
+            "Success is a journey, not a destination. The doing is often more important than the outcome.",
+            "If you want to live a happy life, tie it to a goal, not to people or things.",
+            "Only I can change my life. No one can do it for me.",
+            "Happiness is not something readymade. It comes from your own actions.",
+            "The best revenge is massive success.",
+            "The only person you are destined to become is the person you decide to be.",
+            "You miss 100% of the shots you don't take.",
+            "The power of imagination makes us infinite.",
+            "What lies behind us and what lies before us are tiny matters compared to what lies within us.",
+            "With great power comes great responsibility.",
+            "If you want to lift yourself up, lift up someone else.",
+            "When you have a dream, you've got to grab it and never let go.",
+            "Nothing is impossible, the word itself says 'I'm possible'!",
+            "The bad news is time flies. The good news is you're the pilot.",
+            "Life has no remote, get up and change it yourself.",
+            "If opportunity doesn't knock, build a door.",
+            "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+            "The way to get started is to quit talking and begin doing.",
+            "Your time is limited, don't waste it living someone else's life.",
+            "Keep your eyes on the stars, and your feet on the ground.",
+            "It is during our darkest moments that we must focus to see the light.",
+            "Perseverance is not a long race; it is many short races one after the other.",
+            "If you can dream it, you can achieve it.",
+            "Either you run the day, or the day runs you.",
+            "The only impossible journey is the one you never begin.",
+            "Don't count the days, make the days count.",
+            "The mind is a powerful thing. It can make you believe anything.",
+            "To hell with circumstances; I create opportunities.",
+            "The starting point of all achievement is desire.",
+            "It's not what you look at that matters, it's what you see.",
+            "The best revenge is massive success.",
+            "You are never too old to set another goal or to dream a new dream.",
+            "The difference between ordinary and extraordinary is that little extra.",
+            "Your only limit is your mind.",
+            "Action is the foundational key to all success.",
+            "If you have integrity, nothing else matters. If you don't have integrity, nothing else matters.",
+            "The secret of getting ahead is getting started.",
+            "Don't be afraid to give up the good to go for the great.",
+            "I've failed over and over and over again in my life. And that is why I succeed.",
+            "What defines us is how well we rise after falling.",
+            "Only those who dare to fail greatly can ever achieve greatly.",
+            "If you really look closely, most overnight successes took a long time.",
+            "Strength does not come from winning. Your struggles develop your strengths.",
+            "The journey to a thousand success stories begins with a single step of courage.",
+            "Greatness is not just in the records we keep, but in the moments we share.",
+            "Innovation in this faculty starts with a single vision.",
+            "Legacy is built one achievement at a time. Captured forever.",
+            "Unity is the cornerstone of our academic excellence.",
+            "Beyond the lectures and labs lies the heart of our community.",
+            "A memory captured today becomes history tomorrow.",
+            "Sometimes even when one doesnt deserve anything, he gets something better just because he is good to others.",
+            "The best way to find yourself is to lose yourself in the service of others.",
+            "Education is the most powerful weapon which you can use to change the world.",
+            "In the middle of every difficulty lies opportunity.",
+            "Life will definitely throw you challenges, but the key to overcoming them is to stay focused on your goals and keep pushing forward.",
+            "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+            "Believe you can and you're halfway there.",
+            "The only way to do great work is to love what you do.",
+            "Don't watch the clock; do what it does. Keep going.",
+            "The future belongs to those who believe in the beauty of their dreams.",
+            "Dreams get prettier when chased.",
+            "Strive for progress, not perfection.",
+            "Your limitation—it's only your imagination.",
+            "Old but Gold, make your story bold.",
+            "Be Godly, nice and kind always to your fellow students."
+
+        ];
+
+        // --- THEME LOGIC ---
+        function toggleTheme() {
+            const body = document.body;
+            const isLight = body.getAttribute('data-theme') === 'light';
+            body.setAttribute('data-theme', isLight ? 'dark' : 'light');
+            localStorage.setItem('archive-theme', isLight ? 'dark' : 'light');
+        }
+
+        // --- UPLOAD & STORAGE ---
+        function triggerSecureUpload() {
+            if(prompt("Enter Gen Sec Password:") === MASTER_PASS) document.getElementById('real-file').click();
+            else alert("Unauthorized access denied.");
+        }
+
+        document.getElementById('real-file').onchange = (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const id = Date.now();
+                    const src = event.target.result;
+                    const photos = JSON.parse(localStorage.getItem('ai_photos') || '[]');
+                    photos.push({id, src});
+                    localStorage.setItem('ai_photos', JSON.stringify(photos));
+                    renderPhoto(id, src);
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // --- DELETE LOGIC ---
+        function requestDelete(id, event) {
+            event.stopPropagation(); // Prevents lightbox from opening
+            if(prompt("Enter Gen Sec Password to DELETE:") === MASTER_PASS) {
+                let photos = JSON.parse(localStorage.getItem('ai_photos') || '[]');
+                photos = photos.filter(p => p.id !== id);
+                localStorage.setItem('ai_photos', JSON.stringify(photos));
+                
+                // Refresh Grid
+                document.getElementById('gallery-grid').innerHTML = '';
+                photos.forEach(p => renderPhoto(p.id, p.src));
+            } else {
+                alert("Deletion unauthorized.");
+            }
+        }
+
+        function renderPhoto(id, src) {
+            const div = document.createElement('div');
+            div.className = 'item';
+            div.innerHTML = `
+                <div class="delete-trigger" onclick="requestDelete(${id}, event)">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <img src="${src}">
+            `;
+            div.onclick = () => openAILightbox(src);
+            document.getElementById('gallery-grid').prepend(div);
+        }
+
+        // --- UI FUNCTIONS ---
+        function openAILightbox(src) {
+            document.getElementById('lb-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+            const quoteEl = document.getElementById('ai-quote-text');
+            quoteEl.innerText = "Analyzing memory...";
+            setTimeout(() => {
+                quoteEl.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+            }, 800);
+        }
+
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+
+        function downloadCurrent() {
+            const link = document.createElement('a');
+            link.href = document.getElementById('lb-img').src;
+            link.download = "Faculty_Archive_Memory.png";
+            link.click();
+        }
+
+        // --- INIT ---
+        window.onload = () => {
+            if(localStorage.getItem('archive-theme') === 'light') document.body.setAttribute('data-theme', 'light');
+            const saved = JSON.parse(localStorage.getItem('ai_photos') || '[]');
+            saved.forEach(p => renderPhoto(p.id, p.src));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gateway | Equity Crew 26</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;700&family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #10b981;
+            --primary-blue: #3b82f6;
+            --bg-dark: #020617;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #1e293b 0%, #020617 100%);
+        }
+
+        .gateway-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .gateway-title h1 {
+            font-family: 'Oswald';
+            font-size: 3rem;
+            letter-spacing: 5px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .gateway-title p {
+            opacity: 0.5;
+            font-weight: 300;
+        }
+
+        .box-container {
+            display: flex;
+            gap: 40px;
+            max-width: 1000px;
+            width: 90%;
+        }
+
+        .nav-box {
+            flex: 1;
+            height: 300px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Machine Learning Theme */
+        .box-ml:hover {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.2);
+            transform: translateY(-10px);
+        }
+
+        /* ViewCodeRun Theme */
+        .box-vcr:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.2);
+            transform: translateY(-10px);
+        }
+
+        .nav-box i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .box-ml i { color: var(--primary-green); }
+        .box-vcr i { color: var(--primary-blue); }
+
+        .nav-box h2 {
+            font-family: 'Oswald';
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .nav-box span {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Background glow effect on hover */
+        .nav-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .nav-box:hover::before {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gateway-title">
+        <h1>Secretariat Console</h1>
+        <p>Equity Crew '26 Command Interface</p>
+    </div>
+
+    <div class="box-container">
+        <a href="machine.html" class="nav-box box-ml">
+            <i class="fas fa-brain"></i>
+            <h2>MACHINE LEARNING</h2>
+            <span> Low-Level Assembly & Binary</span>
+        </a>
+
+        <a href="run-live-codes.html" class="nav-box box-vcr">
+            <i class="fas fa-code"></i>
+            <h2>VIEW CODE RUN</h2>
+            <span>HTML CSS AND JAVASCRIPT </span>
+        </a>
+    </div>
+
+    <div style="margin-top: 60px; font-size: 0.7rem; opacity: 0.3; letter-spacing: 2px;">
+        SECURE GATEWAY // ENCRYPTED SESSION ACTIVE
+    </div>
+
+</body>
+</html>

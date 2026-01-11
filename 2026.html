@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive 2026 | Digital Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --dark-bg: #050a05;
+            --text-color: #f4f4f4;
+            --glass: rgba(46, 204, 113, 0.1);
+            --border: rgba(46, 204, 113, 0.3);
+        }
+
+        .light-mode {
+            --dark-bg: #f8faf8;
+            --text-color: #1a1a1a;
+            --glass: rgba(46, 204, 113, 0.05);
+            --border: rgba(46, 204, 113, 0.4);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            transition:  0.5s ease;
+            overflow-x: hidden;
+        }
+
+        /* Luxury Navbar */
+        .navbar {
+            padding: 1.5rem 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(5, 10, 5, 0.8);
+        }
+
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; }
+        .logo span { color: var(--primary-green); }
+
+        .nav-links { list-style: none; display: flex; gap: 25px; margin: 0; padding: 0; }
+        .nav-links a { color: var(--text-color); text-decoration: none; font-size: 0.85rem; font-weight: 600; opacity: 0.7; }
+        .nav-links a.active { color: var(--primary-green); opacity: 1; }
+
+        /* Content Area */
+        .details-container {
+            max-width: 1000px;
+            margin: 60px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        h1 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 10px; }
+        .subtitle { opacity: 0.6; max-width: 600px; margin: 0 auto 40px; }
+
+        /* Premium Download Button */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--primary-green);
+            color: #050a05;
+            padding: 18px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+            margin-bottom: 50px;
+        }
+
+        .download-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(46, 204, 113, 0.5); }
+
+        /* Refurbished Cube Section */
+        .cube-container {
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            gap: 100px;
+        }
+
+        .cube {
+            width: 180px;
+            height: 180px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotateCube 20s infinite linear;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: var(--glass);
+            border: 2px solid var(--primary-green);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: var(--primary-green);
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+
+        /* 3D Face Positioning */
+        .front  { transform: rotateY(0deg) translateZ(90px); }
+        .back   { transform: rotateY(180deg) translateZ(90px); }
+        .right  { transform: rotateY(90deg) translateZ(90px); }
+        .left   { transform: rotateY(-90deg) translateZ(90px); }
+        .top    { transform: rotateX(90deg) translateZ(90px); }
+        .bottom { transform: rotateX(-90deg) translateZ(90px); }
+
+        @keyframes rotateCube {
+            0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+        }
+
+        /* Mode Toggle */
+        .mode-btn { background: none; border: none; color: var(--primary-green); cursor: pointer; font-size: 1.2rem; }
+
+        footer { margin-top: 100px; padding: 40px; border-top: 1px solid var(--border); opacity: 0.4; font-size: 0.8rem; }
+
+        @media (max-width: 768px) {
+            .cube-container { flex-direction: column; height: auto; gap: 150px; padding: 100px 0; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo"> School <span>Archive</span></div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="library.html" class="active">Library</a></li>
+            </ul>
+            <button class="mode-btn" onclick="toggleMode()"><i class="fas fa-adjust"></i></button>
+        </div>
+    </nav>
+
+    <main class="details-container">
+        <h1>Examination (2026)</h1>
+        <p class="subtitle">Secure digital access to the 2026 session past questions. Verified by the Faculty General Secretariat.</p>
+        
+        <a href="#" class="download-btn" download>
+            <i class="fas fa-file-pdf"></i> DOWNLOAD REPOSITORY
+        </a>
+
+        <div class="cube-container">
+            <div class="cube">
+                <div class="cube-face front">COMING SOON<br>2026 SESSION</div>
+                <div class="cube-face back">EQUITY CREW<br>VOTED 2026</div>
+                <div class="cube-face right">STAY<br>FOCUSED</div>
+                <div class="cube-face left">KEEP<br>STUDYING</div>
+                <div class="cube-face top">TOP TIER</div>
+                <div class="cube-face bottom">EXCELLENCE</div>
+            </div>
+            
+            <div class="cube" style="animation-direction: reverse; animation-duration: 25s;">
+                <div class="cube-face front">LOCKED<br>ARCHIVE</div>
+                <div class="cube-face back">SECURED<br>DATA</div>
+                <div class="cube-face right">FUTURE<br>PAPER</div>
+                <div class="cube-face left">GEN SEC<br>OFFICE</div>
+                <div class="cube-face top">2026</div>
+                <div class="cube-face bottom">HUB</div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="text-align: center;">
+        Developed by <b>Equity Crew 26</b> &copy; 2026
+    </footer>
+
+    <script>
+        function toggleMode() {
+            document.body.classList.toggle('light-mode');
+        }
+    </script>
+</body>
+</html>

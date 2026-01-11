@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Hub | Privacy Protocol</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<style>
+    :root {
+    --deep-green: #062c23;   /* Very dark forest green */
+    --forest-green: #064e3b; /* Medium deep green */
+    --emerald: #10b981;      /* Bright accent green */
+    --mint-white: #f0fdf4;   /* Soft white with green tint */
+    --pure-white: #ffffff;
+}
+
+body {
+    background-color: var(--deep-green);
+    color: var(--mint-white);
+    font-family: 'Inter', system-ui, sans-serif;
+    margin: 0;
+    scroll-behavior: smooth;
+}
+
+/* Navigation Pills */
+.action-bar {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 12px;
+    z-index: 1000;
+}
+
+.nav-pill {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--emerald);
+    color: var(--pure-white);
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.nav-pill:hover {
+    background: var(--emerald);
+    color: var(--deep-green);
+}
+
+/* Header */
+.emerald-header {
+    padding: 120px 20px 60px;
+    background: linear-gradient(180deg, var(--forest-green) 0%, var(--deep-green) 100%);
+    text-align: center;
+}
+
+.status-indicator {
+    color: var(--emerald);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: 1px solid var(--emerald);
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+/* Layout */
+.main-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+    padding: 40px 20px;
+}
+
+/* Glass Side Menu */
+.side-menu {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.menu-item {
+    display: block;
+    padding: 15px;
+    color: var(--mint-white);
+    text-decoration: none;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    border-left: 3px solid transparent;
+}
+
+.menu-item.active {
+    background: var(--forest-green);
+    border-left: 3px solid var(--emerald);
+    color: var(--pure-white);
+}
+
+/* Content Cards */
+.card {
+    background: var(--pure-white);
+    color: var(--deep-green);
+    padding: 40px;
+    border-radius: 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--forest-green);
+    margin-bottom: 20px;
+}
+
+.card-header i { font-size: 2rem; color: var(--emerald); }
+
+h2 { margin: 0; font-size: 1.8rem; }
+
+/* Update the content flow to handle a grid */
+.content-flow {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column for mobile */
+    gap: 25px;
+}
+
+@media (min-width: 900px) {
+    .content-flow {
+        grid-template-columns: 1fr 1fr; /* Two columns for desktop */
+    }
+    
+    /* Make the first few cards full-width for emphasis */
+    #data, #security {
+        grid-column: span 2;
+    }
+}
+
+.card {
+    border: 1px solid rgba(16, 185, 129, 0.2); /* Emerald border glow */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    border-color: var(--emerald);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card-header h2 {
+    font-size: 1.3rem; /* Slightly smaller for the grid layout */
+    color: var(--deep-green);
+    font-weight: 700;
+}
+</style>
+<body class="deep-theme">
+
+    <nav class="action-bar">
+        <button onclick="history.back()" class="nav-pill">
+            <i class="ph ph-caret-left"></i> Back
+        </button>
+        <!-- <a href="/" class="nav-pill">
+            <i class="ph ph-house"></i> Home
+        </a> -->
+    </nav>
+
+    <header class="emerald-header">
+        <div class="content-limit">
+            <span class="status-indicator">Secure Connection Active</span>
+            <h1>Privacy Details</h1>
+            <p>How we safeguard your academic journey at Student Hub.</p>
+        </div>
+    </header>
+
+    <main class="main-grid">
+        <aside class="side-menu">
+            <nav id="spy-nav">
+                <a href="#data" class="menu-item active">Data Collection</a>
+                <a href="#security" class="menu-item">Security Layers</a>
+                <a href="#rights" class="menu-item">Student Rights</a>
+            </nav>
+        </aside>
+
+        <section class="content-flow">
+            <div id="data" class="card">
+                <div class="card-header">
+                    <i class="ph-fill ph-database"></i>
+                    <h2>Collected Information</h2>
+                </div>
+                <p>We only store information essential for your academic success, such as course registrations and university identifiers.</p>
+            </div>
+
+            <div id="security" class="card">
+                <div class="card-header">
+                    <i class="ph-fill ph-shield-checkered"></i>
+                    <h2>Encryption Standards</h2>
+                </div>
+                <p>All data is encrypted using <strong>AES-256</strong>. We utilize end-to-end green-certified servers to host your information.</p>
+            </div>
+            <div id="location" class="card">
+    <div class="card-header"><i class="ph-fill ph-map-pin"></i> <h2>1. Geo-Location Data</h2></div>
+    <p>We only access precise location data when you use the "Campus Navigator." This data is never stored on our servers for more than 24 hours.</p>
+</div>
+
+<div id="ai-usage" class="card">
+    <div class="card-header"><i class="ph-fill ph-cpu"></i> <h2>2. AI & Machine Learning</h2></div>
+    <p>Our study assistants analyze your input to provide personalized summaries. Your prompts are <strong>anonymized</strong> before being processed by LLM providers.</p>
+</div>
+
+<div id="cookies" class="card">
+    <div class="card-header"><i class="ph-fill ph-cookie"></i> <h2>3. Cookie Architecture</h2></div>
+    <p>We use essential cookies for session management. Analytics cookies are opt-in only and help us identify which hub features students use most.</p>
+</div>
+
+<div id="retention" class="card">
+    <div class="card-header"><i class="ph-fill ph-clock-counter-clockwise"></i> <h2>4. Retention Schedule</h2></div>
+    <p>Active account data is kept indefinitely. Inactive accounts (no login for 2 years) are flagged for deletion, and data is wiped after a 30-day grace period.</p>
+</div>
+
+<div id="biometrics" class="card">
+    <div class="card-header"><i class="ph-fill ph-fingerprint"></i> <h2>5. Biometric Authentication</h2></div>
+    <p>FaceID or Fingerprint data stays on your device's secure enclave. Student Hub only receives a "success" or "fail" token from your OS.</p>
+</div>
+
+<div id="third-party" class="card">
+    <div class="card-header"><i class="ph-fill ph-users-three"></i> <h2>6. Third-Party Integration</h2></div>
+    <p>We sync with Google Calendar and Outlook. We only request "Write" permissions to add your class schedule, never "Read" permissions for your private emails.</p>
+</div>
+
+<div id="advertising" class="card">
+    <div class="card-header"><i class="ph-fill ph-megaphone-simple"></i> <h2>7. No-Ad Policy</h2></div>
+    <p>Student Hub is 100% ad-free. We do not share your profile with data brokers or marketing agencies for targeted student advertising.</p>
+</div>
+
+<div id="emergency" class="card">
+    <div class="card-header"><i class="ph-fill ph-first-aid"></i> <h2>8. Emergency Disclosure</h2></div>
+    <p>In extreme cases involving campus safety or legal subpoenas, we may be required to share limited data with university security or law enforcement.</p>
+</div>
+
+<div id="child-privacy" class="card">
+    <div class="card-header"><i class="ph-fill ph-baby"></i> <h2>9. Age Requirements</h2></div>
+    <p>Our platform is designed for students aged 13 and older. We do not knowingly collect information from children under the age of 13.</p>
+</div>
+
+<div id="rights-export" class="card">
+    <div class="card-header"><i class="ph-fill ph-export"></i> <h2>10. Data Portability</h2></div>
+    <p>You can request a full JSON export of your academic data at any time via the Settings menu. Your data, your rules.</p>
+</div>
+        </section>
+    </main>
+
+    <script> 
+    
+    
+    document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.card');
+    
+    const revealOnScroll = () => {
+        const triggerBottom = window.innerHeight * 0.8;
+        
+        cards.forEach(card => {
+            const cardTop = card.getBoundingClientRect().top;
+            
+            if(cardTop < triggerBottom) {
+                card.style.opacity = "1";
+                card.style.transform = "translateY(0)";
+            } else {
+                card.style.opacity = "0";
+                card.style.transform = "translateY(50px)";
+            }
+        });
+    };
+
+    // Initial styles for animation
+    cards.forEach(card => {
+        card.style.transition = "all 0.6s ease-out";
+        card.style.opacity = "0";
+        card.style.transform = "translateY(50px)";
+    });
+
+    window.addEventListener('scroll', revealOnScroll);
+    revealOnScroll(); // Trigger once on load
+});
+
+window.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('.card');
+    const navLinks = document.querySelectorAll('.menu-item');
+    
+    let currentId = "";
+
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= (sectionTop - 200)) {
+            currentId = section.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${currentId}`) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+</body>
+</html>

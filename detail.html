@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HU Detail View</title>
+    <style>
+        :root {
+            --deep-green: #0a1f0a;
+            --accent-green: #2ecc71;
+            --light-bg: #f4f9f4;
+        }
+        body { font-family: sans-serif; background: var(--light-bg); margin: 0; padding: 0; }
+        .detail-header { background: var(--deep-green); color: white; padding: 4rem 2rem; text-align: center; }
+        .content-body { max-width: 800px; margin: -50px auto 50px; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .back-btn { color: var(--accent-green); text-decoration: none; font-weight: bold; display: block; margin-bottom: 20px; }
+        .category-tag { background: #e8f5e9; color: var(--deep-green); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <div class="detail-header">
+        <span class="category-tag" id="displayCat">Category</span>
+        <h1 id="displayTitle">Loading Title...</h1>
+    </div>
+
+    <div class="content-body">
+        <a href="basics.html" class="back-btn">← Back to Basics</a>
+        <div id="displayContent">
+            <p>Loading the full technical documentation for this module...</p>
+        </div>
+    </div>
+
+    <script>
+        // 1. Get the ID from the URL (e.g., ?id=005)
+        const urlParams = new URLSearchParams(window.location.search);
+        const topicId = urlParams.get('id');
+
+        // 2. In a real project, you'd fetch this from a database. 
+        // For now, we'll simulate the data:
+        const topicDetails = {
+            "001": { title: "Git Initialization", cat: "Setup", text: "To initialize a repository, use 'git init'. This creates a hidden .git folder..." },
+            "002": { title: "Environment Vars", cat: "Setup", text: "Environment variables keep your API keys safe. Use a .env file..." },
+            // You can add more detailed text for your 100 items here
+        };
+
+        const data = topicDetails[topicId];
+
+        if (data) {
+            document.getElementById('displayTitle').innerText = data.title;
+            document.getElementById('displayCat').innerText = data.cat;
+            document.getElementById('displayContent').innerHTML = `
+                <h3>Overview</h3>
+                <p>${data.text}</p>
+                <h3>Implementation Steps</h3>
+                <ul>
+                    <li>Open your terminal in the root directory.</li>
+                    <li>Execute the standard HU initialization script.</li>
+                    <li>Verify the green status light in the dashboard.</li>
+                </ul>
+            `;
+        } else {
+            document.getElementById('displayTitle').innerText = "Topic Not Found";
+        }
+    </script>
+</body>
+</html>

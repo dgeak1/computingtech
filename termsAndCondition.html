@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | Student Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<style>
+
+    :root {
+    --deep-bg: #041d18;
+    --forest: #064e3b;
+    --emerald: #10b981;
+    --white: #ffffff;
+    --slate: #1e293b;
+}
+
+body {
+    background-color: var(--deep-bg);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.terms-hero {
+    padding: 120px 20px 40px;
+    background: linear-gradient(to bottom, var(--forest), var(--deep-bg));
+    text-align: center;
+}
+
+.search-container {
+    max-width: 500px;
+    margin: 25px auto;
+    position: relative;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 15px 50px;
+    border-radius: 30px;
+    border: 1px solid var(--emerald);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    outline: none;
+}
+
+.result-count {
+    font-size: 0.85rem;
+    color: var(--emerald);
+    margin-top: 10px;
+}
+
+.terms-wrapper {
+    max-width: 1200px;
+    margin: 0 auto 100px;
+    padding: 0 20px;
+}
+
+.terms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Card Styling */
+.term-card {
+    background: var(--white);
+    color: var(--slate);
+    padding: 25px;
+    border-radius: 15px;
+    border-left: 5px solid var(--emerald);
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.term-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+}
+
+.term-card i {
+    color: var(--emerald);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.term-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: var(--deep-bg);
+}
+
+.term-card p {
+    font-size: 0.9rem;
+    color: #475569;
+}
+</style>
+<body class="deep-theme">
+
+    <nav class="action-bar">
+        <button onclick="history.back()" class="nav-pill"><i class="ph ph-arrow-left"></i> Back</button>
+        <a href="index.html" class="nav-pill"><i class="ph ph-house"></i> Home</a>
+    </nav>
+
+    <header class="terms-hero">
+        <div class="hero-inner">
+            <span class="badge">Student Hub Protocol 2026</span>
+            <h1>Service Terms & Conditions</h1>
+            <p>A comprehensive guide to our 39 core service protocols.</p>
+            
+            <div class="search-container">
+                <i class="ph ph-magnifying-glass"></i>
+                <input type="text" id="termSearch" placeholder="Search across 39 terms...">
+            </div>
+            <div id="resultCount" class="result-count">Showing all 39 terms</div>
+        </div>
+    </header>
+
+    <main class="terms-wrapper">
+        <div class="terms-grid" id="termsContainer"></div>
+    </main>
+
+    <script>
+
+        const termsData = [
+            { id: 1, icon: "ph-gavel", title: "Acceptance", text: "By creating an account, you agree to all 39 terms herein." },
+            { id: 2, icon: "ph-student", title: "Eligibility", text: "You must be a currently enrolled student or faculty member." },
+            { id: 3, icon: "ph-shield-check", title: "Account Safety", text: "Users are responsible for all activity under their credentials." },
+            { id: 4, icon: "ph-book-open", title: "Academic Honesty", text: "Use of Hub tools for plagiarism is strictly prohibited." },
+            { id: 5, icon: "ph-currency-dollar", title: "Subscription Fees", text: "Premium features are billed on a monthly recurring basis." },
+            { id: 6, icon: "ph-hand-coins", title: "Refund Policy", text: "Refund requests must be submitted within 7 days of billing." },
+            { id: 7, icon: "ph-user-minus", title: "Termination", text: "We reserve the right to suspend accounts for conduct violations." },
+            { id: 8, icon: "ph-cloud-arrow-up", title: "User Content", text: "You retain ownership of the study materials you upload." },
+            { id: 9, icon: "ph-copyright", title: "Intellectual Property", text: "Student Hub branding is protected under copyright law." },
+            { id: 10, icon: "ph-globe", title: "Global Access", text: "Availability may vary based on regional university firewalls." },
+    { id: 11, icon: "ph-warning-circle", title: "Liability Limits", text: "We are not liable for accidental data loss or server downtime." },
+    { id: 12, icon: "ph-device-mobile", title: "Mobile Use", text: "Standard data rates apply when using our mobile application." },
+    { id: 13, icon: "ph-signature", title: "E-Signatures", text: "Digital agreements made via the Hub are legally binding." },
+    { id: 14, icon: "ph-users", title: "Community Conduct", text: "Harassment of other students results in an immediate ban." },
+    { id: 15, icon: "ph-envelope-simple", title: "Communications", text: "We may send critical system updates via your .edu email." },
+    { id: 16, icon: "ph-hard-drive", title: "Storage Limits", text: "Free accounts are limited to 5GB of cloud study storage." },
+    { id: 17, icon: "ph-scales", title: "Governing Law", text: "These terms are governed by the laws of your local jurisdiction." },
+    { id: 18, icon: "ph-intersect", title: "Third-Party Links", text: "We are not responsible for content on external university sites." },
+    { id: 19, icon: "ph-arrows-clockwise", title: "Policy Updates", text: "We may update these terms with 30 days notice to users." },
+    { id: 20, icon: "ph-robot", title: "AI Assistance", text: "AI-generated study aids must be verified by the student." },
+    { id: 21, icon: "ph-magnifying-glass", title: "Audit Rights", text: "We may audit system logs to prevent fraudulent activity." },
+    { id: 22, icon: "ph-lock", title: "Password Security", text: "Two-factor authentication is required for faculty accounts." },
+    { id: 23, icon: "ph-translate", title: "Language", text: "The English version of these terms is the primary authority." },
+    { id: 24, icon: "ph-ghost", title: "Inactive Accounts", text: "Accounts inactive for 24 months will be permanently deleted." },
+    { id: 25, icon: "ph-wifi-high", title: "Connectivity", text: "A stable internet connection is required for real-time sync." },
+    { id: 26, icon: "ph-credit-card", title: "Payment Methods", text: "We accept all major credits cards and university credits." },
+    { id: 27, icon: "ph-file-search", title: "DMCA Policy", text: "We respond to valid notices of alleged copyright infringement." },
+    { id: 28, icon: "ph-database", title: "Data Accuracy", text: "Users must provide accurate university enrollment info." },
+    { id: 29, icon: "ph-app-window", title: "Software License", text: "We grant you a limited, non-transferable use license." },
+    { id: 30, icon: "ph-briefcase", title: "Commercial Use", text: "Personal use only; no reselling of Hub study materials." },
+    { id: 31, icon: "ph-shield-plus", title: "Indemnification", text: "You agree to hold us harmless from your misuse of the site." },
+    { id: 32, icon: "ph-calendar", title: "Event Booking", text: "Room reservations via the Hub are subject to campus rules." },
+    { id: 33, icon: "ph-camera", title: "Media Uploads", text: "Videos must not contain prohibited or sensitive content." },
+    { id: 34, icon: "ph-link-simple", title: "API Usage", text: "Developers must follow our specific API rate limits." },
+    { id: 35, icon: "ph-bug", title: "Bug Reporting", text: "Security vulnerabilities should be reported via our bounty page." },
+    { id: 36, icon: "ph-clock", title: "Server Maintenance", text: "Scheduled downtime usually occurs Sundays at 2 AM EST." },
+    { id: 37, icon: "ph-identification-card", title: "Identity Theft", text: "Impersonating faculty is a tier-1 violation." },
+    { id: 38, icon: "ph-speaker-hifi", title: "Audio Tools", text: "Voice-to-text data is processed locally on your device." },
+    { id: 39, icon: "ph-check-circle", title: "Entire Agreement", text: "This constitutes the total agreement between you and the Hub." }
+];
+
+const container = document.getElementById('termsContainer');
+const searchInput = document.getElementById('termSearch');
+const countDisplay = document.getElementById('resultCount');
+
+function renderTerms(data) {
+    container.innerHTML = data.map(term => `
+        <div class="term-card">
+            <i class="ph-fill ${term.icon}"></i>
+            <h3>${term.id}. ${term.title}</h3>
+            <p>${term.text}</p>
+        </div>
+    `).join('');
+    countDisplay.innerText = `Showing ${data.length} terms`;
+}
+
+// Initial Render
+renderTerms(termsData);
+
+// Search Functionality
+searchInput.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase();
+    const filtered = termsData.filter(item => 
+        item.title.toLowerCase().includes(term) || 
+        item.text.toLowerCase().includes(term)
+    );
+    renderTerms(filtered);
+});
+    </script>
+</body>
+</html>

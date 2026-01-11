@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Attendance | Equity Crew 26</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #10b981;
+            --danger: #ef4444;
+            --accent-gold: #f39c12;
+            --bg-color: #020617;
+            --text-color: #ffffff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --nav-bg: rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f8fafc;
+            --text-color: #0f172a;
+            --glass: rgba(0, 0, 0, 0.03);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --nav-bg: rgba(255, 255, 255, 0.8);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0; padding: 0;
+            transition: all 0.4s ease;
+        }
+
+        .top-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; background: var(--nav-bg);
+            backdrop-filter: blur(10px); border-bottom: 1px solid var(--card-border);
+            position: sticky; top: 0; z-index: 1000;
+        }
+
+        .nav-link { color: var(--primary-green); text-decoration: none; font-weight: 800; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; }
+
+        .container { padding: 40px 5%; }
+        .header { text-align: center; margin-bottom: 40px; }
+        h1 { font-family: 'Oswald'; color: var(--primary-green); text-transform: uppercase; letter-spacing: 2px; }
+
+        .attendance-table, .records-table {
+            width: 100%; max-width: 1000px;
+            margin: auto; background: var(--glass);
+            border-radius: 20px; border: 1px solid var(--card-border);
+            overflow: hidden; backdrop-filter: blur(10px); margin-bottom: 40px;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { background: rgba(0,0,0,0.2); padding: 15px; text-align: left; color: var(--primary-green); font-size: 0.75rem; text-transform: uppercase; }
+        td { padding: 15px; border-bottom: 1px solid var(--card-border); font-size: 0.85rem; }
+
+        .status-btn { padding: 8px 12px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; }
+        .present { background: var(--primary-green); color: black; }
+        .absent { background: var(--danger); color: white; }
+        .status-btn:disabled { opacity: 0.2; filter: grayscale(1); }
+        .active-selection { outline: 3px solid var(--text-color); transform: scale(1.05); }
+
+        .summary-card {
+            max-width: 1000px; margin: 30px auto; padding: 20px;
+            background: rgba(16, 185, 129, 0.1); border-radius: 15px;
+            border: 1px solid var(--primary-green); text-align: center;
+        }
+
+        input[type="password"] { background: var(--glass); border: 1px solid var(--card-border); color: var(--text-color); padding: 10px; border-radius: 8px; text-align: center; }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <nav class="top-nav">
+        <a href="index.html" class="nav-link"><i class="fas fa-arrow-left"></i> BACK TO HOME</a>
+        <button onclick="toggleTheme()" style="background:none; border:none; color:var(--text-color); cursor:pointer;"><i id="themeIcon" class="fas fa-sun"></i></button>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>GENERAL SECRETARIAT LOGS</h1>
+            <p>Current Session: <span id="currentDate"></span></p>
+        </div>
+
+        <div class="attendance-table">
+            <h3 style="text-align:center; color:var(--primary-green); font-family:'Oswald'; padding-top:20px;">LIVE SITTING CHECKLIST</h3>
+            <table>
+                <thead>
+                    <tr><th>OFFICER</th><th>ACTION</th><th>LIFETIME MISSES</th><th>FINE</th></tr>
+                </thead>
+                <tbody id="attendanceBody"></tbody>
+            </table>
+        </div>
+
+        <div class="summary-card">
+            <button onclick="commitSession()" style="background:var(--primary-green); border:none; padding:15px 40px; border-radius:10px; font-weight:800; cursor:pointer; font-family:'Oswald';">SUBMIT SESSION RECORDS</button>
+        </div>
+
+        <div class="section-header" style="text-align: center; margin-top: 80px;">
+            <h2 style="font-family: 'Oswald'; color: var(--accent-gold);"><i class="fas fa-vault"></i> THE SECRETARIAT VAULT</h2>
+            <p style="font-size: 0.8rem; opacity: 0.6;">DETAILED HISTORICAL MEMBER LOGS</p>
+        </div>
+
+        <div id="authLock" class="summary-card" style="border-color: var(--accent-gold);">
+            <p>Enter 4-Digit Vault Key</p>
+            <input type="password" id="secKey" placeholder="••••" style="letter-spacing: 5px;">
+            <button onclick="unlockVault()" style="background:var(--accent-gold); color:black; padding:10px 20px; border-radius:8px; font-weight:bold; border:none; cursor:pointer; margin-left:10px;">OPEN VAULT</button>
+        </div>
+
+        <div id="vaultContent" style="display: none;">
+            <div class="records-table" style="border-color: var(--accent-gold);">
+                <div style="padding: 15px; background: rgba(243, 156, 18, 0.1); display: flex; justify-content: space-between;">
+                    <span style="color:var(--accent-gold); font-weight:bold;">FULL HISTORY TABLE</span>
+                    <button onclick="lockVault()" style="background:none; border:1px solid var(--danger); color:var(--danger); cursor:pointer; border-radius:4px;">CLOSE VAULT</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr id="vaultHeader">
+                                <th>DATE/TIME</th>
+                                </tr>
+                        </thead>
+                        <tbody id="vaultBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const members = ["President", "Vice President", "Gen. Sec", "Asst. Gen Sec", "Fin. Sec", "Treasurer", "P.R.O", "Sports Dir", "Welfare Dir"];
+        
+        // Data structure: stats (totals) and fullLog (every single entry)
+        let stats = JSON.parse(localStorage.getItem('exec_stats')) || members.map(m => ({ name: m, totalMisses: 0 }));
+        let fullLog = JSON.parse(localStorage.getItem('exec_full_log')) || [];
+        let currentSession = members.map(() => null);
+
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString();
+
+        function renderAttendance() {
+            const body = document.getElementById('attendanceBody');
+            body.innerHTML = stats.map((m, i) => {
+                const fine = Math.floor(m.totalMisses / 4) * 2500;
+                const isDecided = currentSession[i] !== null;
+                return `
+                    <tr>
+                        <td><b>${m.name}</b></td>
+                        <td>
+                            <button class="status-btn present ${currentSession[i]==='P'?'active-selection':''}" onclick="mark(${i}, 'P')" ${isDecided?'disabled':''}>P</button>
+                            <button class="status-btn absent ${currentSession[i]==='A'?'active-selection':''}" onclick="mark(${i}, 'A')" ${isDecided?'disabled':''}>A</button>
+                        </td>
+                        <td>${m.totalMisses}</td>
+                        <td><span style="color:${fine>0?'var(--danger)':'inherit'}">₦${fine.toLocaleString()}</span></td>
+                    </tr>`;
+            }).join('');
+        }
+
+        function mark(i, status) { currentSession[i] = status; renderAttendance(); }
+
+        function commitSession() {
+            if (currentSession.includes(null)) return alert("Mark all members first.");
+            
+            const timestamp = new Date().toLocaleString();
+            
+            // 1. Update Cumulative Stats
+            currentSession.forEach((status, i) => { if (status === 'A') stats[i].totalMisses += 1; });
+            
+            // 2. Add to Full Historical Log
+            const sessionEntry = { time: timestamp, attendance: [...currentSession] };
+            fullLog.push(sessionEntry);
+
+            localStorage.setItem('exec_stats', JSON.stringify(stats));
+            localStorage.setItem('exec_full_log', JSON.stringify(fullLog));
+
+            alert("Records Vaulted Successfully.");
+            currentSession = members.map(() => null);
+            renderAttendance();
+        }
+
+        // --- VAULT LOGIC ---
+        function unlockVault() {
+            if (document.getElementById('secKey').value === "1234") {
+                document.getElementById('authLock').style.display = 'none';
+                document.getElementById('vaultContent').style.display = 'block';
+                renderVaultTable();
+            } else alert("Invalid Key.");
+        }
+
+        function lockVault() {
+            document.getElementById('secKey').value = '';
+            document.getElementById('authLock').style.display = 'block';
+            document.getElementById('vaultContent').style.display = 'none';
+        }
+
+        function renderVaultTable() {
+            const header = document.getElementById('vaultHeader');
+            const body = document.getElementById('vaultBody');
+
+            // Set Headers (Date + 9 Member Names)
+            header.innerHTML = `<th>TIMESTAMP</th>` + members.map(m => `<th>${m}</th>`).join('');
+
+            // Set Rows (Each row is one meeting)
+            body.innerHTML = fullLog.slice().reverse().map(entry => {
+                const cells = entry.attendance.map(status => {
+                    const color = status === 'P' ? 'var(--primary-green)' : 'var(--danger)';
+                    return `<td style="color:${color}; font-weight:bold; text-align:center;">${status}</td>`;
+                }).join('');
+                return `<tr><td><small>${entry.time}</small></td>${cells}</tr>`;
+            }).join('');
+        }
+
+        function toggleTheme() {
+            const b = document.body;
+            const isDark = b.getAttribute('data-theme') === 'dark';
+            b.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('themeIcon').className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        renderAttendance();
+    </script>
+</body>
+</html>

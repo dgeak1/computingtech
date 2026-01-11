@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Board | 9-Member Persistent Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-overlay: rgba(6, 78, 59, 0.9);
+            --card-bg: rgba(22, 66, 10, 0.95);
+            --text-main: #ffffff;
+            --emerald: #10b981;
+            --deep-green: #064e3b;
+        }
+
+        [data-theme="light"] {
+            --bg-overlay: rgba(240, 253, 244, 0.95);
+            --card-bg: #ffffff;
+            --text-main: #064e3b;
+            --emerald: #059669;
+        }
+
+        body, html { margin: 0; padding: 0; min-height: 100vh; font-family: 'Poppins', sans-serif; transition: 0.3s; overflow-x: hidden; }
+
+        .page-container {
+            background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
+                        url('https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=1950&q=80');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-bottom: 80px;
+        }
+
+        .controls { position: absolute; top: 30px; left: 30px; display: flex; gap: 10px; z-index: 1000; }
+        .user-info { position: absolute; top: 30px; right: 30px; color: var(--text-main); font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        
+        .btn-ui { background: rgba(255, 255, 255, 0.1); color: var(--text-main); border: 1px solid var(--emerald); padding: 10px 20px; border-radius: 8px; cursor: pointer; backdrop-filter: blur(10px); font-weight: 600; font-size: 0.8rem; transition: 0.3s; text-decoration: none; }
+        .btn-ui:hover { background: var(--emerald); color: white; }
+
+        /* Gallery System (9 Members) */
+        .gallery-wrapper { width: 95%; max-width: 1300px; margin-top: 120px; position: relative; display: flex; align-items: center; }
+        .faculty-gallery { display: flex; overflow-x: auto; gap: 20px; padding: 20px 0; scroll-behavior: smooth; scrollbar-width: none; width: 100%; }
+        .faculty-gallery::-webkit-scrollbar { display: none; }
+        
+        .scroll-btn { background: var(--emerald); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 10; font-weight: bold; position: absolute; }
+        .scroll-left { left: -20px; }
+        .scroll-right { right: -20px; }
+
+        .member-card { flex: 0 0 280px; background: var(--card-bg); border-radius: 20px; padding: 30px 20px; text-align: center; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .member-image { width: 120px; height: 120px; border-radius: 20px; object-fit: cover; border: 4px solid var(--emerald); margin-bottom: 20px; }
+        .member-name { color: var(--emerald); font-size: 1.1rem; font-weight: 700; margin: 0; }
+        .member-role { color: #aaa; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+
+        /* Panels */
+        .panel-box { width: 90%; max-width: 1000px; margin-top: 40px; background: var(--card-bg); border-radius: 20px; padding: 25px; border: 1px solid var(--emerald); }
+        table { width: 100%; border-collapse: collapse; color: white; margin-top: 15px; }
+        th { text-align: left; color: var(--emerald); border-bottom: 2px solid var(--emerald); padding: 12px; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
+        .pending { background: #f59e0b; color: #000; }
+        .approved { background: #10b981; color: #fff; }
+
+        /* Modals */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center; }
+        .modal-box { background: var(--card-bg); padding: 40px; border-radius: 25px; text-align: center; width: 400px; border: 1px solid var(--emerald); position: relative; }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid var(--emerald); background: rgba(0,0,0,0.2); color: white; box-sizing: border-box; }
+        .back-modal { position: absolute; top: 20px; left: 20px; cursor: pointer; color: var(--emerald); font-size: 0.8rem; border: none; background: none; }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div id="authModal" class="modal-overlay" style="display: flex;">
+        <div class="modal-box">
+            <h2 style="color: var(--emerald); margin-top:0;">Student Access</h2>
+            <p style="color: #888; font-size: 0.85rem;">Login with your username to see your requests</p>
+            <input type="text" id="loginUser" placeholder="Username (e.g., Alex_2026)">
+            <button class="btn-ui" style="width: 100%; margin-top:10px;" onclick="handleLogin()">Login / Enter</button>
+        </div>
+    </div>
+
+    <div class="page-container">
+        <div class="controls">
+            <a href="index.html" class="btn-ui">🏠 HOME</a>
+            <button class="btn-ui" onclick="toggleTheme()">🌓 THEME</button>
+            <button class="btn-ui" onclick="adminLogin()" style="border-color: #f59e0b;">🔑 GEN SEC LOGIN</button>
+        </div>
+
+        <div class="user-info">
+            <span id="displayUser" style="color: var(--emerald);">Guest</span>
+            <button class="btn-ui" onclick="logout()" style="padding: 5px 10px; border-color: #ff4444;">Logout</button>
+        </div>
+
+        <h1 style="color: white; margin-top: 100px; text-align: center;">Faculty Executive Board</h1>
+
+        <div class="gallery-wrapper">
+            <button class="scroll-btn scroll-left" onclick="sideScroll('left')">&#10094;</button>
+            <div class="faculty-gallery" id="gallery">
+                <div class="member-card"><img src="backggg.jfif" class="member-image"><p class="member-role">President</p><h4 class="member-name">Ajiferuke Ridwanullahi</h4></div>
+                <div class="member-card"><img src="BGG2.jpg" class="member-image"><p class="member-role">Vice President</p><h4 class="member-name">Armani</h4></div>
+                <div class="member-card"><img src="newbg.JPG" class="member-image"><p class="member-role">General Secretary</p><h4 class="member-name">Obidare Ibrahim</h4></div>
+                <div class="member-card"><img src="IMG_9202.JPG" class="member-image"><p class="member-role">Asst. Gen Secretary</p><h4 class="member-name">Muslimah</h4></div>
+                <div class="member-card"><img src="IMG_9196.JPG" class="member-image"><p class="member-role">Financial Secretary</p><h4 class="member-name">Oyenike Blessing</h4></div>
+                <div class="member-card"><img src="newbg - Copy.JPG" class="member-image"><p class="member-role">Welfare Director</p><h4 class="member-name">Editor</h4></div>
+                <div class="member-card"><img src="newbg.JPG" class="member-image"><p class="member-role">PRO</p><h4 class="member-name">Muller</h4></div>
+                <div class="member-card"><img src="newbg.JPG" class="member-image"><p class="member-role">Sports Director</p><h4 class="member-name">Marcos</h4></div>
+                <div class="member-card"><img src="newbg.JPG" class="member-image"><p class="member-role">Social Director</p><h4 class="member-name">Zachh</h4></div>
+            </div>
+            <button class="scroll-btn scroll-right" onclick="sideScroll('right')">&#10095;</button>
+        </div>
+
+        <div class="panel-box">
+            <h3 style="margin-top:0; color:var(--emerald);">My Request History</h3>
+            <div id="userTracker"></div>
+        </div>
+
+        <div id="adminPanel" class="panel-box" style="display: none; border-color: #f59e0b;">
+            <h3 style="margin-top:0; color:#f59e0b;">Gen Sec Master Control (All Users)</h3>
+            <table>
+                <thead>
+                    <tr><th>User</th><th>Gmail</th><th>Details</th><th>Status</th><th>Action</th></tr>
+                </thead>
+                <tbody id="adminBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <button class="btn-ui" style="position: fixed; bottom: 30px; right: 30px; padding: 18px 30px; border-radius: 50px; background: var(--deep-green); box-shadow: 0 10px 30px rgba(0,0,0,0.5);" onclick="openDesk()">
+        💬 GEN SEC LIVE DESK
+    </button>
+
+    <div id="deskModal" class="modal-overlay">
+        <div class="modal-box" style="width: 450px;">
+            <button class="back-modal" onclick="closeDesk()">&#8592; BACK</button>
+            <h3 style="color: var(--emerald); margin-top: 30px;">New Request</h3>
+            <input type="email" id="reqEmail" placeholder="Your Gmail">
+            <textarea id="reqDetails" placeholder="Details..."></textarea>
+            <button class="btn-ui" style="width: 100%; margin-top:20px;" onclick="submitRequest()">Submit</button>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = "";
+        // Load data from localStorage or start with empty array
+        let db = JSON.parse(localStorage.getItem('faculty_db')) || [];
+
+        function handleLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            if(user.length < 3) return alert("Username too short!");
+            currentUser = user;
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('displayUser').innerText = "👤 " + currentUser;
+            renderUI();
+        }
+
+        function logout() {
+            currentUser = "";
+            document.getElementById('authModal').style.display = 'flex';
+            document.getElementById('loginUser').value = "";
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        function adminLogin() {
+            if(prompt("Enter Gen Sec Password:") === "1234") {
+                document.getElementById('adminPanel').style.display = 'block';
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }
+        }
+
+        function sideScroll(dir) {
+            const gallery = document.getElementById('gallery');
+            gallery.scrollBy({ left: dir === 'left' ? -300 : 300, behavior: 'smooth' });
+        }
+
+        function openDesk() { document.getElementById('deskModal').style.display = 'flex'; }
+        function closeDesk() { document.getElementById('deskModal').style.display = 'none'; }
+
+        function submitRequest() {
+            const email = document.getElementById('reqEmail').value;
+            const details = document.getElementById('reqDetails').value;
+            if(!email.includes('@')) return alert("Invalid Email");
+
+            db.push({
+                id: Date.now(),
+                user: currentUser,
+                email: email,
+                details: details,
+                status: 'Pending'
+            });
+
+            saveAndRender();
+            closeDesk();
+        }
+
+        function approve(id) {
+            const index = db.findIndex(item => item.id === id);
+            if(index !== -1) {
+                db[index].status = 'Approved';
+                saveAndRender();
+            }
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('faculty_db', JSON.stringify(db));
+            renderUI();
+        }
+
+        function renderUI() {
+            // User Specific Tracker
+            const tracker = document.getElementById('userTracker');
+            const myData = db.filter(item => item.user === currentUser);
+            
+            tracker.innerHTML = myData.length === 0 
+                ? `<p style="opacity:0.5; font-size:0.85rem;">No history found for "${currentUser}".</p>`
+                : myData.map(item => `
+                    
+                        <span class="badge ${item.status === 'Pending' ? 'pending' : 'approved'}">${item.status}</span>
+                    </div>
+                `).join('');
+
+            // Admin Panel
+            const adminBody = document.getElementById('adminBody');
+            adminBody.innerHTML = db.map(item => `
+                <tr>
+                    <td><strong>${item.user}</strong></td>
+                    <td>${item.email}</td>
+                    <td>${item.details}</td>
+                    <td><span class="badge ${item.status === 'Pending' ? 'pending' : 'approved'}">${item.status}</span></td>
+                    <td>
+                        ${item.status === 'Pending' ? `<button onclick="approve(${item.id})" style="background:#10b981; border:none; color:white; padding:5px 10px; border-radius:4px; cursor:pointer;">Approve</button>` : '✅'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dues Payment | School Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #0a1f0a;
+            --accent-green: #2ecc71;
+            --soft-bg: #f4f9f4;
+            --text-main: #1a2e1a;
+            --card-white: #ffffff;
+            --warning-orange: #f39c12;
+            --error-red: #e74c3c;
+        }
+
+        body.dark-mode {
+            --soft-bg: #050a05;
+            --text-main: #e0eadd;
+            --card-white: #0d1b11;
+            --primary-green: #000000;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--soft-bg);
+            color: var(--text-main);
+            margin: 0;
+            transition: 0.3s;
+        }
+
+        /* Nav & Header */
+        nav { background: #000; padding: 15px; text-align: center; display: flex; justify-content: center; gap: 25px; }
+        nav a { color: var(--accent-green); text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .mode-toggle { color: var(--accent-green); cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+
+        header {
+            background: var(--primary-green);
+            color: white;
+            padding: 2.5rem;
+            text-align: center;
+            border-bottom: 4px solid var(--accent-green);
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 2.5rem auto;
+            padding: 2.5rem;
+            background: var(--card-white);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        /* Deadline Card Styling */
+        .deadline-card {
+            background: rgba(243, 156, 18, 0.05);
+            border: 2px dashed var(--warning-orange);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: -12px;
+            right: 15px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+
+        .on-time { background: var(--accent-green); color: black; }
+        .late { background: var(--error-red); color: white; }
+
+        /* Payment Logic UI */
+        .payment-box {
+            background: var(--primary-green);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .amount-display { font-size: 3rem; font-weight: bold; color: var(--accent-green); margin: 10px 0; }
+
+        .fine-check {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .pay-btn {
+            background: var(--accent-green);
+            color: var(--primary-green);
+            width: 100%;
+            padding: 18px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .pay-btn:hover { background: white; transform: scale(1.02); }
+
+        /* Help Desk Bubble */
+        .help-bubble {
+            position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px;
+            background: var(--accent-green); border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 1000;
+        }
+
+        .chat-window {
+            position: fixed; bottom: 100px; right: 25px; width: 300px;
+            background: var(--card-white); border: 1px solid var(--accent-green);
+            border-radius: 15px; display: none; flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 1000;
+        }
+
+        .chat-header { background: var(--accent-green); color: black; padding: 15px; font-weight: bold; }
+        .chat-body { height: 200px; padding: 15px; overflow-y: auto; font-size: 0.85rem; }
+        .chat-input { padding: 10px; border-top: 1px solid rgba(0,0,0,0.1); display: flex; }
+        .chat-input input { flex: 1; border: none; outline: none; background: transparent; color: inherit; }
+
+        footer { padding: 2rem; text-align: center; font-size: 0.8rem; opacity: 0.6; }
+    </style>
+</head>
+<body id="mainBody">
+
+<nav>
+    <a href="index.html"><i class="fas fa-university"></i> School Hub</a>
+    <a href="index.html"><i class="fas fa-home"></i> Home</a>
+    <span class="mode-toggle" onclick="toggleMode()"><i class="fas fa-adjust"></i> Toggle Mode</span>
+</nav>
+
+<header>
+    <h1>Dues Payment</h1>
+</header>
+
+<div class="container">
+    <h2>Dues Payment Deadline</h2>
+    <p style="opacity: 0.7; font-size: 0.9rem;">Pay your faculty and departmental dues before the deadline.</p>
+
+    <div class="deadline-card" id="cardBorder">
+        <div id="statusBadge" class="status-badge">...</div>
+        <h3 style="margin:0; color:var(--warning-orange);"><i class="fas fa-calendar-alt"></i> Deadline</h3>
+        <div style="font-size: 1.4rem; font-weight: bold; margin: 10px 0;">15th of next month</div>
+        <p id="dateMsg" style="font-size: 0.8rem; margin:0;"></p>
+    </div>
+
+    <div class="payment-box">
+        <p style="margin:0; opacity: 0.8; font-size: 0.8rem;">Payment Amount:</p>
+        <div class="amount-display">₦<span id="priceDisplay">5000</span></div>
+        
+        <div class="fine-check">
+            <input type="checkbox" id="fineCheck" onchange="manualPrice()">
+            <label for="fineCheck">Add Late Fine (₦2,500)</label>
+        </div>
+
+        <button class="pay-btn" onclick="window.location.href='#';">  
+            Go Pay Now <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+</div>
+
+<div class="help-bubble" onclick="toggleChat()"><i class="fas fa-robot"></i></div>
+<div class="chat-window" id="chatWindow">
+    <div class="chat-header">Equity AI Help Desk</div>
+    <div class="chat-body" id="chatBody">
+        <div style="color:var(--accent-green)">[AI]: Hello! I'm your School Hub assistant. How is your day going? 😊</div>
+    </div>
+    <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Say hello..." onkeypress="if(event.key==='Enter') speak()">
+        <i class="fas fa-paper-plane" style="color:var(--accent-green); cursor:pointer;" onclick="speak()"></i>
+    </div>
+</div>
+
+<footer>
+    Developed by <strong>Equity Crew 26</strong> © 2026
+</footer>
+
+<script>
+    const DEADLINE_DAY = 15; // 15th of the month
+    const BASE_DUES = 5000;
+    const FINE = 2500;
+
+    function checkDate() {
+        const today = new Date();
+        const currentDay = today.getDate();
+        const checkbox = document.getElementById('fineCheck');
+        const badge = document.getElementById('statusBadge');
+        const msg = document.getElementById('dateMsg');
+
+        // Logic: If current date is past the 15th
+        if (currentDay > DEADLINE_DAY) {
+            checkbox.checked = true;
+            checkbox.disabled = true;
+            badge.innerText = "LATE";
+            badge.className = "status-badge late";
+            msg.innerHTML = "⚠️ The deadline has passed. Late fine applied.";
+            document.getElementById('cardBorder').style.borderColor = "var(--error-red)";
+        } else {
+            badge.innerText = "ON TIME";
+            badge.className = "status-badge on-time";
+            msg.innerHTML = "✅ You are within the safe payment window.";
+        }
+        manualPrice();
+    }
+
+    function manualPrice() {
+        const check = document.getElementById('fineCheck').checked;
+        document.getElementById('priceDisplay').innerText = check ? (BASE_DUES + FINE) : BASE_DUES;
+    }
+
+    function toggleMode() { document.body.classList.toggle('dark-mode'); }
+
+    function toggleChat() {
+        const win = document.getElementById('chatWindow');
+        win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function speak() {
+        const box = document.getElementById('chatInput');
+        const body = document.getElementById('chatBody');
+        if(!box.value) return;
+
+        body.innerHTML += `<div style="text-align:right; margin-bottom:8px;"><b>You:</b> ${box.value}</div>`;
+        
+        setTimeout(() => {
+            body.innerHTML += `<div style="color:var(--accent-green); margin-bottom:8px;"><b>AI:</b> That's great to hear! Keep pushing toward excellence today. 🚀</div>`;
+            body.scrollTop = body.scrollHeight;
+        }, 800);
+        box.value = "";
+    }
+
+    window.onload = checkDate;
+</script>
+
+</body>
+</html>

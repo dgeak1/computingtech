@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DG Vault | Command Center</title>
+    <style>
+        :root {
+            --neon-green: #2ecc71;
+            --deep-dark: #020802;
+            --panel-bg: #0a140a;
+            --accent-blue: #00f2ff;
+            --border-glow: rgba(46, 204, 113, 0.2);
+        }
+
+        body {
+            background-color: var(--deep-dark);
+            color: var(--neon-green);
+            font-family: 'Fira Code', 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Top Status Bar */
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(0,0,0,0.8);
+            border-bottom: 1px solid var(--neon-green);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+
+        /* Grid Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 20px;
+            padding: 20px;
+            height: calc(100vh - 60px);
+        }
+
+        /* General Panel Style */
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Left Menu: Categories */
+        .sidebar-menu a {
+            display: block;
+            color: var(--neon-green);
+            text-decoration: none;
+            padding: 12px;
+            border: 1px solid transparent;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(46, 204, 113, 0.1);
+            border-color: var(--neon-green);
+        }
+
+        /* Center: Hero/Stats */
+        .hero {
+            text-align: center;
+            justify-content: center;
+            border: 1px solid var(--neon-green);
+            background: radial-gradient(circle, #0a1f0a 0%, #020802 100%);
+        }
+
+        .hero h1 { font-size: 3rem; margin: 0; letter-spacing: 5px; text-shadow: 0 0 20px var(--neon-green); }
+
+        /* Stats Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: #000;
+            padding: 15px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .stat-val { font-size: 1.5rem; color: #fff; }
+
+        /* Right: Live Logs */
+        .log-feed {
+            font-size: 0.7rem;
+            flex-grow: 1;
+            overflow-y: auto;
+            background: #000;
+            padding: 10px;
+        }
+
+        .log-entry { margin-bottom: 5px; border-bottom: 1px solid #111; padding-bottom: 3px; }
+        .log-time { color: var(--accent-blue); margin-right: 10px; }
+
+        /* Action Button */
+        .big-btn {
+            background: var(--neon-green);
+            color: #000;
+            padding: 20px;
+            border: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .big-btn:hover { background: #fff; transform: scale(1.05); }
+
+    </style>
+</head>
+<body>
+
+    <div class="status-header">
+        <span>SECURITY: LEVEL_MAX</span>
+        <span>ACCESS_GRANTED: DOLAPO_AUTH</span>
+        <span id="liveClock">00:00:00</span>
+    </div>
+
+    <div class="dashboard">
+        
+        <aside class="panel sidebar-menu">
+            <h4 style="border-bottom: 1px solid #333; padding-bottom: 10px;">DIRECTORIES</h4>
+            <a href="devops_vault.html">⚡ DevOps Terminal</a>
+            <a href="#">🧠 ML Frameworks</a>
+            <a href="#">🛡️ Security Logs</a>
+            <a href="#">📡 Cloud Metrics</a>
+            <div style="margin-top: auto;">
+                <button onclick="window.location.href='index.html'" style="width:100%; padding:10px; background:none; border: 1px solid #ff5f56; color:#ff5f56; cursor:pointer;">LOCK VAULT</button>
+            </div>
+        </aside>
+
+        <main class="panel hero">
+            <div style="opacity: 0.5; font-size: 0.8rem;">DG VAULT SYSTEM CORE v4.0</div>
+            <h1>SECURE HUB</h1>
+            <p>Ready to deploy Machine Learning kernels across 1,024 nodes.</p>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div style="font-size: 0.7rem;">TOTAL SCRIPTS</div>
+                    <div class="stat-val">1,024</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-size: 0.7rem;">SYSTEM UPTIME</div>
+                    <div class="stat-val">99.9%</div>
+                </div>
+            </div>
+
+            <button class="big-btn" onclick="window.location.href='devops_vault.html'">INITIALIZE EXECUTION ENGINE</button>
+        </main>
+
+        <aside class="panel">
+            <h4 style="margin-top: 0;">LIVE MONITOR</h4>
+            <div class="log-feed" id="logFeed">
+                </div>
+            <div style="margin-top: 15px;">
+                <div style="font-size: 0.7rem;">CPU NEURAL LOAD</div>
+                <div style="width: 100%; height: 5px; background: #222; margin-top: 5px;">
+                    <div style="width: 65%; height: 100%; background: var(--neon-green);"></div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // Live Clock
+        setInterval(() => {
+            document.getElementById('liveClock').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+
+        // Simulated Logs
+        const logFeed = document.getElementById('logFeed');
+        const messages = [
+            "Syncing ML Cluster...",
+            "Encrypting Local Assets...",
+            "Node 77 Active",
+            "Checking Docker Hub...",
+            "Security Sweep: CLEAN",
+            "Parsing Metadata..."
+        ];
+
+        function addLog() {
+            const time = new Date().toLocaleTimeString([], {hour12: false});
+            const msg = messages[Math.floor(Math.random() * messages.length)];
+            const entry = `<div class="log-entry"><span class="log-time">${time}</span> ${msg}</div>`;
+            logFeed.innerHTML = entry + logFeed.innerHTML;
+            if(logFeed.children.length > 15) logFeed.lastChild.remove();
+        }
+
+        setInterval(addLog, 2000);
+    </script>
+</body>
+</html>

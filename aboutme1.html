@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office of the General Secretary | 2026 Hub</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-green: #04241c;
+            --forest: #064e3b;
+            --emerald: #10b981;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --pure-white: #ffffff;
+            --black: #000000;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body { background-color: var(--deep-green); color: var(--pure-white); font-family: 'Inter', sans-serif; margin: 0; line-height: 1.6; }
+
+        .action-bar { padding: 30px; display: flex; justify-content: space-between; max-width: 1100px; margin: 0 auto; align-items: center; }
+        .nav-pill { background: var(--black); border: 1px solid var(--emerald); color: white; padding: 10px 22px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; transition: var(--transition); }
+        .nav-pill:hover { background: var(--emerald); color: var(--black); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+
+        .wide-container { max-width: 1100px; margin: 0 auto 40px; padding: 0 20px; }
+
+        /* --- Executive Profile --- */
+        .executive-box { background: linear-gradient(145deg, var(--forest), var(--deep-green)); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 32px; display: flex; align-items: center; padding: 50px; gap: 50px; margin-bottom: 50px; }
+        .ornate-frame { width: 260px; height: 340px; background: var(--black); border: 8px solid var(--black); outline: 2px solid var(--emerald); overflow: hidden; position: relative; flex-shrink: 0; cursor: pointer; transition: var(--transition); border-radius: 4px; }
+        .image-overlay { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, #04241c, #04241c 10px, #000 10px, #000 20px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; transition: opacity 0.5s; }
+        .profile-img { width: 100%; height: 100%; object-fit: cover; filter: blur(25px); transition: filter 0.8s ease; }
+
+        /* --- Forms & Portals --- */
+        .portal-toggle { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 35px; }
+        .option-card { background: var(--card-bg); border: 1px solid rgba(16, 185, 129, 0.1); padding: 25px; border-radius: 20px; cursor: pointer; text-align: center; transition: var(--transition); }
+        .option-card.active { border-color: var(--emerald); background: rgba(16, 185, 129, 0.12); transform: translateY(-5px); }
+        .request-form { background: var(--card-bg); padding: 45px; border-radius: 28px; border: 1px solid rgba(255,255,255,0.05); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
+        label { display: block; font-size: 0.75rem; color: var(--emerald); text-transform: uppercase; margin-bottom: 10px; font-weight: 700; }
+        input, textarea { width: 100%; padding: 16px; background: var(--black); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; color: white; box-sizing: border-box; }
+        .btn-submit { width: 100%; padding: 20px; background: var(--emerald); color: var(--deep-green); border: none; border-radius: 14px; font-weight: 800; cursor: pointer; margin-top: 25px; }
+
+        .legislative-section { background: rgba(255, 255, 255, 0.02); padding: 40px; border-radius: 28px; border: 1px solid rgba(16, 185, 129, 0.1); margin-top: 60px; }
+        .section-title { font-family: 'Playfair Display'; font-size: 1.8rem; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
+        .section-title i { color: var(--emerald); }
+        
+        .download-card { background: var(--black); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px 30px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; transition: var(--transition); }
+        .download-card:hover { border-color: var(--emerald); background: rgba(16, 185, 129, 0.03); }
+        .file-info h4 { margin: 0; font-size: 1.05rem; }
+        .file-info p { margin: 5px 0 0; font-size: 0.8rem; opacity: 0.6; }
+        
+        .btn-download { background: transparent; border: 1px solid var(--emerald); color: var(--emerald); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .btn-download:hover { background: var(--emerald); color: var(--black); }
+
+        .hidden { display: none; }
+
+        @media print {
+            body { display: none !important; }
+        }
+
+        .screenshot-guard {
+            position: absolute; inset: 0; pointer-events: none;
+            background: repeating-linear-gradient(45deg, rgba(16, 185, 129, 0.02), rgba(16, 185, 129, 0.02) 10px, transparent 10px, transparent 20px);
+            display: none; z-index: 5;
+        }
+
+        .secure-mode { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+    </style>
+</head>
+<body>
+
+    <nav class="action-bar">
+        <h2 style="font-family: 'Playfair Display'; margin:0; cursor: pointer;" onclick="location.reload()">EQUITY <span style="color:var(--emerald)">'26</span></h2>
+        <div class="nav-right-group" style="display: flex; gap:12px;">
+             <a href="index.html" style="color: white; text-decoration: none; padding: 10px; border-radius: 10px; font-size: small; background-color: #04241c; border: 1px solid white;"> Back to Home </a>
+            <button onclick="switchView('admin')" class="nav-pill"><i class="ph ph-shield-check"></i> Secretariat Vault</button>
+        </div>
+    </nav>
+
+    <main class="wide-container">
+        <header class="executive-box">
+            <div class="ornate-frame" id="secureContainer">
+                <div id="imageLock" class="image-overlay" onclick="requestImageAccess()">
+                    <i class="ph ph-lock-key" style="font-size: 2rem; color: var(--emerald); margin-bottom: 10px;"></i>
+                    <div style="color: var(--emerald); font-family: monospace; font-size: 0.7rem; font-weight: bold;">CLICK TO UNLOCK</div>
+                </div>
+                
+                <img src="../new pattern/newbg.JPG" 
+                     class="profile-img secure-mode" 
+                     id="secret-img" 
+                     oncontextmenu="return false;" 
+                     ondragstart="return false;">
+                
+                <div id="screenshotGuard" class="screenshot-guard"></div>
+            </div>
+
+            <div class="info-side">
+                <span style="color:var(--emerald); text-transform:uppercase; font-size:0.75rem; letter-spacing:3px; font-weight:700;">Administrative Head</span>
+                <h1 style="font-family:'Playfair Display'; font-size:2.5rem; margin:10px 0;">Office of the General Secretary</h1>
+                <h2 style="color: var(--emerald); font-weight: 400;">Comr. Obidare Ibrahim Boluwatife</h2>
+                <p style="opacity: 0.7; max-width: 600px;">Ensuring institutional integrity and administrative excellence for the 2026 Academic Session.</p>
+            </div>
+        </header>
+
+        <section id="studentPortal">
+            <div class="portal-toggle">
+                <div class="option-card active" onclick="setDoc('Introductory Letter', this)">
+                    <i class="ph ph-envelope-open"></i>
+                    <div>Introductory Letter</div>
+                </div>
+                <div class="option-card active" onclick="setDoc('Proficiency Cert', this)">
+                    <i class="ph ph-certificate"></i>
+                    <div>Proficiency Cert</div>
+                </div>
+                <div class="option-card acive" onclick="setDoc('General Request', this)">
+                    <i class="ph ph-file-text"></i>
+                    <div>General Request</div>
+                </div>
+            </div>
+
+            <form class="request-form" id="mainForm">
+                <input type="hidden" id="selectedType" value="Introductory Letter">
+                <div class="form-grid">
+                    <div><label>Full Name</label><input type="text" id="sName" placeholder="Legal Name" required></div>
+                    <div><label>Matric No</label><input type="text" id="sMatric" placeholder="SW2026/..." required></div>
+                </div>
+                <div id="introBox" style="display: block; margin-top:20px;">
+                    <label>Addressed To (Organization & Address)</label>
+                    <textarea id="sAddress" rows="4" placeholder="To: The Manager..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Submit Official Request</button>
+            </form>
+        </section>
+
+        <section id="adminPortal" class="hidden">
+            <div id="adminTable"></div>
+        </section>
+
+        <section class="legislative-section">
+            <div class="section-title"><i class="ph ph-books"></i><span>Legislative Repository</span></div>
+            <div id="repoList">
+                <div class="download-card">
+                    <div class="file-info">
+                        <h4>Constitution Draft (2026 Version)</h4>
+                        <p>PDF Document • Official Governing Protocols & Student Rights</p>
+                    </div>
+                    <button class="btn-download" onclick="downloadFile('Constitution_Draft_2026.pdf')">
+                        <i class="ph ph-download-simple"></i> Download
+                    </button>
+                </div>
+                </div>
+        </section>
+    </main>
+
+    <script>
+        const MASTER_PASS = "DolapoAdmin";
+
+        function switchView(view) {
+            if(view === 'admin') {
+                const pass = prompt("Enter Gen Sec Access Key:");
+                if(pass === MASTER_PASS) {
+                    document.getElementById('studentPortal').classList.add('hidden');
+                    document.getElementById('adminPortal').classList.remove('hidden');
+                    loadAdminData();
+                } else if (pass !== null) { alert("You cant access this page."); }
+            } else {
+                document.getElementById('studentPortal').classList.remove('hidden');
+                document.getElementById('adminPortal').classList.add('hidden');
+            }
+        }
+
+        function requestImageAccess() {
+            const password = prompt("Subscription Password Required:");
+            if (password === MASTER_PASS) {
+                document.getElementById('imageLock').style.display = 'none';
+                document.getElementById('secret-img').style.filter = 'blur(0px)';
+                document.getElementById('screenshotGuard').style.display = 'block';
+                startSecurityMonitor();
+            } else if (password !== null) { alert("Access Denied."); }
+        }
+
+        function startSecurityMonitor() {
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey && (e.key === 'p' || e.key === 's' || e.key === 'u')) || e.key === 'PrintScreen') {
+                    e.preventDefault();
+                    alert("Security Violation: Action Blocked");
+                    location.reload();
+                }
+            });
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) location.reload();
+            });
+        }
+
+        function setDoc(type, el) {
+            document.getElementById('selectedType').value = type;
+            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('introBox').style.display = (type === 'Introductory Letter') ? 'block' : 'none';
+        }
+
+        document.getElementById('mainForm').onsubmit = function(e) {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('sName').value,
+                matric: document.getElementById('sMatric').value,
+                type: document.getElementById('selectedType').value,
+                address: document.getElementById('sAddress').value,
+                date: new Date().toLocaleDateString()
+            };
+            let db = JSON.parse(localStorage.getItem('secretariat_db') || '[]');
+            db.push(data);
+            localStorage.setItem('secretariat_db', JSON.stringify(db));
+            alert("Request Filed Successfully!");
+            this.reset();
+        };
+
+        function loadAdminData() {
+            const db = JSON.parse(localStorage.getItem('secretariat_db') || '[]');
+            const container = document.getElementById('adminTable');
+            container.innerHTML = db.length === 0 ? "<p style='text-align:center; opacity:0.5;'>No student requests found.</p>" : 
+                db.map(req => `<div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:15px; margin-bottom:10px; border-left:4px solid var(--emerald);">
+                    <h4 style="margin:0">${req.name} (${req.matric})</h4>
+                    <p style="margin:5px 0; font-size:0.85rem; color:var(--emerald)">${req.type} | ${req.date}</p>
+                </div>`).join('');
+        }
+
+        function downloadFile(fileName) {
+            alert("Preparing download for: " + fileName);
+        }
+    </script>
+</body>
+</html>

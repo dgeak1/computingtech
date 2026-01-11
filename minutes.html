@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minutes Vault | Equity Crew 26</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #10b981;
+            --accent-gold: #fbbf24;
+            --bg-color: #020617;
+            --text-color: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --text-color: #0f172a;
+            --glass: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(0, 0, 0, 0.05);
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0; transition: 0.4s;
+        }
+
+        /* --- NAVIGATION --- */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%; background: var(--glass); backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--card-border); sticky: top;
+        }
+
+        .gold-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: black; padding: 10px 20px; border-radius: 8px;
+            font-weight: 700; border: none; cursor: pointer; text-transform: uppercase;
+        }
+
+        .container { padding: 50px 5%; max-width: 1200px; margin: auto; }
+
+        .hero-title { text-align: center; margin-bottom: 60px; }
+        .hero-title h1 { font-family: 'Oswald'; font-size: 3rem; color: var(--primary-green); letter-spacing: 4px; margin:0; }
+        .hero-title p { opacity: 0.6; font-weight: 300; }
+
+        /* --- RICH CARDS --- */
+        .glass-card {
+            background: var(--glass); border: 1px solid var(--card-border);
+            border-radius: 24px; padding: 35px; box-shadow: var(--shadow);
+            backdrop-filter: blur(20px); transition: 0.3s;
+        }
+
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.8rem; color: var(--accent-gold); }
+        input, textarea, select {
+            width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border);
+            padding: 15px; border-radius: 12px; color: var(--text-color); margin-bottom: 20px;
+        }
+
+        /* --- TABLE STYLE --- */
+        .rich-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .rich-table th { background: rgba(0,0,0,0.2); padding: 18px; color: var(--accent-gold); text-align: left; font-family: 'Oswald'; }
+        .rich-table td { padding: 18px; border-bottom: 1px solid var(--card-border); }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: 100px; padding: 60px 5%; background: rgba(0,0,0,0.2);
+            border-top: 1px solid var(--card-border); text-align: center;
+        }
+
+        .footer-logo { font-family: 'Oswald'; font-size: 1.5rem; color: var(--primary-green); margin-bottom: 10px; }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <nav class="nav-bar">
+        <a href="index.html" style="color:var(--primary-green); text-decoration:none; font-weight:bold;">← SECRETARIAT HOME</a>
+        <div>
+            <button onclick="toggleTheme()" style="background:none; border:none; color:var(--text-color); margin-right:20px; cursor:pointer;"><i id="tIcon" class="fas fa-sun"></i></button>
+            <button class="gold-btn" onclick="openVault()"><i class="fas fa-key"></i> ADMIN VAULT</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero-title">
+            <h1>MINUTES ARCHIVE</h1>
+            <p>Digitizing the Legacy of Equity Crew since 2000</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px;">
+            <div class="glass-card">
+                <h2 style="font-family:'Oswald'; color:var(--primary-green);">LOG SESSION</h2>
+                <div class="input-group">
+                    <label>MEETING TITLE</label>
+                    <input type="text" id="minTitle" placeholder="Ex: Q3 Executive Sitting">
+                    <label>MEETING DATE</label>
+                    <input type="date" id="minDate">
+                    <label>MINUTES CONTENT</label>
+                    <textarea id="minText" rows="6" placeholder="Document the deliberations..."></textarea>
+                    <button class="gold-btn" style="width:100%" onclick="saveMinutes()">SAVE TO REGISTRY</button>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h2 style="font-family:'Oswald';">RECENT REGISTRY</h2>
+                <table class="rich-table">
+                    <thead>
+                        <tr><th>DATE</th><th>TITLE</th><th>ACTION</th></tr>
+                    </thead>
+                    <tbody id="publicTable">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="adminVault" style="display:none; margin-top:50px;" class="glass-card">
+            <h2 style="color:var(--accent-gold); font-family:'Oswald';"><i class="fas fa-lock"></i> SENSITIVE DELIBERATIONS VAULT</h2>
+            <table class="rich-table">
+                <thead>
+                    <tr><th>TIMESTAMP</th><th>OFFICE</th><th>SENSITIVE NOTES</th></tr>
+                </thead>
+                <tbody id="vaultTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-logo">EQUITY CREW '26</div>
+        <p style="opacity:0.5; font-size:0.8rem;">General Secretariat Management Suite &copy; 2026<br>Office of the General Secretary</p>
+        <div style="margin-top:20px; font-size:1.2rem; gap:15px; display:flex; justify-content:center; color:var(--primary-green);">
+            <i class="fab fa-facebook"></i> <i class="fab fa-twitter"></i> <i class="fab fa-linkedin"></i>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Theme Logic
+        function toggleTheme() {
+            const b = document.body;
+            const isDark = b.getAttribute('data-theme') === 'dark';
+            b.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('tIcon').className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // 2. Populate 20 Legacy Records
+        const publicTable = document.getElementById('publicTable');
+        for(let i=1; i<=20; i++) {
+            let row = `<tr>
+                <td><small>202${6-Math.floor(i/4)}-0${(i%9)+1}</small></td>
+                <td>Legacy Minute Entry #${2000+i}</td>
+                <td><a href="#" style="color:var(--primary-green); font-size:0.7rem;">DOWNLOAD PDF</a></td>
+            </tr>`;
+            publicTable.innerHTML += row;
+        }
+
+        // 3. Save Minutes & Vault Logic
+        let secretData = JSON.parse(localStorage.getItem('minutes_vault')) || [];
+
+        function saveMinutes() {
+            const title = document.getElementById('minTitle').value;
+            const text = document.getElementById('minText').value;
+            if(!title || !text) return alert("Fill all fields");
+
+            const entry = { time: new Date().toLocaleString(), title: title, content: text };
+            secretData.push(entry);
+            localStorage.setItem('minutes_vault', JSON.stringify(secretData));
+            
+            alert("Minutes synchronized with Secure Vault.");
+            document.getElementById('minTitle').value = '';
+            document.getElementById('minText').value = '';
+        }
+
+        function openVault() {
+            const pass = prompt("Enter Administrator Password:");
+            if(pass === "1234") {
+                document.getElementById('adminVault').style.display = 'block';
+                const vBody = document.getElementById('vaultTableBody');
+                vBody.innerHTML = secretData.map(d => `
+                    <tr>
+                        <td><small>${d.time}</small></td>
+                        <td><b>${d.title}</b></td>
+                        <td style="font-size:0.8rem; opacity:0.8;">${d.content}</td>
+                    </tr>
+                `).join('');
+                window.scrollTo(0, document.body.scrollHeight);
+            } else {
+                alert("Access Denied.");
+            }
+        }
+    </script>
+</body>
+</html>

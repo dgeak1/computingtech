@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful | Equity Crew 26</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(circle at top, #064e3b, #022c22);
+            --primary-green: #10b981;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        [data-theme="dark"] {
+            --bg-gradient: radial-gradient(circle at top, #020617, #000000);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .success-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 50px;
+            border-radius: 35px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+            animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .check-container {
+            width: 80px; height: 80px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2.5rem;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+        }
+
+        h1 { font-weight: 800; margin-bottom: 10px; font-size: 1.8rem; }
+        p { color: var(--text-muted); line-height: 1.6; margin-bottom: 30px; }
+
+        .receipt-box {
+            background: rgba(0,0,0,0.2);
+            border: 1px dashed var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .receipt-row b { color: var(--primary-green); }
+
+        .btn-group { display: flex; flex-direction: column; gap: 12px; }
+        
+        .btn-main {
+            background: var(--primary-green);
+            color: white; border: none; padding: 16px;
+            border-radius: 15px; font-weight: 800; text-decoration: none;
+            transition: 0.3s; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white; border: 1px solid var(--glass-border);
+            padding: 14px; border-radius: 15px; text-decoration: none;
+            font-size: 0.85rem; transition: 0.3s;
+        }
+
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); }
+        .btn-outline:hover { background: var(--glass-bg); }
+
+        .timer-text { margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <div class="success-card">
+        <div class="check-container">
+            <i class="fas fa-check"></i>
+        </div>
+        
+        <h1>Payment Received</h1>
+        <p>Thank you for your contribution to the Equity Crew 26 projects.</p>
+
+        <div class="receipt-box">
+            <div class="receipt-row">
+                <span>Reference:</span>
+                <b id="refCode">...</b>
+            </div>
+            <div class="receipt-row">
+                <span>Amount:</span>
+                <b id="finalAmt">...</b>
+            </div>
+            <div class="receipt-row">
+                <span>Status:</span>
+                <span style="color:#10b981; font-weight:800;">VERIFIED</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-main" onclick="fetchPaystackPDF()">
+                <i class="fas fa-file-pdf"></i> Download Official PDF
+            </button>
+            <a href="feedback.html" class="btn-outline"> Return to Hub</a>
+        </div>
+
+        <div class="timer-text">
+            Redirecting to home in <span id="timer"> 15 </span> seconds...
+        </div>
+    </div>
+
+    <script>
+        // Sync Theme
+        const savedTheme = localStorage.getItem('hub-theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            
+            // Get data from URL or generate placeholder
+            const reference = params.get('reference') || params.get('ref') || 'EQT-' + Math.floor(Math.random()*1000000);
+            const amount = params.get('amount') ? '₦' + params.get('amount') : 'Verified';
+
+            document.getElementById('refCode').innerText = reference;
+            document.getElementById('finalAmt').innerText = amount;
+
+            // Countdown Timer (increased to 15s to allow time for download)
+            let timeLeft = 15;
+            const timerElement = document.getElementById('timer');
+            const countdown = setInterval(() => {
+                timeLeft--;
+                timerElement.innerText = timeLeft;
+                if(timeLeft <= 0) {
+                    clearInterval(countdown);
+                    window.location.href = "index.html";
+                }
+            }, 1000);
+        };
+
+        // function fetchPaystackPDF() {
+        //     const ref = document.getElementById('refCode').innerText;
+            
+        //     // This is the official Paystack Receipt retrieval URL pattern
+        //     // It allows users to view/download the actual financial PDF
+        //     const paystackReceiptUrl = `https://dashboard.paystack.com/receipt/${ref}`;
+            
+        //     // Opening in a new window so the redirect timer isn't interrupted
+        //     window.open(paystackReceiptUrl, '_blank');
+        // }
+        function fetchPaystackPDF() {
+    const ref = document.getElementById('refCode').innerText;
+
+    // Check if the reference is one of your fake test ones
+    if (ref.startsWith('EQT-') || ref === "...") {
+        alert("NOTE: You are in Testing Mode. Real PDF receipts are only generated for actual Paystack transactions.\n\nYour fake ref is: " + ref);
+        
+        // Option: Redirect them to a sample receipt image instead of the error page
+        // window.open('https://paystack.com/images/receipt-sample.png', '_blank'); 
+    } else {
+        // This will only run when you plug in a REAL reference
+        window.open(`https://checkout.paystack.com/${ref}/receipt`, '_blank');
+    }
+}
+    </script>
+</body>
+</html>

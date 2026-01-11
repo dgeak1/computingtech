@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Welfare Master | Equity Crew 26</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #0a1f0a;
+            --accent-green: #2ecc71;
+            --deep-black: #050a05;
+            --card-bg: #ffffff;
+            --text-color: #1a2e1a;
+            --emergency-red: #e74c3c;
+            --input-bg: rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode {
+            --primary-green: #000000;
+            --card-bg: #0d1b11;
+            --text-color: #e0eadd;
+            --deep-black: #020502;
+            --input-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body { font-family: 'Poppins', sans-serif; background-color: var(--deep-black); color: var(--text-color); margin: 0; transition: 0.3s; line-height: 1.6; }
+
+        /* Navigation */
+        .welfare-nav { padding: 15px; background: #000; text-align: center; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: center; gap: 20px; align-items: center; border-bottom: 1px solid var(--accent-green); }
+        .welfare-nav a, .mode-toggle { color: var(--accent-green); text-decoration: none; font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: 0.3s; }
+
+        header {
+            background: linear-gradient(rgba(10, 31, 10, 0.9), rgba(5, 10, 5, 1)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover; background-position: center; padding: 80px 20px; text-align: center; color: white; border-bottom: 3px solid var(--accent-green);
+        }
+
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+
+        /* Support Grid */
+        .welfare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 50px; }
+        .welfare-card {
+            background: var(--card-bg); border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--accent-green); transition: 0.3s;
+        }
+        .welfare-card i { font-size: 2.2rem; color: var(--accent-green); margin-bottom: 15px; display: block; }
+        .welfare-card h3 { margin: 10px 0; font-size: 1.3rem; color: var(--accent-green); }
+
+        /* Registry Form Section */
+        .report-section { background: var(--primary-green); color: white; padding: 40px; border-radius: 20px; margin-top: 50px; }
+        .report-form label { display: block; margin-top: 15px; font-weight: 600; font-size: 0.85rem; color: var(--accent-green); }
+        .report-form input, .report-form textarea, .report-form select {
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--input-bg); color: white; outline: none; box-sizing: border-box; font-family: 'Poppins', sans-serif;
+        }
+        .report-form select option { color: black; }
+        .submit-btn { background: var(--accent-green); color: var(--primary-green); border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; transition: 0.3s; font-size: 1rem; }
+
+        /* Admin Table */
+        #adminSection { display: none; margin-top: 50px; background: var(--card-bg); padding: 30px; border-radius: 15px; border: 2px solid var(--accent-green); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; min-width: 1000px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(46, 204, 113, 0.1); font-size: 0.85rem; }
+        th { background: var(--primary-green); color: var(--accent-green); text-transform: uppercase; }
+        .priority-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+
+        /* Help Desk */
+        .help-bubble { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: var(--accent-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 1001; color: var(--primary-green); }
+        .chat-window { position: fixed; bottom: 110px; right: 30px; width: 320px; background: var(--card-bg); border: 1px solid var(--accent-green); border-radius: 15px; display: none; flex-direction: column; z-index: 1001; box-shadow: 0 15px 40px rgba(0,0,0,0.3); overflow: hidden; }
+        .chat-header { background: var(--accent-green); padding: 15px; font-weight: bold; color: var(--primary-green); display: flex; justify-content: space-between; }
+        .chat-body { height: 250px; padding: 15px; overflow-y: auto; font-size: 0.85rem; display: flex; flex-direction: column; gap: 10px; }
+        
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr !important; }
+        }
+    </style>
+</head>
+<body id="welfareBody">
+
+    <nav class="welfare-nav">
+        <a href="index.html"><i class="fas fa-home"></i> HUB</a>
+        <a href="#report"><i class="fas fa-edit"></i> REGISTRY</a>
+        <span class="mode-toggle" onclick="toggleDarkMode()"><i class="fas fa-adjust"></i> THEME</span>
+        <a onclick="unlockAdmin()"><i class="fas fa-user-shield"></i> ADMIN</a>
+    </nav>
+
+    <header>
+        <h1>Student Welfare Registry</h1>
+        <p>Your Health, Safety, and Comfort are the Secretariat's priority.</p>
+    </header>
+
+    <div class="container">
+        <div class="welfare-grid">
+            <div class="welfare-card">
+                <i class="fas fa-clinic-medical"></i>
+                <h3>Healthcare</h3>
+                <p>24/7 Campus Clinic access. NHIS card holders get priority medication.</p>
+                <div style="color:var(--emergency-red); font-size: 0.85rem; font-weight: bold; margin-top: 10px;">
+                    <i class="fas fa-phone-alt"></i> Emergency: Call <a style="color: white; background-color: red; padding: 10px; text-decoration: none; border-radius: 20px; border: 3px solid wheat;" href="tel:07065482188"> 07065482188 </a>
+                </div>
+            </div>
+            <div class="welfare-card">
+                <i class="fas fa-bus-alt"></i>
+                <h3>Transport</h3>
+                <p>Shuttles every 15 mins. Show Faculty ID for the ₦50 subsidy discount per trip.</p>
+            </div>
+            <div class="welfare-card">
+                <i class="fas fa-brain"></i>
+                <h3>Mental Health</h3>
+                <p>Confidential counseling for academic stress and personal challenges.</p>
+            </div>
+        </div>
+
+        <div class="report-section" id="report">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 style="color:var(--accent-green); margin-bottom: 5px;">
+                    <i class="fas fa-clipboard-list"></i> Secretariat Welfare Registry
+                </h2>
+                <p style="opacity: 0.8; font-size: 0.9rem;">Submit your concerns to the Office of the General Secretary.</p>
+            </div>
+
+            <form id="welfareForm" class="report-form">
+                <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label>Full Name</label>
+                        <input type="text" id="studentName" placeholder="e.g. John Doe" required>
+
+                        <label>Matriculation Number</label>
+                        <input type="text" id="matricNo" placeholder="e.g. 21/40CC/001" required>
+
+                        <label>Phone Number (Optional)</label>
+                        <input type="tel" id="phoneNo" placeholder="e.g. 08012345678">
+                    </div>
+
+                    <div>
+                        <label>Email Address (Optional)</label>
+                        <input type="email" id="emailAdd" placeholder="e.g. john@example.com">
+
+                        <label>Category of Issue</label>
+                        <select id="category">
+                            <option value="Medical">Medical Support</option>
+                            <option value="Transport">Transport & Mobility</option>
+                            <option value="Accommodation">Hostel / Housing</option>
+                            <option value="Financial">Financial Assistance</option>
+                            <option value="Security">Security Concern</option>
+                        </select>
+
+                        <label>Urgency Level</label>
+                        <select id="priority">
+                            <option value="Normal">Normal</option>
+                            <option value="Important">Important</option>
+                            <option value="Urgent">Urgent</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label>Detailed Description</label>
+                <textarea id="description" rows="5" placeholder="Explain the situation in detail..." required></textarea>
+
+                <div style="display: flex; align-items: center; gap: 10px; margin-top: 15px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
+                    <input type="checkbox" id="consent" style="width: auto; margin: 0;" required>
+                    <label for="consent" style="font-size: 0.75rem; opacity: 0.8; margin: 0;">
+                        I authorize the Secretariat to contact me regarding this report.
+                    </label>
+                </div>
+
+                <button type="button" class="submit-btn" onclick="submitToLocal()">
+                    <i class="fas fa-paper-plane"></i> Dispatch Report
+                </button>
+            </form>
+        </div>
+
+        <div id="adminSection">
+            <h2 style="color:var(--accent-green);">Gen Sec Registry Logs</h2>
+            <table id="requestsTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Student</th>
+                        <th>Matric</th>
+                        <th>Contact</th>
+                        <th>Cat</th>
+                        <th>Priority</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+            <button onclick="clearLogs()" class="submit-btn" style="background:#444; color:white; width:auto; padding:10px 20px;">Wipe Records</button>
+        </div>
+    </div>
+
+    <div class="help-bubble" onclick="toggleChat()"><i class="fas fa-robot"></i></div>
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header"><span>Welfare AI</span><i class="fas fa-times" onclick="toggleChat()" style="cursor:pointer;"></i></div>
+        <div class="chat-body" id="chatBody">
+            <div style="background:var(--accent-green); color:black; padding:8px; border-radius:8px; align-self: flex-start;">How can I help you today?</div>
+        </div>
+        <div style="padding:10px; display:flex; background: var(--input-bg);">
+            <input type="text" id="chatInput" placeholder="Type..." style="flex:1; border:none; outline:none; background:transparent; color:inherit;">
+            <i class="fas fa-paper-plane" style="color:var(--accent-green); cursor:pointer;" onclick="chat()"></i>
+        </div>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+        }
+        if(localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
+
+        function submitToLocal() {
+            if(!document.getElementById('consent').checked) return alert("Please agree to the consent.");
+
+            const log = {
+                date: new Date().toLocaleDateString(),
+                name: document.getElementById('studentName').value,
+                matric: document.getElementById('matricNo').value,
+                phone: document.getElementById('phoneNo').value || "N/A",
+                email: document.getElementById('emailAdd').value || "N/A",
+                cat: document.getElementById('category').value,
+                priority: document.getElementById('priority').value,
+                desc: document.getElementById('description').value
+            };
+
+            if(!log.name || !log.desc || !log.matric) return alert("Please fill required fields.");
+
+            let data = JSON.parse(localStorage.getItem('welfareLogs')) || [];
+            data.push(log);
+            localStorage.setItem('welfareLogs', JSON.stringify(data));
+
+            alert("Dispatched to Secretariat!");
+            document.getElementById('welfareForm').reset();
+        }
+
+        function unlockAdmin() {
+            if(prompt("Admin Password:") === "Dolapo") {
+                document.getElementById('adminSection').style.display = 'block';
+                const body = document.getElementById('tableBody');
+                const logs = JSON.parse(localStorage.getItem('welfareLogs')) || [];
+                body.innerHTML = logs.reverse().map(l => `
+                    <tr>
+                        <td>${l.date}</td>
+                        <td>${l.name}</td>
+                        <td>${l.matric}</td>
+                        <td>${l.phone}<br><small>${l.email}</small></td>
+                        <td>${l.cat}</td>
+                        <td><span class="priority-badge" style="background:${l.priority === 'Urgent' ? '#e74c3c' : (l.priority === 'Important' ? '#f39c12' : '#2ecc71')}; color:white;">${l.priority}</span></td>
+                        <td>${l.desc}</td>
+                    </tr>
+                `).join('');
+                window.location.hash = "adminSection";
+            } else alert("Denied.");
+        }
+
+        function toggleChat() {
+            const c = document.getElementById('chatWindow');
+            c.style.display = c.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function chat() {
+            const input = document.getElementById('chatInput');
+            const body = document.getElementById('chatBody');
+            if(!input.value) return;
+            body.innerHTML += `<div style="background:rgba(255,255,255,0.1); padding:8px; border-radius:8px; align-self: flex-end; margin-left:20px;">${input.value}</div>`;
+            setTimeout(() => {
+                body.innerHTML += `<div style="background:var(--accent-green); color:black; padding:8px; border-radius:8px; align-self: flex-start; margin-right:20px;">I've noted that. Please use the form above for official tracking.</div>`;
+                body.scrollTop = body.scrollHeight;
+            }, 600);
+            input.value = "";
+        }
+
+        function clearLogs() { if(confirm("Clear records?")) { localStorage.removeItem('welfareLogs'); unlockAdmin(); } }
+    </script>
+</body>
+</html>
