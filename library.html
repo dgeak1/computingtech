@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Gallery | Digital Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --dark-bg: #050a05;
+            --book-cover: #0a1a0a;
+            --gold: #d4af37;
+            --text-color: #f4f4f4;
+            --border: rgba(46, 204, 113, 0.2);
+        }
+
+        .light-mode {
+            --dark-bg: #f5f7f5;
+            --book-cover: #ffffff;
+            --text-color: #1a1a1a;
+            --border: rgba(46, 204, 113, 0.4);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            transition: 0.4s ease;
+        }
+
+        /* Navbar */
+        .navbar {
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; }
+        .logo span { color: var(--primary-green); }
+
+        /* Live Desk */
+        .live-desk {
+            max-width: 1000px;
+            margin: 40px auto;
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(46, 204, 113, 0.05);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .stat h4 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; margin: 0; }
+        .stat p { font-size: 1.4rem; font-weight: 700; color: var(--primary-green); margin: 5px 0 0; }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 50px;
+            padding: 40px 8% 100px;
+            max-width: 1300px;
+            margin: 0 auto;
+            justify-items: center;
+        }
+
+        /* Textbook Styling */
+        .book {
+            position: relative;
+            width: 180px;
+            height: 260px;
+            background: var(--book-cover);
+            border-radius: 4px 15px 15px 4px;
+            border-left: 12px solid var(--dark-green);
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.5);
+            cursor: pointer;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid var(--border);
+        }
+
+        /* Leather Spine Effect */
+        .book::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 15px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.3), transparent);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .book:hover {
+            transform: rotateY(-15deg) scale(1.05);
+            box-shadow: 20px 20px 40px rgba(0,0,0,0.6);
+            border-color: var(--primary-green);
+        }
+
+        .book-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--gold);
+            margin-top: auto;
+            border-bottom: 2px solid var(--gold);
+            width: fit-content;
+        }
+
+        .book-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        .book-tag {
+            font-size: 0.65rem;
+            opacity: 0.5;
+            font-style: italic;
+            color: white;
+        }
+
+        .gold-seal {
+            position: absolute;
+            top: 20px; right: 20px;
+            font-size: 1.2rem;
+            color: var(--gold);
+            opacity: 0.8;
+        }
+
+        /* Dark Mode Toggle */
+        .mode-btn { background: none; border: none; color: var(--primary-green); cursor: pointer; font-size: 1.2rem; }
+
+        footer { text-align: center; padding: 60px; border-top: 1px solid var(--border); opacity: 0.4; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo"> Faculty <span>Archive</span></div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <button class="mode-btn" onclick="toggleMode()"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <a href="index.html" style="color:var(--text-color); text-decoration:none; font-size: 0.9rem;">Home</a>
+        </div>
+    </nav>
+
+    <div class="live-desk">
+        <div class="stat"><h4>Resources</h4><p>1,240</p></div>
+        <div class="stat"><h4>Active Now</h4><p>14</p></div>
+        <div class="stat"><h4>Format</h4><p>Digital PDF</p></div>
+    </div>
+
+    <main class="gallery-grid">
+        <a href="2026.html" class="book">
+            <i class="fas fa-certificate gold-seal"></i>
+            <span class="book-title">Past Questions</span>
+            <span class="book-tag">Academic Vol. I</span>
+            <div class="book-year">2026</div>
+        </a>
+
+        <a href="2025.html" class="book">
+            <i class="fas fa-certificate gold-seal"></i>
+            <span class="book-title">Past Questions</span>
+            <span class="book-tag">Academic Vol. II</span>
+            <div class="book-year">2025</div>
+        </a>
+
+        <a href="2024.html" class="book">
+            <i class="fas fa-certificate gold-seal"></i>
+            <span class="book-title">Past Questions</span>
+            <span class="book-tag">Academic Vol. III</span>
+            <div class="book-year">2024</div>
+        </a>
+
+        <a href="2023.html" class="book">
+            <i class="fas fa-certificate gold-seal"></i>
+            <span class="book-title">Past Questions</span>
+            <span class="book-tag">Academic Vol. IV</span>
+            <div class="book-year">2023</div>
+        </a>
+
+        <a href="2022.html" class="book">
+            <i class="fas fa-certificate gold-seal"></i>
+            <span class="book-title">Past Questions</span>
+            <span class="book-tag">Academic Vol. V</span>
+            <div class="book-year">2022</div>
+        </a>
+
+        <a href="2021.html" class="book">
+            <i class="fas fa-certificate gold-seal"></i>
+            <span class="book-title">Past Questions</span>
+            <span class="book-tag">Academic Vol. VI</span>
+            <div class="book-year">2021</div>
+        </a>
+
+        <a href="2020.html" class="book">
+            <i class="fas fa-certificate gold-seal"></i>
+            <span class="book-title">Past Questions</span>
+            <span class="book-tag">Academic Vol. VII</span>
+            <div class="book-year">2020</div>
+        </a>
+
+        <a href="2019.html" class="book">
+            <i class="fas fa-certificate gold-seal"></i>
+            <span class="book-title">Past Questions</span>
+            <span class="book-tag">Academic Vol. VIII</span>
+            <div class="book-year">2019</div>
+        </a>
+    </main>
+
+    <footer>
+        Developed by <b>Equity Crew 26</b> &copy; 2026
+    </footer>
+
+    <script>
+        function toggleMode() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.getElementById('themeIcon');
+            icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    </script>
+</body>
+</html>
