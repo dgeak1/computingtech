@@ -1,10 +1,14 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dues Payment | School Hub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Dues Payment | Equity Crew 26</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
+
     <style>
         :root {
             --primary-green: #0a1f0a;
@@ -16,237 +20,1352 @@
             --error-red: #e74c3c;
         }
 
-        body.dark-mode {
-            --soft-bg: #050a05;
-            --text-main: #e0eadd;
-            --card-white: #0d1b11;
-            --primary-green: #000000;
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--soft-bg); margin: 0; color: var(--text-main); }
+
+        #authWrapper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--primary-green); z-index: 9999;
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            overflow-y: auto; padding: 20px; box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--soft-bg);
-            color: var(--text-main);
-            margin: 0;
-            transition: 0.3s;
+        .login-box {
+            background: var(--card-white); padding: 30px; border-radius: 20px;
+            width: 100%; max-width: 400px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px;
         }
 
-        /* Nav & Header */
-        nav { background: #000; padding: 15px; text-align: center; display: flex; justify-content: center; gap: 25px; }
-        nav a { color: var(--accent-green); text-decoration: none; font-weight: bold; font-size: 0.9rem; }
-        .mode-toggle { color: var(--accent-green); cursor: pointer; font-weight: bold; font-size: 0.9rem; }
-
-        header {
-            background: var(--primary-green);
-            color: white;
-            padding: 2.5rem;
-            text-align: center;
-            border-bottom: 4px solid var(--accent-green);
-        }
-
-        .container {
-            max-width: 500px;
-            margin: 2.5rem auto;
-            padding: 2.5rem;
-            background: var(--card-white);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        /* Deadline Card Styling */
-        .deadline-card {
-            background: rgba(243, 156, 18, 0.05);
-            border: 2px dashed var(--warning-orange);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .status-badge {
-            position: absolute;
-            top: -12px;
-            right: 15px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.65rem;
-            font-weight: bold;
-        }
-
-        .on-time { background: var(--accent-green); color: black; }
-        .late { background: var(--error-red); color: white; }
-
-        /* Payment Logic UI */
-        .payment-box {
-            background: var(--primary-green);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-        }
-
-        .amount-display { font-size: 3rem; font-weight: bold; color: var(--accent-green); margin: 10px 0; }
-
-        .fine-check {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            background: rgba(255,255,255,0.1);
-            padding: 10px;
-            border-radius: 8px;
+        .login-box input {
+            width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd;
+            border-radius: 8px; box-sizing: border-box; font-size: 1rem;
         }
 
         .pay-btn {
-            background: var(--accent-green);
-            color: var(--primary-green);
-            width: 100%;
-            padding: 18px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: 0.3s;
+            background: var(--accent-green); color: var(--primary-green);
+            width: 100%; padding: 15px; border-radius: 50px;
+            font-weight: bold; font-size: 1rem; border: none;
+            cursor: pointer; margin-top: 15px; transition: 0.3s;
         }
+        .pay-btn:hover { background: #fff; transform: translateY(-2px); }
 
-        .pay-btn:hover { background: white; transform: scale(1.02); }
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; }
+        .admin-table th, .admin-table td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
+        .admin-link { color: #fff; opacity: 0.4; font-size: 0.75rem; cursor: pointer; text-decoration: underline; background: none; border: none; margin-top: 10px; }
 
-        /* Help Desk Bubble */
-        .help-bubble {
-            position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px;
-            background: var(--accent-green); border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; font-size: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 1000;
-        }
+        nav { background: #000; padding: 15px; text-align: center; color: var(--accent-green); font-weight: bold; }
+        .container { max-width: 600px; margin: 40px auto; padding: 30px; background: white; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .payment-box { background: var(--primary-green); color: white; padding: 30px; border-radius: 15px; margin-top: 20px; position: relative; }
+        
+        .deadline-badge { position: absolute; top: -10px; right: 10px; background: var(--warning-orange); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
 
-        .chat-window {
-            position: fixed; bottom: 100px; right: 25px; width: 300px;
-            background: var(--card-white); border: 1px solid var(--accent-green);
-            border-radius: 15px; display: none; flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 1000;
-        }
-
-        .chat-header { background: var(--accent-green); color: black; padding: 15px; font-weight: bold; }
-        .chat-body { height: 200px; padding: 15px; overflow-y: auto; font-size: 0.85rem; }
-        .chat-input { padding: 10px; border-top: 1px solid rgba(0,0,0,0.1); display: flex; }
-        .chat-input input { flex: 1; border: none; outline: none; background: transparent; color: inherit; }
-
-        footer { padding: 2rem; text-align: center; font-size: 0.8rem; opacity: 0.6; }
+        table.history-table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left; font-size: 0.9rem; }
+        table.history-table th { border-bottom: 2px solid var(--accent-green); padding: 10px 5px; }
+        table.history-table td { padding: 10px 5px; border-bottom: 1px solid #eee; }
     </style>
 </head>
-<body id="mainBody">
+<body>
 
-<nav>
-    <a href="index.html"><i class="fas fa-university"></i> School Hub</a>
-    <a href="index.html"><i class="fas fa-home"></i> Home</a>
-    <span class="mode-toggle" onclick="toggleMode()"><i class="fas fa-adjust"></i> Toggle Mode</span>
-</nav>
-
-<header>
-    <h1>Dues Payment</h1>
-</header>
-
-<div class="container">
-    <h2>Dues Payment Deadline</h2>
-    <p style="opacity: 0.7; font-size: 0.9rem;">Pay your faculty and departmental dues before the deadline.</p>
-
-    <div class="deadline-card" id="cardBorder">
-        <div id="statusBadge" class="status-badge">...</div>
-        <h3 style="margin:0; color:var(--warning-orange);"><i class="fas fa-calendar-alt"></i> Deadline</h3>
-        <div style="font-size: 1.4rem; font-weight: bold; margin: 10px 0;">15th of next month</div>
-        <p id="dateMsg" style="font-size: 0.8rem; margin:0;"></p>
+<div id="authWrapper">
+    <div class="login-box" id="registerBox">
+        <h2 style="color: var(--primary-green)">Student Registration</h2>
+        <input type="text" id="regName" placeholder="Full Name">
+        <input type="text" id="regMatric" placeholder="Matric (14 digits: SW/CS/NC...)">
+        <input type="email" id="regEmail" placeholder="Gmail Address">
+        <input type="password" id="regPass" placeholder="Create Password">
+        <button class="pay-btn" onclick="registerStudent()">Submit Registration</button>
+        <p style="font-size: 0.8rem; margin-top: 15px;">Already registered? <a href="javascript:void(0)" onclick="showLogin()" style="color: var(--accent-green)">Login here</a></p>
     </div>
 
-    <div class="payment-box">
-        <p style="margin:0; opacity: 0.8; font-size: 0.8rem;">Payment Amount:</p>
-        <div class="amount-display">₦<span id="priceDisplay">5000</span></div>
-        
-        <div class="fine-check">
-            <input type="checkbox" id="fineCheck" onchange="manualPrice()">
-            <label for="fineCheck">Add Late Fine (₦2,500)</label>
+    <div class="login-box" id="loginBox" style="display:none;">
+        <h2 style="color: var(--primary-green)">Student Login</h2>
+        <input type="text" id="logMatric" placeholder="Matric Number">
+        <input type="password" id="logPass" placeholder="Password">
+        <button class="pay-btn" onclick="loginUser()">Access Portal</button>
+        <p style="font-size: 0.8rem; margin-top: 15px;">
+            <a href="javascript:void(0)" onclick="showForgot()" style="color: var(--error-red)">Forgot Password?</a> | 
+            <a href="javascript:void(0)" onclick="showRegister()" style="color: var(--accent-green)">Register</a>
+        </p>
+    </div>
+
+    <div class="login-box" id="forgotBox" style="display:none;">
+        <h2 style="color: var(--primary-green)">Reset Password</h2>
+        <p style="font-size: 0.8rem;">Enter your details to set a new password.</p>
+        <input type="text" id="resetMatric" placeholder="Matric Number">
+        <input type="email" id="resetEmail" placeholder="Registered Gmail">
+        <input type="password" id="newPass" placeholder="Enter New Password">
+        <button class="pay-btn" onclick="resetPassword()">Update Password</button>
+        <p style="font-size: 0.8rem; margin-top: 15px;"><a href="javascript:void(0)" onclick="showLogin()" style="color: var(--accent-green)">Back to Login</a></p>
+    </div>
+
+    <div class="login-box" id="adminSection" style="display:none; max-width: 500px;">
+        <h2 style="color: var(--primary-green)">Admin Dashboard</h2>
+        <div id="adminLock">
+            <input type="password" id="adminPassInput" placeholder="Enter Admin Pin (1234)">
+            <button class="pay-btn" onclick="unlockAdmin()">Unlock</button>
         </div>
-
-        <button class="pay-btn" onclick="window.location.href='#';">  
-            Go Pay Now <i class="fas fa-arrow-right"></i>
-        </button>
+        <div id="adminContent" style="display:none;">
+            <table class="admin-table">
+                <thead><tr><th>Name</th><th>Matric</th><th>Action</th></tr></thead>
+                <tbody id="studentList"></tbody>
+            </table>
+            <button onclick="localStorage.clear(); location.reload();" style="margin-top:20px; font-size:0.7rem; color:red; border:none; background:none; cursor:pointer;">[Reset Database]</button>
+        </div>
     </div>
+
+    <button class="admin-link" onclick="showAdminBox()">Admin Access</button>
 </div>
 
-<div class="help-bubble" onclick="toggleChat()"><i class="fas fa-robot"></i></div>
-<div class="chat-window" id="chatWindow">
-    <div class="chat-header">Equity AI Help Desk</div>
-    <div class="chat-body" id="chatBody">
-        <div style="color:var(--accent-green)">[AI]: Hello! I'm your School Hub assistant. How is your day going? 😊</div>
+<nav>EQUITY CREW 26 | <span id="userNavName">Guest</span></nav>
+<div class="container">
+    <h2 id="welcomeMsg" style="color: var(--primary-green);"></h2>
+    
+    <div class="payment-box">
+        <div class="deadline-badge">Deadline: Jan 15, 2026</div>
+        <p id="deadlineStatus" style="margin-top: 10px;"></p>
+        <p style="opacity: 0.8; margin: 0;">Total Dues Payable:</p>
+        <h1 style="font-size: 3rem; margin: 10px 0;">₦<span id="priceDisplay">200,000</span></h1>
+        <button class="pay-btn" onclick="payWithPaystack()">Pay via Paystack <i class="fas fa-shield-alt"></i></button>
     </div>
-    <div class="chat-input">
-        <input type="text" id="chatInput" placeholder="Say hello..." onkeypress="if(event.key==='Enter') speak()">
-        <i class="fas fa-paper-plane" style="color:var(--accent-green); cursor:pointer;" onclick="speak()"></i>
+
+    <div style="margin-top: 40px; text-align: left;">
+        <h3 style="border-bottom: 2px solid var(--accent-green); display: inline-block; padding-bottom: 5px;">Payment History</h3>
+        <div id="paymentHistory"></div>
     </div>
 </div>
 
 <footer>
-    Developed by <strong>Equity Crew 26</strong> © 2026
+    <p style="text-align: center; font-size: 0.8rem; color: #888; margin: 20px 0;">Developed by Equity Crew 26 © 2026</p>
 </footer>
 
 <script>
-    const DEADLINE_DAY = 15; // 15th of the month
-    const BASE_DUES = 5000;
-    const FINE = 2500;
+    const ADMIN_PIN = "1234";
+    const BASE_DUES = 200000;
+    const LATE_FINE = 2500;
+    const DEADLINE_DAY = 15; // January 15th
+    let currentUser = null;
 
-    function checkDate() {
-        const today = new Date();
-        const currentDay = today.getDate();
-        const checkbox = document.getElementById('fineCheck');
-        const badge = document.getElementById('statusBadge');
-        const msg = document.getElementById('dateMsg');
-
-        // Logic: If current date is past the 15th
-        if (currentDay > DEADLINE_DAY) {
-            checkbox.checked = true;
-            checkbox.disabled = true;
-            badge.innerText = "LATE";
-            badge.className = "status-badge late";
-            msg.innerHTML = "⚠️ The deadline has passed. Late fine applied.";
-            document.getElementById('cardBorder').style.borderColor = "var(--error-red)";
-        } else {
-            badge.innerText = "ON TIME";
-            badge.className = "status-badge on-time";
-            msg.innerHTML = "✅ You are within the safe payment window.";
-        }
-        manualPrice();
+    function isValidMatric(matric) {
+        const regex = /^(SW|CS|NC).{12}$/;
+        return regex.test(matric) && matric.length === 14;
     }
 
-    function manualPrice() {
-        const check = document.getElementById('fineCheck').checked;
-        document.getElementById('priceDisplay').innerText = check ? (BASE_DUES + FINE) : BASE_DUES;
+    // --- NAVIGATION ---
+    function showLogin() { hideAll(); document.getElementById('loginBox').style.display='block'; }
+    function showRegister() { hideAll(); document.getElementById('registerBox').style.display='block'; }
+    function showForgot() { hideAll(); document.getElementById('forgotBox').style.display='block'; }
+    function showAdminBox() { hideAll(); document.getElementById('adminSection').style.display='block'; }
+    function hideAll() {
+        document.getElementById('registerBox').style.display='none';
+        document.getElementById('loginBox').style.display='none';
+        document.getElementById('forgotBox').style.display='none';
+        document.getElementById('adminSection').style.display='none';
     }
 
-    function toggleMode() { document.body.classList.toggle('dark-mode'); }
+    // --- AUTH LOGIC ---
+    function registerStudent() {
+        const name = document.getElementById('regName').value;
+        const matric = document.getElementById('regMatric').value.toUpperCase();
+        const email = document.getElementById('regEmail').value;
+        const pass = document.getElementById('regPass').value;
 
-    function toggleChat() {
-        const win = document.getElementById('chatWindow');
-        win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+        if(!name || !matric || !pass || !email) return alert("All fields are required!");
+        if(!isValidMatric(matric)) return alert("Invalid Matric! Must be 14 characters and start with SW, CS, or NC.");
+
+        const user = { name, matric, email, password: pass, approved: true, history: [] };
+        localStorage.setItem(matric, JSON.stringify(user));
+        alert("Registration Successful!");
+        showLogin();
     }
 
-    function speak() {
-        const box = document.getElementById('chatInput');
-        const body = document.getElementById('chatBody');
-        if(!box.value) return;
+    function loginUser() {
+        const m = document.getElementById('logMatric').value.toUpperCase();
+        const p = document.getElementById('logPass').value;
+        const data = localStorage.getItem(m);
 
-        body.innerHTML += `<div style="text-align:right; margin-bottom:8px;"><b>You:</b> ${box.value}</div>`;
+        if(data) {
+            const user = JSON.parse(data);
+            if(user.password === p) {
+                currentUser = user;
+                document.getElementById('authWrapper').style.display='none';
+                document.getElementById('userNavName').innerText = user.name;
+                document.getElementById('welcomeMsg').innerText = "Student Dashboard: " + user.name;
+                checkDateAndPrice();
+                showHistory();
+            } else { alert("Incorrect Password."); }
+        } else { alert("Matric Number not found."); }
+    }
+
+    function resetPassword() {
+        const m = document.getElementById('resetMatric').value.toUpperCase();
+        const e = document.getElementById('resetEmail').value;
+        const n = document.getElementById('newPass').value;
+        const data = localStorage.getItem(m);
+
+        if(data) {
+            let user = JSON.parse(data);
+            if(user.email === e) {
+                user.password = n;
+                localStorage.setItem(m, JSON.stringify(user));
+                alert("Password updated successfully!");
+                showLogin();
+            } else { alert("Email does not match our records."); }
+        } else { alert("Matric Number not found."); }
+    }
+
+    // --- DASHBOARD LOGIC ---
+    function checkDateAndPrice() {
+        const day = new Date().getDate();
+        const month = new Date().getMonth(); // 0 is January
+        const priceSpan = document.getElementById('priceDisplay');
+        const statusArea = document.getElementById('deadlineStatus');
         
-        setTimeout(() => {
-            body.innerHTML += `<div style="color:var(--accent-green); margin-bottom:8px;"><b>AI:</b> That's great to hear! Keep pushing toward excellence today. 🚀</div>`;
-            body.scrollTop = body.scrollHeight;
-        }, 800);
-        box.value = "";
+        // Late if it's past January 15th
+        let isLate = (month === 0 && day > DEADLINE_DAY) || month > 0;
+        let finalPrice = isLate ? BASE_DUES + LATE_FINE : BASE_DUES;
+
+        if (isLate) {
+            statusArea.innerHTML = `<i class="fas fa-clock"></i> Late Payment (Fine Added)`;
+            statusArea.style.color = "var(--error-red)";
+            priceSpan.style.color = "var(--error-red)";
+        } else {
+            statusArea.innerHTML = `<i class="fas fa-check-circle"></i> Early Bird Window`;
+            statusArea.style.color = "var(--accent-green)";
+        }
+        priceSpan.innerText = finalPrice.toLocaleString();
     }
 
-    window.onload = checkDate;
+    // --- ADMIN ---
+    function unlockAdmin() {
+        if(document.getElementById('adminPassInput').value === ADMIN_PIN) {
+            document.getElementById('adminLock').style.display='none';
+            document.getElementById('adminContent').style.display='block';
+            loadRequests();
+        } else { alert("Wrong Pin"); }
+    }
+
+    function loadRequests() {
+        const list = document.getElementById('studentList');
+        list.innerHTML = "";
+        for (let i = 0; i < localStorage.length; i++) {
+            const user = JSON.parse(localStorage.getItem(localStorage.key(i)));
+            if(user && user.matric) {
+                list.innerHTML += `<tr><td>${user.name}</td><td>${user.matric}</td><td>✅ Active</td></tr>`;
+            }
+        }
+    }
+
+    // --- PAYMENTS ---
+    function payWithPaystack() {
+        const amount = parseInt(document.getElementById('priceDisplay').innerText.replace(/,/g, ''));
+        let handler = PaystackPop.setup({
+            key: 'pk_test_7c7358690ce988034fc366cff33b97a3f1a3bc7b', // Replace with your Paystack Public Key
+            email: currentUser.email,
+            amount: amount * 100,
+            callback: (res) => {
+                const data = JSON.parse(localStorage.getItem(currentUser.matric));
+                data.history.push({ reference: res.reference, amount: amount, date: new Date().toLocaleString() });
+                localStorage.setItem(currentUser.matric, JSON.stringify(data));
+                showHistory();
+                alert("Payment Confirmed!");
+            }
+        });
+        handler.openIframe();
+    }
+
+    function showHistory() {
+        const historyDiv = document.getElementById('paymentHistory');
+        const data = JSON.parse(localStorage.getItem(currentUser.matric));
+        if(!data.history || data.history.length === 0) {
+            historyDiv.innerHTML = "<p style='color:#999'>No payment records yet.</p>";
+            return;
+        }
+        let html = `<table class="history-table"><thead><tr><th>Date</th><th>Amt</th><th>PDF</th></tr></thead><tbody>`;
+        data.history.forEach((h, i) => {
+            html += `<tr><td>${h.date}</td><td>₦${h.amount.toLocaleString()}</td>
+            <td><button onclick="downloadPDF(${i})" style="border:none; background:var(--primary-green); color:white; padding:5px; border-radius:5px; cursor:pointer;"><i class="fas fa-download"></i></button></td></tr>`;
+        });
+        historyDiv.innerHTML = html + "</tbody></table>";
+    }
+
+    function downloadPDF(index) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const data = JSON.parse(localStorage.getItem(currentUser.matric));
+        const pay = data.history[index];
+        doc.text("EQUITY CREW 26 - RECEIPT", 105, 20, {align: "center"});
+        doc.text(`Name: ${data.name}`, 20, 40);
+        doc.text(`Matric: ${data.matric}`, 20, 50);
+        doc.text(`Amount: NGN ${pay.amount.toLocaleString()}`, 20, 60);
+        doc.text(`Ref: ${pay.reference}`, 20, 70);
+        doc.save(`Receipt_${pay.reference}.pdf`);
+    }
+    
+    // ... previous code remains unchanged ...
+
+    // --- ENHANCED HIGH-END PDF RECEIPT GENERATOR ---
+    function downloadPDF(index) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4'); // Formal A4 Portrait
+        const data = JSON.parse(localStorage.getItem(currentUser.matric));
+        const pay = data.history[index];
+
+        // 1. Page Border
+        doc.setLineWidth(0.5);
+        doc.rect(10, 10, 190, 277); // Outer border
+        doc.setLineWidth(0.1);
+        doc.rect(12, 12, 186, 273); // Inner decorative border
+
+        // 2. Header Section
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(22);
+        doc.setTextColor(10, 31, 10); // Primary Green
+        doc.text("EQUITY CREW 26", 105, 30, {align: "center"});
+        
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100);
+        doc.text("OFFICIAL PAYMENT RECEIPT", 105, 38, {align: "center"});
+        
+        doc.setDrawColor(46, 204, 113); // Accent Green
+        doc.setLineWidth(1);
+        doc.line(40, 45, 170, 45);
+
+        // 3. Transaction Details
+        doc.setFontSize(12);
+        doc.setTextColor(0);
+        let currentY = 65;
+
+        const details = [
+            ["Receipt Date:", pay.date],
+            ["Transaction Ref:", pay.reference],
+            ["Student Name:", data.name.toUpperCase()],
+            ["Matric Number:", data.matric],
+            ["Department:", getDept(data.matric)],
+            ["Payment Description:", "2026 Departmental Dues"]
+        ];
+
+        details.forEach(detail => {
+            doc.setFont("helvetica", "bold");
+            doc.text(detail[0], 30, currentY);
+            doc.setFont("helvetica", "normal");
+            doc.text(detail[1], 80, currentY);
+            currentY += 12;
+        });
+
+        // 4. Amount Box
+        doc.setFillColor(244, 249, 244);
+        doc.rect(30, currentY + 10, 150, 25, 'F');
+        doc.setDrawColor(10, 31, 10);
+        doc.rect(30, currentY + 10, 150, 25, 'S');
+        
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.setTextColor(46, 204, 113);
+        doc.text(`TOTAL PAID: NGN ${pay.amount.toLocaleString()}`, 105, currentY + 26, {align: "center"});
+
+        // 5. Signature Section (The "Back to Basics" Formal Space)
+        const sigY = 240;
+        doc.setTextColor(0);
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+
+        // Gen Sec Signature Line
+        doc.line(30, sigY, 90, sigY);
+        doc.text("GENERAL SECRETARY", 60, sigY + 7, {align: "center"});
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(8);
+        doc.text("Signature / Date", 60, sigY + 12, {align: "center"});
+
+        // President Signature Line
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.line(120, sigY, 180, sigY);
+        doc.text("EXECUTIVE PRESIDENT", 150, sigY + 7, {align: "center"});
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(8);
+        doc.text("Signature / Date", 150, sigY + 12, {align: "center"});
+
+        // 6. Footer
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(150);
+        doc.text("This document serves as digital proof of payment.", 105, 265, {align: "center"});
+        doc.text("Valid only when verified against official bank statements.", 105, 270, {align: "center"});
+
+        doc.save(`Equity_Crew_Receipt_${data.matric}.pdf`);
+    }
+
+    // Helper to determine department for the receipt
+    function getDept(matric) {
+        if(matric.startsWith("SW")) return "Software & Web Development";
+        if(matric.startsWith("CS")) return "Computer Science";
+        if(matric.startsWith("NC")) return "Cloud Networking";
+        return "Departmental Member";
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+    // Replace this with your actual verification website URL
+    const VERIFY_URL = "https://yourwebsite.com/verify.html";
+
+    async function downloadPDF(index) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const data = JSON.parse(localStorage.getItem(currentUser.matric));
+        const pay = data.history[index];
+
+        // --- 1. Generate QR Code (Hidden) ---
+        const qrContainer = document.createElement("div");
+        // The URL the QR code will open: e.g., verify.html?ref=PAY-123&matric=SW123456789012
+        const qrText = `${VERIFY_URL}?ref=${pay.reference}&matric=${data.matric}`;
+        
+        const qrcode = new QRCode(qrContainer, {
+            text: qrText,
+            width: 128,
+            height: 128
+        });
+
+        // Wait a split second for QR to render
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const qrCanvas = qrContainer.querySelector('canvas');
+        const qrDataURL = qrCanvas.toDataURL("image/png");
+
+        // --- 2. Build A4 Receipt (Professional Layout) ---
+        // Page Borders
+        doc.setDrawColor(10, 31, 10);
+        doc.setLineWidth(0.5);
+        doc.rect(10, 10, 190, 277); 
+        doc.setLineWidth(0.1);
+        doc.rect(12, 12, 186, 273);
+
+        // Header
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(24);
+        doc.setTextColor(10, 31, 10);
+        doc.text("EQUITY CREW 26", 105, 30, {align: "center"});
+        
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100);
+        doc.text("OFFICIAL TRANSACTION RECEIPT", 105, 38, {align: "center"});
+        
+        doc.setDrawColor(46, 204, 113);
+        doc.setLineWidth(1);
+        doc.line(40, 45, 170, 45);
+
+        // Student Data
+        doc.setFontSize(12);
+        doc.setTextColor(0);
+        let y = 65;
+        const details = [
+            ["Receipt Date:", pay.date],
+            ["Transaction Ref:", pay.reference],
+            ["Student Name:", data.name.toUpperCase()],
+            ["Matric Number:", data.matric],
+            ["Department:", getDept(data.matric)],
+            ["Status:", "VERIFIED PAYMENT"]
+        ];
+
+        details.forEach(item => {
+            doc.setFont("helvetica", "bold");
+            doc.text(item[0], 30, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(item[1], 80, y);
+            y += 12;
+        });
+
+        // Amount Section
+        doc.setFillColor(244, 249, 244);
+        doc.rect(30, y + 10, 150, 25, 'F');
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.setTextColor(46, 204, 113);
+        doc.text(`TOTAL PAID: NGN ${pay.amount.toLocaleString()}`, 105, y + 26, {align: "center"});
+
+        // Signature Section
+        const sigY = 240;
+        doc.setTextColor(0);
+        doc.setFontSize(10);
+        doc.line(30, sigY, 90, sigY);
+        doc.text("GENERAL SECRETARY", 60, sigY + 7, {align: "center"});
+        
+        doc.line(120, sigY, 180, sigY);
+        doc.text("EXECUTIVE PRESIDENT", 150, sigY + 7, {align: "center"});
+
+        // --- 3. Place QR Code (Bottom Right Corner) ---
+        // x, y, width, height
+        doc.addImage(qrDataURL, 'PNG', 165, 252, 25, 25);
+        doc.setFontSize(7);
+        doc.setTextColor(150);
+        doc.text("Scan to Verify", 177.5, 280, {align: "center"});
+
+        // Footer Note
+        doc.text("This receipt is valid only with an official stamp and signature.", 105, 265, {align: "center"});
+
+        doc.save(`Equity_Receipt_${data.matric}.pdf`);
+    }
+
+    function getDept(matric) {
+        if(matric.startsWith("SW")) return "Software & Web Development";
+        if(matric.startsWith("CS")) return "Computer Science";
+        if(matric.startsWith("NC")) return "Cloud Networking";
+        return "Department Member";
+    }
+
+    async function downloadPDF(index) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const data = JSON.parse(localStorage.getItem(currentUser.matric));
+        const pay = data.history[index];
+
+        // --- QR Code Setup ---
+        const qrContainer = document.createElement("div");
+        const qrText = `${VERIFY_URL}?ref=${pay.reference}&matric=${data.matric}`;
+        const qrcode = new QRCode(qrContainer, { text: qrText, width: 128, height: 128 });
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const qrCanvas = qrContainer.querySelector('canvas');
+        const qrDataURL = qrCanvas.toDataURL("image/png");
+
+        // --- Page Styling ---
+        doc.setDrawColor(10, 31, 10);
+        doc.setLineWidth(0.5);
+        doc.rect(10, 10, 190, 277); // Formal Border
+
+        // --- Header Section ---
+        doc.setFont("times", "bold"); 
+        doc.setFontSize(22);
+        doc.setTextColor(10, 31, 10);
+        doc.text("EQUITY CREW 26", 105, 30, {align: "center"});
+        
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100);
+        doc.text("OFFICIAL TRANSACTION RECEIPT", 105, 38, {align: "center"});
+
+        // --- Data Rows (Typography Enforced) ---
+        let y = 65;
+        const details = [
+            ["RECEIPT DATE", pay.date],
+            ["TRANSACTION REF", pay.reference],
+            ["STUDENT NAME", data.name.toUpperCase()],
+            ["MATRIC NUMBER", data.matric],
+            ["DEPARTMENT", getDept(data.matric)]
+        ];
+
+        details.forEach(item => {
+            // Title: ALL CAPS, 12pt
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.setTextColor(10, 31, 10);
+            doc.text(item[0], 30, y);
+
+            // Description: Small letters (Sentence case), 10pt
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(60);
+            doc.text(item[1].toString().toLowerCase(), 85, y);
+            y += 12;
+        });
+
+        // --- Amount Box ---
+        doc.setFillColor(244, 249, 244);
+        doc.rect(30, y + 5, 150, 20, 'F');
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(46, 204, 113);
+        doc.text(`TOTAL PAID: NGN ${pay.amount.toLocaleString()}`, 105, y + 18, {align: "center"});
+
+        // --- Signature Section (Small Caps Logic & Specific Names) ---
+        const sigY = 240;
+        doc.setTextColor(0);
+
+        // General Secretary Column
+        doc.line(30, sigY, 90, sigY);
+        // Small Caps Title for Gen Sec
+        doc.setFontSize(10); doc.setFont("helvetica", "bold");
+        doc.text("G", 43, sigY + 5); 
+        doc.setFontSize(8); doc.text("ENERAL", 46.5, sigY + 5);
+        doc.setFontSize(10); doc.text(" S", 58, sigY + 5);
+        doc.setFontSize(8); doc.text("ECRETARY", 61.5, sigY + 5);
+        
+        // Gen Sec Name: 12pt
+        doc.setFontSize(12); doc.setFont("times", "normal");
+        doc.text("Obidare Ibrahim Boluwatife", 60, sigY + 12, {align: "center"});
+
+        // President Column
+        doc.line(120, sigY, 180, sigY);
+        // Small Caps Title for President
+        doc.setFontSize(10); doc.setFont("helvetica", "bold");
+        doc.text("E", 133, sigY + 5);
+        doc.setFontSize(8); doc.text("XECUTIVE", 135.5, sigY + 5);
+        doc.setFontSize(10); doc.text(" P", 150, sigY + 5);
+        doc.setFontSize(8); doc.text("RESIDENT", 153.5, sigY + 5);
+
+        // President Name: 12pt
+        doc.setFontSize(12); doc.setFont("times", "normal");
+        doc.text("Ajiferuke Ridwanullahi", 150, sigY + 12, {align: "center"});
+
+        // --- QR Code & Footer ---
+        doc.addImage(qrDataURL, 'PNG', 165, 252, 25, 25);
+        doc.setFontSize(7);
+        doc.setTextColor(150);
+        doc.text("Digital Verification QR", 177.5, 280, {align: "center"});
+        
+        doc.setFontSize(8);
+        doc.text("This receipt is valid only when stamped by the department.", 105, 270, {align: "center"});
+
+        doc.save(`Equity_Receipt_${data.matric}.pdf`);
+    }
+</script>
+</body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dues Payment | Equity Crew 26</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        :root {
+            --primary-green: #0a1f0a;
+            --accent-green: #2ecc71;
+            --soft-bg: #f4f9f4;
+            --text-main: #1a2e1a;
+            --card-white: #ffffff;
+            --warning-orange: #f39c12;
+            --error-red: #e74c3c;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--soft-bg); margin: 0; color: var(--text-main); }
+
+        #authWrapper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--primary-green); z-index: 9999;
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            overflow-y: auto; padding: 20px; box-sizing: border-box;
+        }
+
+        .login-box {
+            background: var(--card-white); padding: 30px; border-radius: 20px;
+            width: 100%; max-width: 400px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px;
+        }
+
+        .login-box input {
+            width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd;
+            border-radius: 8px; box-sizing: border-box; font-size: 1rem;
+        }
+
+        .pay-btn {
+            background: var(--accent-green); color: var(--primary-green);
+            width: 100%; padding: 15px; border-radius: 50px;
+            font-weight: bold; font-size: 1rem; border: none;
+            cursor: pointer; margin-top: 15px; transition: 0.3s;
+        }
+        .pay-btn:hover { background: #fff; transform: translateY(-2px); }
+
+        nav { background: #000; padding: 15px; text-align: center; color: var(--accent-green); font-weight: bold; }
+        .container { max-width: 700px; margin: 40px auto; padding: 30px; background: white; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        
+        .payment-box { 
+            background: var(--primary-green); color: white; padding: 30px; 
+            border-radius: 15px; margin-top: 20px; position: relative; 
+            overflow: hidden;
+        }
+        
+        .deadline-badge { 
+            position: absolute; top: 0; right: 0; background: var(--warning-orange); 
+            color: white; padding: 5px 15px; border-bottom-left-radius: 15px; 
+            font-size: 0.75rem; font-weight: bold; 
+        }
+
+        .admin-link { color: #fff; opacity: 0.3; font-size: 0.7rem; cursor: pointer; background: none; border: none; margin-top: 10px; }
+
+        table.history-table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left; font-size: 0.9rem; }
+        table.history-table th { border-bottom: 2px solid var(--accent-green); padding: 10px 5px; }
+        table.history-table td { padding: 10px 5px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+
+<div id="authWrapper">
+    <div class="login-box" id="registerBox">
+        <h2 style="color: var(--primary-green)">Create Account</h2>
+        <input type="text" id="regName" placeholder="Full Name">
+        <input type="text" id="regMatric" placeholder="Matric (e.g. SW123456789012)">
+        <input type="email" id="regEmail" placeholder="Gmail Address">
+        <input type="password" id="regPass" placeholder="Password">
+        <button class="pay-btn" onclick="registerStudent()">Register Now</button>
+        <p style="font-size: 0.8rem; margin-top: 15px;">Joined already? <a href="javascript:void(0)" onclick="showLogin()" style="color: var(--accent-green)">Login</a></p>
+    </div>
+
+    <div class="login-box" id="loginBox" style="display:none;">
+        <h2 style="color: var(--primary-green)">Student Login</h2>
+        <input type="text" id="logMatric" placeholder="Matric Number">
+        <input type="password" id="logPass" placeholder="Password">
+        <button class="pay-btn" onclick="loginUser()">Access Dashboard</button>
+        <p style="font-size: 0.8rem; margin-top: 15px;">
+            <a href="javascript:void(0)" onclick="showForgot()" style="color: var(--error-red)">Forgot Password?</a> | 
+            <a href="javascript:void(0)" onclick="showRegister()" style="color: var(--accent-green)">Register</a>
+        </p>
+    </div>
+
+    <div class="login-box" id="forgotBox" style="display:none;">
+        <h2 style="color: var(--primary-green)">Reset Password</h2>
+        <input type="text" id="resetMatric" placeholder="Matric Number">
+        <input type="email" id="resetEmail" placeholder="Registered Gmail">
+        <input type="password" id="newPass" placeholder="New Password">
+        <button class="pay-btn" onclick="resetPassword()">Update Password</button>
+        <p style="font-size: 0.8rem; margin-top: 15px;"><a href="javascript:void(0)" onclick="showLogin()" style="color: var(--accent-green)">Back to Login</a></p>
+    </div>
+
+    <div class="login-box" id="adminSection" style="display:none; max-width: 500px;">
+        <h2 style="color: var(--primary-green)">Admin Console</h2>
+        <input type="password" id="adminPassInput" placeholder="Admin Pin">
+        <button class="pay-btn" onclick="unlockAdmin()">Unlock Records</button>
+        <div id="adminContent" style="display:none; margin-top:20px;">
+            <div id="studentList"></div>
+            <button onclick="localStorage.clear(); location.reload();" style="color:red; background:none; border:none; cursor:pointer; font-size:0.7rem;">[WIPE DATABASE]</button>
+        </div>
+    </div>
+
+    <button class="admin-link" onclick="showAdminBox()">Internal Access Only</button>
+</div>
+
+<nav>EQUITY CREW 26 | <span id="userNavName">Guest</span></nav>
+
+<div class="container">
+    <h2 id="welcomeMsg" style="color: var(--primary-green);">Welcome</h2>
+    
+    <div class="payment-box">
+        <div class="deadline-badge">Deadline: Jan 15, 2026</div>
+        <p id="deadlineStatus" style="margin-top: 10px; font-weight: bold;"></p>
+        <p style="opacity: 0.8; margin: 0;">Faculty & Departmental Dues:</p>
+        <h1 style="font-size: 3rem; margin: 10px 0;">₦<span id="priceDisplay">200,000</span></h1>
+        <button class="pay-btn" onclick="payWithPaystack()">Secure Payment <i class="fas fa-lock"></i></button>
+    </div>
+
+    <div style="margin-top: 40px; text-align: left;">
+        <h3 style="border-bottom: 2px solid var(--accent-green); display: inline-block; padding-bottom: 5px;">My Receipt History</h3>
+        <div id="paymentHistory"></div>
+    </div>
+</div>
+
+<footer>
+    <p style="text-align: center; font-size: 0.8rem; color: #888; margin: 40px 0;">© 2026 Equity Crew 26 Faculty Hub</p>
+</footer>
+
+<script>
+    const ADMIN_PIN = "1234";
+    const BASE_DUES = 200000;
+    const LATE_FINE = 2500;
+    const DEADLINE_DAY = 15; 
+    const VERIFY_URL = "https://equitycrew26.com/verify"; // Change to your domain
+    let currentUser = null;
+
+    // --- VALIDATION ---
+    function isValidMatric(m) {
+        const regex = /^(SW|CS|NC).{12}$/;
+        return regex.test(m.toUpperCase()) && m.length === 14;
+    }
+
+    function getDept(m) {
+        if(m.startsWith("SW")) return "Software & Web Development";
+        if(m.startsWith("CS")) return "Computer Science";
+        if(m.startsWith("NC")) return "Cloud Networking";
+        return "General Faculty";
+    }
+
+    // --- NAVIGATION ---
+    function showLogin() { hideAll(); document.getElementById('loginBox').style.display='block'; }
+    function showRegister() { hideAll(); document.getElementById('registerBox').style.display='block'; }
+    function showForgot() { hideAll(); document.getElementById('forgotBox').style.display='block'; }
+    function showAdminBox() { hideAll(); document.getElementById('adminSection').style.display='block'; }
+    function hideAll() {
+        document.getElementById('registerBox').style.display='none';
+        document.getElementById('loginBox').style.display='none';
+        document.getElementById('forgotBox').style.display='none';
+        document.getElementById('adminSection').style.display='none';
+    }
+
+    // --- AUTH ---
+    function registerStudent() {
+        const name = document.getElementById('regName').value;
+        const matric = document.getElementById('regMatric').value.toUpperCase();
+        const email = document.getElementById('regEmail').value;
+        const pass = document.getElementById('regPass').value;
+
+        if(!name || !matric || !pass || !email) return alert("Please fill all fields.");
+        if(!isValidMatric(matric)) return alert("Invalid Matric! Must be 14 digits starting with SW, CS, or NC.");
+
+        const user = { name, matric, email, password: pass, history: [] };
+        localStorage.setItem(matric, JSON.stringify(user));
+        alert("Registration Successful! Log in to continue.");
+        showLogin();
+    }
+
+    function loginUser() {
+        const m = document.getElementById('logMatric').value.toUpperCase();
+        const p = document.getElementById('logPass').value;
+        const data = localStorage.getItem(m);
+
+        if(data) {
+            const user = JSON.parse(data);
+            if(user.password === p) {
+                currentUser = user;
+                document.getElementById('authWrapper').style.display='none';
+                document.getElementById('userNavName').innerText = user.name;
+                document.getElementById('welcomeMsg').innerText = "Hello, " + user.name;
+                checkDateAndPrice();
+                showHistory();
+            } else { alert("Incorrect Password."); }
+        } else { alert("User not found."); }
+    }
+
+    function resetPassword() {
+        const m = document.getElementById('resetMatric').value.toUpperCase();
+        const e = document.getElementById('resetEmail').value;
+        const n = document.getElementById('newPass').value;
+        const data = localStorage.getItem(m);
+
+        if(data) {
+            let user = JSON.parse(data);
+            if(user.email === e) {
+                user.password = n;
+                localStorage.setItem(m, JSON.stringify(user));
+                alert("Password Updated!");
+                showLogin();
+            } else { alert("Email verification failed."); }
+        } else { alert("Matric not found."); }
+    }
+
+    // --- PRICING ---
+    function checkDateAndPrice() {
+        const now = new Date();
+        const isLate = (now.getMonth() === 0 && now.getDate() > DEADLINE_DAY) || now.getMonth() > 0;
+        const finalPrice = isLate ? BASE_DUES + LATE_FINE : BASE_DUES;
+        
+        document.getElementById('priceDisplay').innerText = finalPrice.toLocaleString();
+        const status = document.getElementById('deadlineStatus');
+        if(isLate) {
+            status.innerHTML = "LATE PAYMENT ACTIVE (Penalty Added)";
+            status.style.color = "var(--error-red)";
+        } else {
+            status.innerHTML = "ON-TIME PAYMENT ACTIVE";
+            status.style.color = "var(--accent-green)";
+        }
+    }
+
+    // --- PAYMENT ---
+    function payWithPaystack() {
+        const amount = parseInt(document.getElementById('priceDisplay').innerText.replace(/,/g, ''));
+        let handler = PaystackPop.setup({
+            key: 'pk_test_7c7358690ce988034fc366cff33b97a3f1a3bc7b', 
+            email: currentUser.email,
+            amount: amount * 100,
+            callback: (res) => {
+                const data = JSON.parse(localStorage.getItem(currentUser.matric));
+                data.history.push({ reference: res.reference, amount: amount, date: new Date().toLocaleString() });
+                localStorage.setItem(currentUser.matric, JSON.stringify(data));
+                showHistory();
+                alert("Payment Successful!");
+            }
+        });
+        handler.openIframe();
+    }
+
+    function showHistory() {
+        const historyDiv = document.getElementById('paymentHistory');
+        const data = JSON.parse(localStorage.getItem(currentUser.matric));
+        if(!data.history || data.history.length === 0) {
+            historyDiv.innerHTML = "<p style='color:#999'>No receipts found.</p>";
+            return;
+        }
+        let html = `<table class="history-table"><thead><tr><th>Date</th><th>Amount</th><th>Receipt</th></tr></thead><tbody>`;
+        data.history.forEach((h, i) => {
+            html += `<tr><td>${h.date.split(',')[0]}</td><td>₦${h.amount.toLocaleString()}</td>
+            <td><button onclick="downloadPDF(${i})" style="background:var(--primary-green); color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;"><i class="fas fa-file-pdf"></i> View</button></td></tr>`;
+        });
+        historyDiv.innerHTML = html + "</tbody></table>";
+    }
+
+    // --- HIGH-END PDF GENERATOR ---
+    async function downloadPDF(index) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const data = JSON.parse(localStorage.getItem(currentUser.matric));
+        const pay = data.history[index];
+
+        // QR Code
+        const qrContainer = document.createElement("div");
+        const qrText = `${VERIFY_URL}?ref=${pay.reference}&m=${data.matric}`;
+        const qrcode = new QRCode(qrContainer, { text: qrText, width: 128, height: 128 });
+        await new Promise(r => setTimeout(r, 400));
+        const qrDataURL = qrContainer.querySelector('canvas').toDataURL("image/png");
+
+        // Layout
+        doc.setDrawColor(200);
+        doc.rect(10, 10, 190, 277);
+        
+        doc.setFont("times", "bold");
+        doc.setFontSize(18);
+        doc.text("EQUITY CREW 26 OFFICIAL FACULTY RECEIPT", 105, 25, {align: "center"});
+
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.text("RECEIPT NO:", 20, 40);
+        doc.setFont("helvetica", "normal");
+        doc.text(pay.reference.toUpperCase(), 50, 40);
+
+        doc.setFont("helvetica", "bold");
+        doc.text("DATE:", 145, 40);
+        doc.setFont("helvetica", "normal");
+        doc.text(pay.date.split(',')[0], 160, 40);
+
+        // Columns
+        doc.setFontSize(11); doc.setFont("helvetica", "bold");
+        doc.text("FACULTY INFORMATION", 20, 55);
+        doc.text("STUDENT INFORMATION", 115, 55);
+        doc.line(20, 57, 90, 57); doc.line(115, 57, 185, 57);
+
+        doc.setFontSize(10); doc.setFont("helvetica", "normal");
+        doc.text(["Equity Crew 26 Hub", "Faculty of Tech & Computing", "Official Dues Dept."], 20, 65);
+        doc.text([`Name: ${data.name.toUpperCase()}`, `Matric: ${data.matric}`, `Dept: ${getDept(data.matric)}`], 115, 65);
+
+        // Table
+        doc.setFillColor(10, 31, 10); doc.rect(20, 95, 170, 8, 'F');
+        doc.setFont("helvetica", "bold"); doc.setTextColor(255);
+        doc.text("ITEM DESCRIPTION", 25, 100.5); doc.text("TOTAL", 170, 100.5);
+        
+        doc.setTextColor(60); doc.setFont("helvetica", "normal");
+        doc.text("2026 Departmental Session Dues", 25, 112);
+        doc.text(`NGN ${pay.amount.toLocaleString()}`, 170, 112);
+        doc.line(20, 118, 190, 118);
+
+        // Signatures
+        const sigY = 245;
+        doc.setTextColor(0);
+        doc.line(25, sigY, 85, sigY);
+        doc.setFontSize(10); doc.setFont("helvetica", "bold");
+        doc.text("GENERAL SECRETARY", 55, sigY + 5, {align:"center"});
+        doc.setFontSize(12); doc.setFont("times", "normal");
+        doc.text("Obidare Ibrahim Boluwatife", 55, sigY + 12, {align:"center"});
+
+        doc.line(125, sigY, 185, sigY);
+        doc.setFontSize(10); doc.setFont("helvetica", "bold");
+        doc.text("EXECUTIVE PRESIDENT", 155, sigY + 5, {align:"center"});
+        doc.setFontSize(12); doc.setFont("times", "normal");
+        doc.text("Ajiferuke Ridwanullahi", 155, sigY + 12, {align:"center"});
+
+        // QR and Footer
+        doc.addImage(qrDataURL, 'PNG', 165, 255, 22, 22);
+        doc.setFontSize(7); doc.setTextColor(150);
+        doc.text("Scan to Verify", 176, 280, {align:"center"});
+        doc.text("This receipt is valid only with an official faculty stamp.", 105, 275, {align:"center"});
+
+        doc.save(`EquityReceipt_${data.matric}.pdf`);
+    }
+
+    // Admin Helper
+    function unlockAdmin() {
+        if(document.getElementById('adminPassInput').value === ADMIN_PIN) {
+            document.getElementById('adminContent').style.display='block';
+            let html = "<ul>";
+            for (let i = 0; i < localStorage.length; i++){
+                let k = localStorage.key(i);
+                if(k.length === 14) html += `<li>${k}</li>`;
+            }
+            document.getElementById('studentList').innerHTML = html + "</ul>";
+        }
+    }
+</script>
+
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dues Payment | Equity Crew 26</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        :root {
+            --primary-green: #0a1f0a;
+            --accent-green: #2ecc71;
+            --soft-bg: #f4f9f4;
+            --text-main: #1a2e1a;
+            --card-white: #ffffff;
+            --warning-orange: #f39c12;
+            --error-red: #e74c3c;
+        }
+
+        /* Cambria for Typography */
+        body { 
+            font-family: 'Cambria', 'Georgia', serif; 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('image.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            margin: 0; 
+            color: var(--text-main); 
+        }
+
+        #authWrapper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(10,31,10,0.8), rgba(10,31,10,0.8)), url('image.png');
+            background-size: cover;
+            background-position: center;
+            z-index: 9999;
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            overflow-y: auto; padding: 20px; box-sizing: border-box;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px;
+            width: 100%; max-width: 400px; text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4); margin-bottom: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .login-box input {
+            width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd;
+            border-radius: 8px; box-sizing: border-box; font-size: 1rem;
+            font-family: serif;
+        }
+
+        .pay-btn {
+            background: var(--accent-green); color: var(--primary-green);
+            width: 100%; padding: 15px; border-radius: 50px;
+            font-weight: bold; font-size: 1rem; border: none;
+            cursor: pointer; margin-top: 15px; transition: 0.3s;
+            font-family: serif;
+        }
+        .pay-btn:hover { background: #fff; transform: translateY(-2px); }
+
+        nav { background: rgba(0,0,0,0.9); padding: 15px; text-align: center; color: var(--accent-green); font-weight: bold; border-bottom: 2px solid var(--accent-green); }
+        
+        .container { 
+            max-width: 700px; margin: 40px auto; padding: 30px; 
+            background: rgba(255, 255, 255, 0.98); 
+            border-radius: 20px; text-align: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+        }
+        
+        .payment-box { 
+            background: var(--primary-green); color: white; padding: 30px; 
+            border-radius: 15px; margin-top: 20px; position: relative; 
+            overflow: hidden; box-shadow: inset 0 0 50px rgba(46, 204, 113, 0.2);
+        }
+        
+        .deadline-badge { 
+            position: absolute; top: 0; right: 0; background: var(--warning-orange); 
+            color: white; padding: 5px 15px; border-bottom-left-radius: 15px; 
+            font-size: 0.75rem; font-weight: bold; 
+        }
+
+        .admin-link { color: #fff; opacity: 0.5; font-size: 0.7rem; cursor: pointer; background: none; border: none; margin-top: 10px; }
+
+        table.history-table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left; font-size: 0.9rem; }
+        table.history-table th { border-bottom: 2px solid var(--accent-green); padding: 10px 5px; color: var(--primary-green); }
+        table.history-table td { padding: 10px 5px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+
+<div id="authWrapper">
+    <div class="login-box" id="registerBox">
+        <h2 style="color: var(--primary-green)">Create Account</h2>
+        <input type="text" id="regName" placeholder="Full Name">
+        <input type="text" id="regMatric" placeholder="Matric (e.g. SW123456789012)">
+        <input type="email" id="regEmail" placeholder="Gmail Address">
+        <input type="password" id="regPass" placeholder="Password">
+        <button class="pay-btn" onclick="registerStudent()">Register Now</button>
+        <p style="font-size: 0.8rem; margin-top: 15px;">Joined already? <a href="javascript:void(0)" onclick="showLogin()" style="color: var(--accent-green)">Login</a></p>
+    </div>
+
+    <div class="login-box" id="loginBox" style="display:none;">
+        <h2 style="color: var(--primary-green)">Student Login</h2>
+        <input type="text" id="logMatric" placeholder="Matric Number">
+        <input type="password" id="logPass" placeholder="Password">
+        <button class="pay-btn" onclick="loginUser()">Access Dashboard</button>
+        <p style="font-size: 0.8rem; margin-top: 15px;">
+            <a href="javascript:void(0)" onclick="showForgot()" style="color: var(--error-red)">Forgot Password?</a> | 
+            <a href="javascript:void(0)" onclick="showRegister()" style="color: var(--accent-green)">Register</a>
+        </p>
+    </div>
+
+    <div class="login-box" id="forgotBox" style="display:none;">
+        <h2 style="color: var(--primary-green)">Reset Password</h2>
+        <input type="text" id="resetMatric" placeholder="Matric Number">
+        <input type="email" id="resetEmail" placeholder="Registered Gmail">
+        <input type="password" id="newPass" placeholder="New Password">
+        <button class="pay-btn" onclick="resetPassword()">Update Password</button>
+        <p style="font-size: 0.8rem; margin-top: 15px;"><a href="javascript:void(0)" onclick="showLogin()" style="color: var(--accent-green)">Back to Login</a></p>
+    </div>
+
+    <div class="login-box" id="adminSection" style="display:none; max-width: 500px;">
+        <h2 style="color: var(--primary-green)">Admin Console</h2>
+        <input type="password" id="adminPassInput" placeholder="Admin Pin">
+        <button class="pay-btn" onclick="unlockAdmin()">Unlock Records</button>
+        <div id="adminContent" style="display:none; margin-top:20px;">
+            <div id="studentList"></div>
+            <button onclick="localStorage.clear(); location.reload();" style="color:red; background:none; border:none; cursor:pointer; font-size:0.7rem;">[WIPE DATABASE]</button>
+        </div>
+    </div>
+
+    <button class="admin-link" onclick="showAdminBox()">Internal Access Only</button>
+</div>
+
+<nav>EQUITY CREW 26 | <span id="userNavName">Guest</span></nav>
+
+<div class="container">
+    <h2 id="welcomeMsg" style="color: var(--primary-green);">Welcome</h2>
+    
+    <div class="payment-box">
+        <div class="deadline-badge">Deadline: Jan 15, 2026</div>
+        <p id="deadlineStatus" style="margin-top: 10px; font-weight: bold;"></p>
+        <p style="opacity: 0.8; margin: 0;">Faculty & Departmental Dues:</p>
+        <h1 style="font-size: 3rem; margin: 10px 0;">₦<span id="priceDisplay">200,000</span></h1>
+        <button class="pay-btn" onclick="payWithPaystack()">Secure Payment <i class="fas fa-lock"></i></button>
+    </div>
+
+    <div style="margin-top: 40px; text-align: left;">
+        <h3 style="border-bottom: 2px solid var(--accent-green); display: inline-block; padding-bottom: 5px;">My Receipt History</h3>
+        <div id="paymentHistory"></div>
+    </div>
+</div>
+
+<footer>
+    <p style="text-align: center; font-size: 0.8rem; color: #fff; margin: 40px 0; background: rgba(0,0,0,0.5); padding: 10px;">© 2026 Equity Crew 26 Faculty Hub</p>
+</footer>
+
+<script>
+    const ADMIN_PIN = "1234";
+    const BASE_DUES = 200000;
+    const LATE_FINE = 2500;
+    const DEADLINE_DAY = 15; 
+    const VERIFY_URL = "https://equitycrew26.com/verify"; 
+    let currentUser = null;
+
+    function isValidMatric(m) {
+        const regex = /^(SW|CS|NC).{12}$/;
+        return regex.test(m.toUpperCase()) && m.length === 14;
+    }
+
+    function getDept(m) {
+        if(m.startsWith("SW")) return "Software & Web Development";
+        if(m.startsWith("CS")) return "Computer Science";
+        if(m.startsWith("NC")) return "Cloud Networking";
+        return "General Faculty";
+    }
+
+    function showLogin() { hideAll(); document.getElementById('loginBox').style.display='block'; }
+    function showRegister() { hideAll(); document.getElementById('registerBox').style.display='block'; }
+    function showForgot() { hideAll(); document.getElementById('forgotBox').style.display='block'; }
+    function showAdminBox() { hideAll(); document.getElementById('adminSection').style.display='block'; }
+    function hideAll() {
+        document.getElementById('registerBox').style.display='none';
+        document.getElementById('loginBox').style.display='none';
+        document.getElementById('forgotBox').style.display='none';
+        document.getElementById('adminSection').style.display='none';
+    }
+
+    function registerStudent() {
+        const name = document.getElementById('regName').value;
+        const matric = document.getElementById('regMatric').value.toUpperCase();
+        const email = document.getElementById('regEmail').value;
+        const pass = document.getElementById('regPass').value;
+        if(!name || !matric || !pass || !email) return alert("Please fill all fields.");
+        if(!isValidMatric(matric)) return alert("Invalid Matric!");
+        const user = { name, matric, email, password: pass, history: [] };
+        localStorage.setItem(matric, JSON.stringify(user));
+        alert("Registration Successful!");
+        showLogin();
+    }
+
+    function loginUser() {
+        const m = document.getElementById('logMatric').value.toUpperCase();
+        const p = document.getElementById('logPass').value;
+        const data = localStorage.getItem(m);
+        if(data) {
+            const user = JSON.parse(data);
+            if(user.password === p) {
+                currentUser = user;
+                document.getElementById('authWrapper').style.display='none';
+                document.getElementById('userNavName').innerText = user.name;
+                document.getElementById('welcomeMsg').innerText = "Hello, " + user.name;
+                checkDateAndPrice();
+                showHistory();
+            } else { alert("Incorrect Password."); }
+        } else { alert("User not found."); }
+    }
+
+    function resetPassword() {
+        const m = document.getElementById('resetMatric').value.toUpperCase();
+        const e = document.getElementById('resetEmail').value;
+        const n = document.getElementById('newPass').value;
+        const data = localStorage.getItem(m);
+        if(data) {
+            let user = JSON.parse(data);
+            if(user.email === e) {
+                user.password = n;
+                localStorage.setItem(m, JSON.stringify(user));
+                alert("Password Updated!");
+                showLogin();
+            } else { alert("Email verification failed."); }
+        }
+    }
+
+    function checkDateAndPrice() {
+        const now = new Date();
+        const isLate = (now.getMonth() === 0 && now.getDate() > DEADLINE_DAY) || now.getMonth() > 0;
+        const finalPrice = isLate ? BASE_DUES + LATE_FINE : BASE_DUES;
+        document.getElementById('priceDisplay').innerText = finalPrice.toLocaleString();
+        const status = document.getElementById('deadlineStatus');
+        status.innerHTML = isLate ? "LATE PAYMENT ACTIVE" : "ON-TIME PAYMENT ACTIVE";
+        status.style.color = isLate ? "var(--error-red)" : "var(--accent-green)";
+    }
+
+    function payWithPaystack() {
+        const amount = parseInt(document.getElementById('priceDisplay').innerText.replace(/,/g, ''));
+        let handler = PaystackPop.setup({
+            key: 'pk_test_YOUR_KEY', 
+            email: currentUser.email,
+            amount: amount * 100,
+            callback: (res) => {
+                const data = JSON.parse(localStorage.getItem(currentUser.matric));
+                data.history.push({ reference: res.reference, amount: amount, date: new Date().toLocaleString() });
+                localStorage.setItem(currentUser.matric, JSON.stringify(data));
+                showHistory();
+                alert("Payment Successful!");
+            }
+        });
+        handler.openIframe();
+    }
+
+    function showHistory() {
+        const historyDiv = document.getElementById('paymentHistory');
+        const data = JSON.parse(localStorage.getItem(currentUser.matric));
+        if(!data.history || data.history.length === 0) {
+            historyDiv.innerHTML = "<p style='color:#999'>No receipts found.</p>";
+            return;
+        }
+        let html = `<table class="history-table"><thead><tr><th>Date</th><th>Amount</th><th>Receipt</th></tr></thead><tbody>`;
+        data.history.forEach((h, i) => {
+            html += `<tr><td>${h.date.split(',')[0]}</td><td>₦${h.amount.toLocaleString()}</td>
+            <td><button onclick="downloadPDF(${i})" style="background:var(--primary-green); color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;"><i class="fas fa-file-pdf"></i> View</button></td></tr>`;
+        });
+        historyDiv.innerHTML = html + "</tbody></table>";
+    }
+
+    // --- OVERHAULED PDF GENERATOR (Cambria Style, 11pt/12pt) ---
+    async function downloadPDF(index) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const data = JSON.parse(localStorage.getItem(currentUser.matric));
+        const pay = data.history[index];
+
+        // QR Code Generation
+        const qrContainer = document.createElement("div");
+        const qrText = `${VERIFY_URL}?ref=${pay.reference}&m=${data.matric}`;
+        new QRCode(qrContainer, { text: qrText, width: 128, height: 128 });
+        await new Promise(r => setTimeout(r, 400));
+        const qrDataURL = qrContainer.querySelector('canvas').toDataURL("image/png");
+
+        // // Receipt Border
+        // doc.setDrawColor(10, 31, 10);
+        // doc.setLineWidth(0.5);
+        // doc.rect(10, 10, 190, 277);
+
+        // Header - 12pt Bold
+        doc.setFont("times", "bold");
+        doc.setFontSize(12);
+        doc.setTextColor(10, 31, 10);
+        doc.text("EQUITY CREW 26 OFFICIAL FACULTY RECEIPT", 105, 25, {align: "center"});
+        
+        // Metadata - 11pt
+        doc.setFontSize(11);
+        doc.setFont("times", "bold");
+        doc.text("RECEIPT NO:", 20, 40);
+        doc.setFont("times", "normal");
+        doc.text(pay.reference.toUpperCase(), 50, 40);
+
+        doc.setFont("times", "bold");
+        doc.text("DATE:", 145, 40);
+        doc.setFont("times", "normal");
+        doc.text(pay.date.split(',')[0], 160, 40);
+
+        // Column Headers - 12pt Bold
+        doc.setFontSize(12); doc.setFont("times", "bold");
+        doc.text("FACULTY INFORMATION", 20, 55);
+        doc.text("STUDENT INFORMATION", 115, 55);
+        doc.line(20, 57, 90, 57); doc.line(115, 57, 185, 57);
+
+        // Details - 11pt Normal
+        doc.setFontSize(11); doc.setFont("times", "normal");
+        doc.text(["Equity Crew 26 Hub", "Faculty of Tech & Computing", "Official Dues Dept."], 20, 65);
+        doc.text([`Name: ${data.name.toUpperCase()}`, `Matric: ${data.matric}`, `Dept: ${getDept(data.matric)}`], 115, 65);
+
+        // Payment Table
+        doc.setFillColor(10, 31, 10); doc.rect(20, 95, 170, 10, 'F');
+        doc.setFont("times", "bold"); doc.setTextColor(255); doc.setFontSize(12);
+        doc.text("ITEM DESCRIPTION", 25, 101.5); doc.text("TOTAL", 170, 101.5);
+        
+        doc.setTextColor(40); doc.setFont("times", "normal"); doc.setFontSize(11);
+        doc.text("2026 Faculty & Departmental Session Dues", 25, 115);
+        doc.text(`NGN ${pay.amount.toLocaleString()}`, 170, 115);
+        doc.line(20, 120, 190, 120);
+
+        // Signatures
+        const sigY = 230;
+        doc.setTextColor(0);
+        doc.line(25, sigY, 85, sigY);
+        doc.setFontSize(11); doc.setFont("times", "bold");
+        doc.text("GENERAL SECRETARY", 55, sigY + 5, {align:"center"});
+        doc.setFont("times", "italic");
+        doc.text("Obidare Ibrahim Boluwatife", 55, sigY + 12, {align:"center"});
+
+        doc.line(125, sigY, 185, sigY);
+        doc.setFontSize(11); doc.setFont("times", "bold");
+        doc.text("EXECUTIVE PRESIDENT", 155, sigY + 5, {align:"center"});
+        doc.setFont("times", "italic");
+        doc.text("Ajiferuke Ridwanullahi", 155, sigY + 12, {align:"center"});
+
+        // QR and Footer
+        doc.addImage(qrDataURL, 'PNG', 165, 250, 25, 25);
+        doc.setFontSize(10); doc.setTextColor(100);
+        doc.text("This receipt is generated electronically and valid upon faculty verification.", 105, 275, {align:"center"});
+
+        doc.save(`Receipt_${data.matric}.pdf`);
+    }
+
+    function unlockAdmin() {
+        if(document.getElementById('adminPassInput').value === ADMIN_PIN) {
+            document.getElementById('adminContent').style.display='block';
+            let html = "<ul>";
+            for (let i = 0; i < localStorage.length; i++){
+                let k = localStorage.key(i);
+                if(k.length === 14) html += `<li>${k}</li>`;
+            }
+            document.getElementById('studentList').innerHTML = html + "</ul>";
+        }
+    }
 </script>
 
 </body>

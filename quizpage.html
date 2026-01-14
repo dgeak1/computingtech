@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Computing Assessment | Equity '26</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --gold: #d4af37;
+            --deep-green: #022c22;
+            --emerald: #064e3b;
+            --border: rgba(212, 175, 55, 0.2);
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: radial-gradient(circle at center, #064e3b 0%, #022c22 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .hidden { display: none !important; }
+        .cambria { font-family: 'Cambria', serif; }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(2, 44, 34, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 50px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative Background elements */
+        .quiz-container::before {
+            content: ""; position: absolute; top: -50px; right: -50px;
+            width: 200px; height: 200px; background: var(--gold);
+            filter: blur(120px); opacity: 0.1;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: var(--gold);
+            font-size: 2.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Intro Screen */
+        #quiz-intro { text-align: center; }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .feature-item {
+            background: var(--glass);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+
+        /* Active Quiz */
+        .timer-wrapper {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        #timer-fill {
+            width: 100%;
+            height: 100%;
+            background: var(--gold);
+            transition: width 1s linear;
+        }
+
+        .question-text {
+            font-size: 1.6rem;
+            line-height: 1.4;
+            margin-bottom: 40px;
+            min-height: 100px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .option-btn {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .option-index {
+            color: var(--gold);
+            font-weight: 800;
+            margin-right: 15px;
+        }
+
+        /* Results */
+        #quiz-result { text-align: center; }
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border: 5px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .btn-luxury {
+            background: linear-gradient(135deg, var(--gold), #b08d29);
+            color: #022c22;
+            padding: 18px 40px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s;
+        }
+
+        .btn-luxury:hover { transform: scale(1.05); }
+
+        @media (max-width: 768px) {
+            .options-grid { grid-template-columns: 1fr; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .quiz-container { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <div class="header">
+            <h1 class="cambria">Elite Tech Assessment</h1>
+            <p style="opacity: 0.6; font-size: 0.8rem;">Faculty of Computing & Global Innovation Standards</p>
+        </div>
+
+        <div id="quiz-intro">
+            <h2 class="cambria" style="font-size: 1.8rem; margin-bottom: 15px;">Global Student Development</h2>
+            <p style="opacity: 0.8; max-width: 600px; margin: 0 auto;">This assessment evaluates your understanding of hardware architecture, data algorithms, and networking protocols used in global tech hubs like Silicon Valley and Shenzhen.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <i data-lucide="cpu" style="color:var(--gold)"></i>
+                    <h4 style="margin-top:10px">Architecture</h4>
+                </div>
+                <div class="feature-item">
+                    <i data-lucide="shield-check" style="color:var(--gold)"></i>
+                    <h4 style="margin-top:10px">Security</h4>
+                </div>
+                <div class="feature-item">
+                    <i data-lucide="globe" style="color:var(--gold)"></i>
+                    <h4 style="margin-top:10px">Infrastructure</h4>
+                </div>
+            </div>
+
+            <button class="btn-luxury" onclick="startQuiz()">Initialize Assessment</button>
+        </div>
+
+        <div id="quiz-active" class="hidden">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem;">
+                <span>QUESTION <span id="q-count" style="color: var(--gold); font-weight: 800;">01</span> / 15</span>
+                <span id="timer-text" style="font-weight: 800; color: var(--gold);">20s</span>
+            </div>
+            <div class="timer-wrapper">
+                <div id="timer-fill"></div>
+            </div>
+
+            <h2 id="q-text" class="question-text cambria"></h2>
+
+            <div id="q-options" class="options-grid">
+                </div>
+        </div>
+
+        <div id="quiz-result" class="hidden">
+            <div class="score-circle" id="score-display">0%</div>
+            <h2 id="rank-name" class="cambria" style="letter-spacing: 5px; color: white;">RANK: AMATEUR</h2>
+            <p id="rank-desc" style="margin: 20px 0 40px; opacity: 0.7; font-size: 0.9rem; line-height: 1.6;"></p>
+            <button class="btn-luxury" onclick="location.reload()">Return to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        const TECH_QUIZ = [
+            { q: "Which architectural model is the basis for most modern computer designs, separating memory from the CPU?", o: ["Harvard Architecture", "Von Neumann Architecture", "RISC Model", "Turing Machine"], a: 1 },
+            { q: "In Data Structures, which one follows the 'Last In, First Out' (LIFO) principle?", o: ["Queue", "Linked List", "Stack", "Binary Tree"], a: 2 },
+            { q: "What is the complexity of a Binary Search algorithm in the worst-case scenario?", o: ["O(n)", "O(n²)", "O(log n)", "O(1)"], a: 2 },
+            { q: "Who is considered the world's first computer programmer?", o: ["Grace Hopper", "Ada Lovelace", "Katherine Johnson", "Joan Clarke"], a: 1 },
+            { q: "Which protocol is responsible for resolving a domain name to an IP address?", o: ["DHCP", "SNMP", "DNS", "ICMP"], a: 2 },
+            { q: "In Cybersecurity, what is 'Salting' used for?", o: ["Hard Drive Encryption", "Hashing Passwords", "SQL Filtering", "VPN Speed"], a: 1 },
+            { q: "Which company developed the Java programming language in 1995?", o: ["Microsoft", "Sun Microsystems", "IBM", "Oracle"], a: 1 },
+            { q: "What does the 'ACID' property in Database Management Systems ensure?", o: ["Fast Searching", "Transaction Integrity", "Auto-scaling", "Data Encryption"], a: 1 },
+            { q: "Which Linux distribution is the foundation for the Android OS?", o: ["Ubuntu", "Debian", "Modified Linux Kernel", "Fedora"], a: 2 },
+            { q: "In Cloud Computing, what does 'PaaS' stand for?", o: ["Platform as a Service", "Protocol as a Service", "Payment as a Service", "Programming as a Service"], a: 0 },
+            { q: "What is the primary language used for querying Relational Databases?", o: ["Python", "NoSQL", "SQL", "C++"], a: 2 },
+            { q: "Which unit in the CPU performs mathematical calculations?", o: ["Control Unit", "Registers", "ALU", "L1 Cache"], a: 2 },
+            { q: "What is the maximum number of bits in an IPv6 address?", o: ["32 bits", "64 bits", "128 bits", "256 bits"], a: 2 },
+            { q: "Which version control system was created by Linus Torvalds in 2005?", o: ["Subversion", "Mercurial", "Git", "Perforce"], a: 2 },
+            { q: "What does 'RAID' stand for in data storage?", o: ["Rapid Access Drive", "Redundant Array of Independent Disks", "Reliable Data", "Remote Interface"], a: 1 }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 20;
+
+        function startQuiz() {
+            document.getElementById('quiz-intro').classList.add('hidden');
+            document.getElementById('quiz-active').classList.remove('hidden');
+            showQuestion();
+            lucide.createIcons();
+        }
+
+        function showQuestion() {
+            clearInterval(timer);
+            timeLeft = 20;
+            updateTimerUI();
+
+            const q = TECH_QUIZ[currentQ];
+            document.getElementById('q-count').innerText = (currentQ + 1).toString().padStart(2, '0');
+            document.getElementById('q-text').innerText = q.q;
+            
+            const optBox = document.getElementById('q-options');
+            optBox.innerHTML = "";
+            
+            q.o.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn";
+                btn.innerHTML = `<span class="option-index">${String.fromCharCode(65+i)}</span> ${opt}`;
+                btn.onclick = () => handleAnswer(i);
+                optBox.appendChild(btn);
+            });
+
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+                if(timeLeft <= 0) handleAnswer(-1);
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            const fill = document.getElementById('timer-fill');
+            const text = document.getElementById('timer-text');
+            const percent = (timeLeft / 20) * 100;
+            fill.style.width = percent + "%";
+            text.innerText = timeLeft + "s";
+            
+            if(timeLeft < 5) fill.style.background = "#ef4444";
+            else fill.style.background = "var(--gold)";
+        }
+
+        function handleAnswer(choice) {
+            clearInterval(timer);
+            if(choice === TECH_QUIZ[currentQ].a) score++;
+            
+            currentQ++;
+            if(currentQ < TECH_QUIZ.length) {
+                showQuestion();
+            } else {
+                showFinalResult();
+            }
+        }
+
+        function showFinalResult() {
+            document.getElementById('quiz-active').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            
+            const percent = Math.round((score / TECH_QUIZ.length) * 100);
+            document.getElementById('score-display').innerText = percent + "%";
+            
+            let rank = "AMATEUR";
+            let desc = "You need to immerse yourself deeper in computing theory. Knowledge is power.";
+            
+            if(percent >= 90) {
+                rank = "SYSTEM ARCHITECT";
+                desc = "Masterful. You possess the elite technical mindset required for global innovation.";
+            } else if(percent >= 70) {
+                rank = "SENIOR DEVELOPER";
+                desc = "Very strong performance. You understand the core infrastructure of the digital world.";
+            } else if(percent >= 50) {
+                rank = "TECH ASSOCIATE";
+                desc = "Good foundation, but true elite status requires knowing the architectural 'why' behind the 'how'.";
+            }
+            
+            document.getElementById('rank-name').innerText = "RANK: " + rank;
+            document.getElementById('rank-desc').innerText = desc;
+        }
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -44,8 +44,7 @@
             background: rgba(5, 10, 5, 0.8);
         }
 
-        /* Admin Trigger added to Logo */
-        .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; cursor: pointer; user-select: none; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; }
         .logo span { color: var(--primary-green); }
 
         .nav-links { list-style: none; display: flex; gap: 25px; margin: 0; padding: 0; }
@@ -125,39 +124,6 @@
 
         .view-btn:active { transform: scale(0.98); }
 
-        /* Admin Modal Styling */
-        #adminModal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(15px);
-        }
-
-        .upload-card {
-            background: var(--dark-bg);
-            border: 1px solid var(--primary-green);
-            padding: 40px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-        }
-
-        .drop-zone {
-            border: 2px dashed var(--border);
-            padding: 30px;
-            margin: 20px 0;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .drop-zone:hover { border-color: var(--primary-green); background: rgba(46, 204, 113, 0.05); }
-
         /* Dark Mode Toggle */
         .mode-toggle {
             position: fixed;
@@ -194,7 +160,7 @@
 <body>
 
     <nav class="navbar">
-        <div class="logo" onclick="accessAdmin()">The <span>Archive</span></div>
+        <div class="logo">The <span>Archive</span></div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="library.html" class="active">Library</a></li>
@@ -215,22 +181,6 @@
         </div>
     </main>
 
-    <div id="adminModal">
-        <div class="upload-card">
-            <h2 style="font-family: 'Playfair Display';">Gen Sec Portal</h2>
-            <p style="font-size: 0.8rem;">Upload new examination assets to the repository.</p>
-            
-            <div class="drop-zone" onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--primary-green); margin-bottom: 10px;"></i>
-                <p id="fileName">Click to select image(s)</p>
-                <input type="file" id="fileInput" hidden multiple accept="image/*" onchange="updateFileName()">
-            </div>
-
-            <button class="view-btn" style="width: 100%;" onclick="uploadFiles()">Upload Assets</button>
-            <p style="margin-top: 20px; cursor: pointer; color: var(--primary-green); font-size: 0.8rem;" onclick="closeAdmin()">Exit Portal</p>
-        </div>
-    </div>
-
     <button class="mode-toggle" onclick="toggleMode()">
         <i class="fas fa-adjust"></i>
     </button>
@@ -242,38 +192,6 @@
     <script>
         function toggleMode() {
             document.body.classList.toggle('light-mode');
-        }
-
-        function accessAdmin() {
-            const pw = prompt("Identity Verification Required:");
-            if (pw === "DolapoAdmin") {
-                document.getElementById('adminModal').style.display = 'flex';
-            } else if (pw !== null) {
-                alert("Unauthorized Access Attempt Recorded.");
-            }
-        }
-
-        function closeAdmin() {
-            document.getElementById('adminModal').style.display = 'none';
-        }
-
-        function updateFileName() {
-            const input = document.getElementById('fileInput');
-            const fileNameDisplay = document.getElementById('fileName');
-            if (input.files.length > 0) {
-                fileNameDisplay.innerText = input.files.length + " file(s) selected";
-            }
-        }
-
-        function uploadFiles() {
-            const input = document.getElementById('fileInput');
-            if (input.files.length === 0) {
-                alert("Please select files first.");
-                return;
-            }
-            // Logic for actual upload would go here (e.g., Firebase, Cloudinary, etc.)
-            alert("Success: " + input.files.length + " Assets synchronized with 2025 Gallery.");
-            closeAdmin();
         }
     </script>
 </body>

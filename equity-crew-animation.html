@@ -31,6 +31,24 @@
             min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-bottom: 80px;
         }
 
+        .quote-box {
+    font-family: 'Cambria', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: white;
+    border-left: 2px solid hsl(111, 88%, 64%);
+    padding-left: 15px;
+    margin-top: 10px;
+    opacity: 0.9;
+}
+/* .member-node {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: #94a3b8;
+} */
+
         .controls { position: absolute; top: 30px; left: 30px; display: flex; gap: 10px; z-index: 1000; }
         .user-info { position: absolute; top: 30px; right: 30px; color: var(--text-main); font-weight: 600; display: flex; align-items: center; gap: 10px; }
         
@@ -94,20 +112,122 @@
         <h1 style="color: white; margin-top: 100px; text-align: center;">Faculty Executive Board</h1>
 
         <div class="gallery-wrapper">
-            <button class="scroll-btn scroll-left" onclick="sideScroll('left')">&#10094;</button>
-            <div class="faculty-gallery" id="gallery">
-                <div class="member-card"><img src="backggg.jfif" class="member-image"><p class="member-role">President</p><h4 class="member-name">Ajiferuke Ridwanullahi</h4></div>
-                <div class="member-card"><img src="BGG2.jpg" class="member-image"><p class="member-role">Vice President</p><h4 class="member-name">Armani</h4></div>
-                <div class="member-card"><img src="newbg.JPG" class="member-image"><p class="member-role">General Secretary</p><h4 class="member-name">Obidare Ibrahim</h4></div>
-                <div class="member-card"><img src="IMG_9202.JPG" class="member-image"><p class="member-role">Asst. Gen Secretary</p><h4 class="member-name">Muslimah</h4></div>
-                <div class="member-card"><img src="IMG_9196.JPG" class="member-image"><p class="member-role">Financial Secretary</p><h4 class="member-name">Oyenike Blessing</h4></div>
-                <div class="member-card"><img src="newbg - Copy.JPG" class="member-image"><p class="member-role">Welfare Director</p><h4 class="member-name">Editor</h4></div>
-                <div class="member-card"><img src="newbg.JPG" class="member-image"><p class="member-role">PRO</p><h4 class="member-name">Muller</h4></div>
-                <div class="member-card"><img src="newbg.JPG" class="member-image"><p class="member-role">Sports Director</p><h4 class="member-name">Marcos</h4></div>
-                <div class="member-card"><img src="newbg.JPG" class="member-image"><p class="member-role">Social Director</p><h4 class="member-name">Zachh</h4></div>
+    <button class="scroll-btn scroll-left" onclick="sideScroll('left')">&#10094;</button>
+    <div class="faculty-gallery" id="gallery">
+        
+        <div class="member-card" style="box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border: 2px solid #d4af37;">
+            <img src="ajii.jpg" class="member-image">
+            <p class="member-role">President</p>
+            <div class="member-info">
+                <h4 class="member-name">Ajiferuke Ridwanullahi Olamide</h4>
+                <p class="member-details">P.K.A AJII | Level: HNDII<br>Software and Web Development</p>
             </div>
-            <button class="scroll-btn scroll-right" onclick="sideScroll('right')">&#10095;</button>
+            <p class="quote-box">"Leadership is not a title, but the standard of excellence we set for others to follow."</p>
         </div>
+
+        <div class="member-card">
+            <img src="armani.jpg" class="member-image">
+            <p class="member-role">Vice President</p>
+            <div class="member-info">
+                <h4 class="member-name">Olaniyan Kehinde Nasirudeen</h4>
+                <p class="member-details">P.K.A ARMANI | Level: NDII PT<br>Computer Science</p>
+            </div>
+            <p class="quote-box">"Accuracy is our mandate; honor is our guide. We ensure the standard never drops."</p>
+        </div>
+
+        <div class="member-card">
+            <img src="dolapo.jpg" class="member-image">
+            <p class="member-role">General Secretary</p>
+            <div class="member-info">
+                <h4 class="member-name">Obidare Ibrahim Boluwatife</h4>
+                <p class="member-details">P.K.A AJII | Level: HNDII<br>Software and Web Development</p>
+            </div>
+            <p class="quote-box">"Organization is the silent engine of greatness."</p>
+        </div>
+
+        <div class="member-card">
+            <img src="Muslimah.jpg" class="member-image">
+            <p class="member-role">Asst. Gen Secretary</p>
+            <div class="member-info">
+                <h4 class="member-name">Salaudeen Oyindamola Muslimah</h4>
+                <p class="member-details">P.K.A MUSLIMAH | Level: NDII FT<br>Computer Science</p>
+            </div>
+            <p class="quote-box">"Every great vision requires meticulous execution."</p>
+        </div>
+
+        <div class="member-card">
+            <img src="oyenike.jpg" class="member-image">
+            <p class="member-role">Financial Secretary</p>
+            <div class="member-info">
+                <h4 class="member-name">Oyebode Blessing Oyenike</h4>
+                <p class="member-details">P.K.A IRON LADY | Level: HNDII<br>Software and Web Development</p>
+            </div>
+            <p class="quote-box">"Integrity in every transaction."</p>
+        </div>
+
+        <div class="member-card">
+            <img src="editor.jpg" class="member-image">
+            <p class="member-role">Welfare Director</p>
+            <div class="member-info">
+                <h4 class="member-name">Adeyemi AbdulAzeez</h4>
+                <p class="member-details">P.K.A EDITOR | Level: HNDII<br>Software and Web Development</p>
+            </div>
+            <p class="quote-box">"The strength of the Crew is measured by its most silent member."</p>
+        </div>
+
+        <div class="member-card">
+            <img src="Mubest.jpg" class="member-image">
+            <p class="member-role">PRO</p>
+            <div class="member-info">
+                <h4 class="member-name">Yusuf Mubarak Ayinde</h4>
+                <p class="member-details">P.K.A MUBEST | Level: NDII FT<br>Computer Science</p>
+            </div>
+            <p class="quote-box">"We curate the image of a generation destined for impact."</p>
+        </div>
+
+        <div class="member-card">
+            <img src="marcos.jpg" class="member-image">
+            <p class="member-role">Sports Director</p>
+            <div class="member-info">
+                <h4 class="member-name">Adewolu Adesola Adetunji</h4>
+                <p class="member-details">P.K.A MARCOS | Level: HNDII<br>Networking and Cloud Networking</p>
+            </div>
+            <p class="quote-box">"Discipline on the field translates to dominance."</p>
+        </div>
+
+        <div class="member-card">
+            <img src="zacch.jpg" class="member-image">
+            <p class="member-role">Social Director</p>
+            <div class="member-info">
+                <h4 class="member-name">Adesoji Ayobami Zaccheaus</h4>
+                <p class="member-details">P.K.A ZACCH | Level: HNDII<br>Networking and Cloud Computing</p>
+            </div>
+            <p class="quote-box">"Elite social life is refined networking and celebration."</p>
+        </div>
+
+        <div class="member-card">
+            <img src="muller.jpg" class="member-image">
+            <p class="member-role">Treasurer</p>
+            <div class="member-info">
+                <h4 class="member-name">Oladimeji Obaloluwa Damilola</h4>
+                <p class="member-details">P.K.A MULLER | Level: NDII FT<br>Computer Science</p>
+            </div>
+            <p class="quote-box">"Fiscal responsibility is the foundation of trust."</p>
+        </div>
+
+        <div class="member-card">
+            <img src="newbg.JPG" class="member-image">
+            <p class="member-role">Speaker</p>
+            <div class="member-info">
+                <h4 class="member-name">White</h4>
+                <p class="member-details">P.K.A WHITE | Level: HNDII<br>Networking and Cloud Computing</p>
+            </div>
+            <p class="quote-box">"Unity is our greatest currency in the pursuit of greatness."</p>
+        </div>
+
+    </div>
+    <button class="scroll-btn scroll-right" onclick="sideScroll('right')">&#10095;</button>
+</div>
 
         <div class="panel-box">
             <h3 style="margin-top:0; color:var(--emerald);">My Request History</h3>

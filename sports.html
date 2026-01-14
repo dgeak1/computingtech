@@ -357,7 +357,7 @@
             </div>
         </div>
 
-        <h2 class="section-header">🎮 FIFA Tournament Registry</h2>
+        <h2 class="section-header">🎮 FIFA Tournament Registry (Coming Soon...)</h2>
         <div class="big-card" style="border: 2px solid var(--gold); margin-bottom: 50px;">
             <form id="fifaForm">
                 <input type="text" id="fName" placeholder="Gamer Tag" required>
@@ -366,20 +366,24 @@
             </form>
         </div>
 
-        <h2 class="section-header">Field Games Registry</h2>
+        <h2 class="section-header"> Athletes Registry</h2>
         <div class="big-card">
             <form id="athleteForm">
                 <input type="text" id="aName" placeholder="Full Name" required>
                 <input type="text" id="aMatric" placeholder="Matric No" required>
+                
                 <select id="aDept">
-                    <option>Software and Web Development</option>
-                    <option>Cloud Networking</option>
-                    <option>Computer Science</option>
+                    <option> Software and Web Development </option>
+                    <option> Cloud Networking </option>
+                    <option> Computer Science </option>
                 </select>
                 <select id="aSport">
-                    <option>Football</option>
-                    <option>Basketball</option>
-                    <option>Athletics</option>
+                    <option>Football (Male) </option>
+                    <option> Football (Female) </option>
+                    <option> Basketball (Male) </option>
+                    <option>Basketball (Female)</option>
+                    <option>Athletics (Male) </option>
+                    <option> Athletics (Female) </option>
                 </select>
                 <button type="button" class="btn-main" onclick="saveData('general')">Register Athlete</button>
             </form>
