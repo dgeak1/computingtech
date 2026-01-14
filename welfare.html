@@ -122,10 +122,10 @@
                 <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div>
                         <label>Full Name</label>
-                        <input type="text" id="studentName" placeholder="e.g. John Doe" required>
+                        <input type="text" id="studentName" placeholder="e.g. Obidare Ibrahim" required>
 
                         <label>Matriculation Number</label>
-                        <input type="text" id="matricNo" placeholder="e.g. 21/40CC/001" required>
+                        <input type="text" id="matricNo" placeholder="e.g. SWD20240102...." required>
 
                         <label>Phone Number (Optional)</label>
                         <input type="tel" id="phoneNo" placeholder="e.g. 08012345678">
@@ -133,9 +133,9 @@
 
                     <div>
                         <label>Email Address (Optional)</label>
-                        <input type="email" id="emailAdd" placeholder="e.g. john@example.com">
+                        <input type="email" id="emailAdd" placeholder="e.g. dolpgrace@example.com">
 
-                        <label>Category of Issue</label>
+                        <label> Report Category </label>
                         <select id="category">
                             <option value="Medical">Medical Support</option>
                             <option value="Transport">Transport & Mobility</option>
@@ -154,7 +154,7 @@
                 </div>
 
                 <label>Detailed Description</label>
-                <textarea id="description" rows="5" placeholder="Explain the situation in detail..." required></textarea>
+                <textarea id="description" rows="5" placeholder="Explain the situation in detail for the welfare better understanding..." required></textarea>
 
                 <div style="display: flex; align-items: center; gap: 10px; margin-top: 15px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
                     <input type="checkbox" id="consent" style="width: auto; margin: 0;" required>
@@ -272,4 +272,5 @@
         function clearLogs() { if(confirm("Clear records?")) { localStorage.removeItem('welfareLogs'); unlockAdmin(); } }
     </script>
 </body>
+
 </html>
