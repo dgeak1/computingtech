@@ -114,10 +114,10 @@
                     <input type="text" id="name" placeholder="" required />
                 </div>
                 <div class="input-group">
-    <label> Matric Number </label>
-    <input type="text" id="matric-no" placeholder="SW2024... or CS2024..." required />
-</div>
-
+                    <label> Matric Number 
+                    </label>
+                    <input type="text" id="email-address" placeholder="SW2024... or CS2024..." required />
+                </div>
                 <div class="input-group">
                     <label>Amount (₦)</label>
                     <input type="number" id="amount" placeholder="e.g. 2000" required />
@@ -132,61 +132,38 @@
     </footer>
 
     <script>
+        
         const paymentForm = document.getElementById('paymentForm');
+        
+        paymentForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById("email-address").value;
+            const amountValue = document.getElementById("amount").value;
+            
+            // Paystack requires amount in Kobo (Amount * 100)
+            const finalAmount = amountValue * 100;
 
-// 1. ADD YOUR ALLOWED MATRIC NUMBERS HERE
-const allowedMatricNumbers = [
-     "SW202401024742",
-    "SW202401024743",
-    "CS202418431",
-    "SW20240113369",
-    "SW20240115360",
-    "CS20240114515",
-    "SWD20240118438",
-    "CS20240113519",
-    "HC20230101324",
-    "NT20240118462",
-    "EQUITY26-001"
-];
+            let handler = PaystackPop.setup({
+    key: 'pk_test_7c7358690ce988034fc366cff33b97a3f1a3bc7b', // Paste your key exactly as it appears in Paystack
+    email: email,
+    amount: finalAmount,
+    // ... rest of the code
+                currency: 'NGN',
+                ref: 'EQT-'+Math.floor((Math.random() * 1000000000) + 1), // Generates a unique reference
+                onClose: function(){
+                    alert('Transaction cancelled.');
+                },
+                callback: function(response){
+                    // This runs after a successful payment
+                    let message = 'Payment complete! Reference: ' + response.reference;
+                    alert(message);
+                    window.location.href = "success.html"; // Redirect to a success page
+                }
+            });
 
-paymentForm.addEventListener("submit", function(e) {
-    e.preventDefault();
-    
-    // Grab the values
-    const email = document.getElementById("email-address").value;
-    const amountValue = document.getElementById("amount").value;
-    const matricInput = document.getElementById("matric-no").value.trim(); // Get matric number
-
-    // 2. THE VALIDATION CHECK
-    if (!allowedMatricNumbers.includes(matricInput.toUpperCase()) {
-        alert("Access Denied: Your matric number is not authorized to make this payment.");
-        return; // This stops the code from reaching the Paystack part
-    }
-
-    // Paystack section (only runs if matric is valid)
-    const finalAmount = amountValue * 100;
-
-    let handler = PaystackPop.setup({
-        key: 'pk_test_7c7358690ce988034fc366cff33b97a3f1a3bc7b',
-        email: email,
-        amount: finalAmount,
-        currency: 'NGN',
-        ref: 'EQT-'+Math.floor((Math.random() * 1000000000) + 1),
-        onClose: function(){
-            alert('Transaction cancelled.');
-        },
-        callback: function(response){
-            alert('Payment complete! Reference: ' + response.reference);
-            window.location.href = "success.html";
-        }
-    });
-
-    handler.openIframe();
-});
-      
-
+            handler.openIframe();
+        });
     </script>
 </body>
-
 </html>
-
