@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Equity Crew 26 | Elite Hub</title>
+    <title>Equity Crew '26 | Elite Hub</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 
     <style>
         :root {
@@ -17,309 +18,854 @@
             --glass: rgba(2, 44, 34, 0.98); --border: rgba(212, 175, 55, 0.2); --crimson: #ef4444;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Poppins', sans-serif ; }
         body { 
             font-family: 'Poppins', sans-serif; 
-            background: linear-gradient(rgba(2, 44, 34, 0.98), rgba(2, 44, 34, 0.98)), #022c22;
-            color: white; min-height: 100vh; padding-bottom: 90px;
+            background: #022c22; color: white; min-height: 100vh; padding-bottom: 90px;
+            overflow-x: hidden;
         }
 
         .hidden { display: none !important; }
         .container { max-width: 500px; margin: 0 auto; padding: 15px; }
-        .cambria { font-family: 'Cambria', serif; }
+        .cambria { font-family: 'Poppins', serif; }
 
-        /* Luxury AI Deco Classes */
-        .deco-gold { border: 2px solid var(--gold) !important; background: linear-gradient(45deg, #022c22, #064e3b) !important; padding: 25px !important; text-align: center; }
-        .deco-emerald { border: 2px solid #10b981 !important; box-shadow: inset 0 0 20px rgba(16,185,129,0.2); }
+        /* Gallery */
+        .gallery-wrapper { position: relative; display: flex; align-items: center; margin: 20px 0; }
+        .faculty-gallery { display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 15px; padding: 10px; scrollbar-width: none; width: 100%; }
+        .faculty-gallery::-webkit-scrollbar { display: none; }
+        .member-card { min-width: 240px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 20px; text-align: center; border: 1px solid var(--border); }
+        .member-image { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); margin-bottom: 10px; }
+        
+        /* Components */
+        .elite-card { background: rgba(255, 255, 255, 0.04); border-radius: 20px; border: 1px solid var(--border); padding: 15px; margin-bottom: 15px; }
+        .btn-luxury { padding: 12px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--gold), #b08d29); color: #022c22; font-weight: 800; cursor: pointer; font-size: 0.7rem; text-transform: uppercase; width: 100%; }
+        .form-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: white; outline: none; }
+        .post-media { width: 100%; border-radius: 12px; margin-top: 10px; border: 1px solid var(--border); }
 
-        .elite-card {
-            background: rgba(255, 255, 255, 0.04); border-radius: 20px; border: 1px solid var(--border);
-            padding: 15px; margin-bottom: 15px; position: relative; overflow: hidden;
-        }
-
-        .btn-luxury {
-            padding: 10px 18px; border-radius: 12px; border: none;
-            background: linear-gradient(135deg, var(--gold), #b08d29);
-            color: #022c22; font-weight: 800; cursor: pointer; font-size: 0.7rem; text-transform: uppercase;
-        }
-
-        .form-input {
-            width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px;
-            background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: white; outline: none;
-        }
-
-        .post-media { width: 100%; border-radius: 12px; margin: 10px 0; border: 1px solid var(--border); max-height: 400px; object-fit: cover; }
-        .action-row { display: flex; gap: 20px; margin-top: 15px; font-size: 0.8rem; }
-        .like-btn { cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
-        .like-btn:hover { transform: scale(1.2); color: #f87171; }
-        .liked { color: var(--gold) !important; }
-
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0; background: var(--glass);
-            display: flex; justify-content: space-around; padding: 12px 10px 25px;
-            border-top: 1px solid var(--border); z-index: 1000;
-        }
-        .nav-link { color: #555; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--glass); display: flex; justify-content: space-around; padding: 12px 10px 25px; border-top: 1px solid var(--border); z-index: 1000; }
+        .nav-link { color: #777; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
         .nav-link.active { color: var(--gold); }
-        .exec-badge { background: var(--gold); color: black; font-size: 0.5rem; padding: 2px 6px; border-radius: 4px; font-weight: 800; }
+        .exec-badge { background: var(--gold); color: rgb(44, 45, 4); font-size:0.6rem; padding: 10px 6px; border-radius: 4px; font-weight: 800; }
+        
+        #chat-drawer { position: fixed; inset: 0; background: #021a14; z-index: 2000; display: flex; flex-direction: column; }
+        .chat-bubble { padding: 10px 14px; border-radius: 15px; margin-bottom: 8px; max-width: 80%; font-size: 0.85rem; }
+        .sent { align-self: flex-end; background: var(--gold); color: black; }
+        .received { align-self: flex-start; background: rgba(255,255,255,0.1); }
+    .comment-item:active {
+    background: rgba(212, 175, 55, 0.1) !important;
+    transform: scale(0.98);
+    transition: transform 0.2s ease;
+}
+    .market-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.post-author-name {
+    color: var(--gold);
+    text-decoration: none;
+    cursor: pointer;
+}
+.post-author-name:hover {
+    text-decoration: underline;
+}
+.market-img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border);
+}
+.price-tag {
+    background: var(--gold);
+    color: black;
+    font-weight: 800;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 5px;
+}
+        /* Comment Vault Styling */
+.comment-vault {
+    max-height: 120px; /* Adjusted for better fit */
+    overflow-y: auto;
+    margin-top: 10px;
+    padding-right: 5px;
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+/* Custom Slim Scrollbar for the comments */
+.comment-vault::-webkit-scrollbar {
+    width: 4px;
+}
+.comment-vault::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 10px;
+}
+
+.comment-item {
+    font-size: 0.7rem;
+    margin-bottom: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 8px;
+    border-radius: 8px;
+    border-left: 2px solid var(--border);
+}
+    
     </style>
 </head>
 <body>
 
-    <div id="auth-screen" class="container" style="padding-top: 50px;">
-        <div class="elite-card" style="text-align:center;">
-            <h1 class="cambria" style="color:var(--gold); font-size: 2.2rem;">EQUITY 26</h1>
-            <div id="auth-choice">
-                <button class="btn-luxury" style="width:100%; margin-top:20px;" onclick="showReg('Student')">Student Portal</button>
-                <button class="btn-luxury" style="width:100%; margin-top:10px; background:transparent; color:var(--gold); border:1px solid var(--gold);" onclick="gate()">Executive Entry</button>
+<div id="auth-screen" class="container" style="padding-top: 50px;">
+    <div class="elite-card" style="text-align:center;">
+        <h1 class="cambria" style="color:var(--gold); font-size: 2.2rem;"> EQUITY 2026</h1>
+        
+        <div id="auth-choice">
+            <button class="btn-luxury" style="margin-top:20px;" onclick="showReg('Student')">Student Entrance</button>
+            <button class="btn-luxury" style="margin-top:10px; background:transparent; color:var(--gold); border:1px solid var(--gold);" onclick="gate()">Executive Portal</button>
+        </div>
+
+        <div id="reg-form" class="hidden" style="margin-top: 20px;">
+            <input type="text" id="reg-name" class="form-input" placeholder="Full Name">
+            <input type="text" id="reg-matric" class="form-input" placeholder="Matric No">
+            
+            <div id="exec-fields" class="hidden">
+                <p style="font-size: 0.7rem; color: var(--gold); margin-bottom: 5px;">Executive Verification Active</p>
             </div>
-            <div id="reg-form" class="hidden">
-                <input type="text" id="reg-name" class="form-input" placeholder="Name">
-                <input type="text" id="reg-matric" class="form-input" placeholder="Matric No">
-                <div id="exec-fields" class="hidden">
-                    <input type="password" id="reg-code" class="form-input" placeholder="Access Code">
-                </div>
-                <button class="btn-luxury" style="width:100%;" onclick="handleAuth()">Enter Hub</button>
-            </div>
+            
+            <button class="btn-luxury" id="auth-submit-btn" onclick="handleAuth()">Access Hub</button>
+            <p onclick="location.reload()" style="font-size:0.7rem; margin-top:15px; cursor:pointer; opacity:0.5;">← Back</p>
+        </div>
+    </div>
+</div>
+
+<div id="main-app" class="hidden">
+    <header style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--glass); position: sticky; top:0; z-index: 100;">
+        <div class="cambria" style="color:var(--gold); font-weight:900;"> STUDENT HUB</div>
+        <img id="u-pfp" style="width:32px; height:32px; border-radius:50%; border:1.5px solid var(--gold);">
+    </header>
+
+    <div class="container">
+        <section id="tab-market" class="hidden">
+    <div class="elite-card">
+        <h3 class="cambria" style="color:var(--gold);"> Sell Anything</h3>
+        <p style="font-size:0.6rem; opacity:0.7; margin-bottom:10px;">Sell to the students. Online or POD.</p>
+        
+        <button class="btn-luxury" onclick="document.getElementById('market-form').classList.toggle('hidden')">
+            + List an Item
+        </button>
+
+        <div id="market-form" class="hidden" style="margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
+            <input type="text" id="item-name" class="form-input" placeholder="Item Name">
+            <input type="number" id="item-price" class="form-input" placeholder="Price (0 for Free)">
+            <textarea id="item-desc" class="form-input" placeholder="Description/Condition"></textarea>
+            
+            <label style="cursor:pointer; color:var(--gold); display:block; margin-bottom:10px;">
+                <i data-lucide="camera"></i> Add Item Photo
+                <input type="file" id="item-file" class="hidden" accept="image/*" onchange="handleMarketFile(this)">
+            </label>
+            <div id="market-upload-status" style="font-size:0.6rem; color:var(--gold);"></div>
+            
+            <button class="btn-luxury" style="background:var(--emerald); color:white;" onclick="postItem()">Publish Listing</button>
         </div>
     </div>
 
-    <div id="main-app" class="hidden">
-        <header style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border);">
-            <div class="cambria" style="color:var(--gold); font-weight:800;">HUB</div>
-            <img id="u-pfp" style="width:32px; height:32px; border-radius:50%; border:1px solid var(--gold);">
-        </header>
+    <div id="market-display" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        </div>
+</section>
+        <section id="tab-feed">
+            <div class="gallery-wrapper">
+                <button onclick="sideScroll('left')" style="position: absolute; left: -10px; z-index: 10; background: var(--gold); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;">&#10094;</button>
+                <div class="faculty-gallery" id="exec-gallery"></div>
+                <button onclick="sideScroll('right')" style="position: absolute; right: -10px; z-index: 10; background: var(--gold); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;">&#10095;</button>
+            </div>
 
-        <div class="container">
-            <section id="tab-feed">
-                <div class="elite-card">
-                    <textarea id="post-text" class="form-input" placeholder="Speak your mind..." style="height:60px; resize:none;"></textarea>
-                    <div style="display:flex; justify-content: space-between; align-items: center;">
-                        <div style="display:flex; gap:10px;">
-                            <label style="cursor:pointer; color:var(--gold);"><i data-lucide="paperclip"></i>
-                                <input type="file" id="post-file" class="hidden" accept="image/*,video/*,.txt" onchange="handleFile(this)">
-                            </label>
-                            <button class="btn-luxury" style="background:#064e3b; color:white; border:1px solid #10b981;" onclick="applyAiDeco()">AI Decor</button>
-                        </div>
-                        <button class="btn-luxury" id="post-btn" onclick="publishPost()">Post</button>
+            <div class="elite-card">
+                <textarea id="post-text" class="form-input" placeholder="Post an update..." style="height:60px; resize:none;"></textarea>
+                <div style="display:flex; justify-content: space-between; align-items: center;">
+                    <div style="display:flex; gap:10px;">
+                        <label style="cursor:pointer; color:var(--gold);"><i data-lucide="paperclip"></i>
+                            <input type="file" id="post-file" class="hidden" accept="image/*" onchange="handleFile(this)">
+                        </label>
                     </div>
-                    <div id="upload-progress" style="font-size:0.6rem; margin-top:5px; color:var(--gold);"></div>
+                    <button class="btn-luxury" id="post-btn" style="width:auto; padding: 5px 20px;" onclick="publishPost()">Post</button>
                 </div>
-                <div id="feed-display"></div>
-            </section>
+                <div id="upload-progress" style="font-size:0.6rem; margin-top:5px; color:var(--gold);"></div>
+            </div>
+            <div id="feed-display"></div>
+        </section>
 
-            <section id="tab-chat" class="hidden">
-                <h3 class="cambria" style="color:var(--gold); margin-bottom:15px;">Private Directory</h3>
-                <div id="chat-list"></div>
-            </section>
-
-            <section id="tab-profile" class="hidden">
-                <div class="elite-card" style="text-align:center;">
-                    <img id="p-img" style="width:80px; height:80px; border-radius:50%; border:2px solid var(--gold);">
-                    <h2 id="p-name" class="cambria"></h2>
-                    <button class="btn-luxury" style="margin-top:20px; background:var(--crimson); color:white;" onclick="logout()">Logout</button>
+        <section id="tab-gp" class="hidden">
+            <div class="elite-card">
+                <h3 class="cambria" style="color: var(--gold); text-align: center;">4.0 GP Calculator</h3>
+                <div id="course-list" style="margin-top:15px;"></div>
+                <button class="btn-luxury" style="background: transparent; border: 1px solid var(--gold); color: var(--gold); margin: 10px 0;" onclick="addCourseRow()">+ Add Course</button>
+                <div style="margin-top: 20px; padding: 15px; border-radius: 12px; background: rgba(0,0,0,0.4); text-align: center; border: 1.5px solid var(--gold);">
+                    <h1 id="gp-res" style="color: var(--gold); font-size: 2.2rem; margin:0;">0.00</h1>
                 </div>
-            </section>
-        </div>
+                <button class="btn-luxury" style="margin-top: 15px;" onclick="calculateGP()">Calculate & Save</button>
+            </div>
+        </section>
 
-        <nav class="bottom-nav">
-            <div class="nav-link active" onclick="switchTab('feed')"><i data-lucide="layout"></i><small>Feed</small></div>
-            <div class="nav-link" onclick="switchTab('chat')"><i data-lucide="shield"></i><small>Chat</small></div>
-            <div class="nav-link" onclick="switchTab('profile')"><i data-lucide="user"></i><small>Profile</small></div>
-        </nav>
+        <section id="tab-chat" class="hidden">
+            <h3 class="cambria" style="color:var(--gold); margin-bottom:15px;">Direct Messages</h3>
+            <div id="chat-list"></div>
+        </section>
+
+        <section id="tab-profile" class="hidden">
+            <div class="elite-card" style="text-align:center;">
+                <img id="p-img" style="width:80px; height:80px; border-radius:50%; border:2px solid var(--gold); margin-bottom:10px;">
+                <h2 id="p-name" class="cambria"></h2>
+                <p id="p-role" class="exec-badge" style="display:inline-block;"></p>
+                <button class="btn-luxury" style="margin-top:30px; background-color: white; color:white;" onclick="logout()"> Logout Session</button>
+            </div>
+        </section>
     </div>
 
-    <div id="chat-drawer" class="hidden" style="position:fixed; inset:0; background:#021a14; z-index:2000; display:flex; flex-direction:column;">
-        <div style="padding:20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;">
-            <b id="chat-target" class="cambria" style="color:var(--gold);"></b>
-            <i data-lucide="x" onclick="closeChat()"></i>
-        </div>
-        <div id="chat-msgs" style="flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column;"></div>
-        <div style="padding:20px; display:flex; gap:10px;">
-            <input type="text" id="msg-input" class="form-input" style="margin:0;" placeholder="Message...">
-            <button class="btn-luxury" onclick="sendMsg()"><i data-lucide="send"></i></button>
-        </div>
-    </div>
+    <nav class="bottom-nav">
+        <div class="nav-link active" onclick="switchTab('feed')"><i data-lucide="home"></i><small>Feed</small></div>
+        <div class="nav-link" onclick="switchTab('market')">
+    <i data-lucide="shopping-bag"></i>
+    <small>Market</small>
+</div>
+        <div class="nav-link" onclick="switchTab('gp')"><i data-lucide="calculator"></i><small>GP</small></div>
+        <div class="nav-link" onclick="switchTab('chat')"><i data-lucide="message-circle"></i><small>Chat</small></div>
+        <div class="nav-link" onclick="switchTab('profile')"><i data-lucide="user"></i><small>Profile</small></div>
+    </nav>
+</div>
 
-    <script>
-        const firebaseConfig = { 
-            apiKey: "AIzaSyC7ui6tasM3GgtetrLiqSO3qMbuzOvcdMU", 
-            authDomain: "dgmarketplace-6ae42.firebaseapp.com", 
-            projectId: "dgmarketplace-6ae42", 
-            storageBucket: "dgmarketplace-6ae42.appspot.com", 
-            messagingSenderId: "650691092405", 
-            appId: "1:650691092405:web:e174e43bf5b93d7f13c3fc" 
+<div id="chat-drawer" class="hidden">
+    <div style="padding:20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+        <b id="chat-target" class="cambria" style="color:var(--gold);"></b>
+        <i data-lucide="x" onclick="closeChat()" style="cursor:pointer;"></i>
+    </div>
+    <div id="chat-msgs" style="flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column;"></div>
+    <div style="padding:20px; display:flex; gap:10px; background: #021a14;">
+        <input type="text" id="msg-input" class="form-input" style="margin:0;" placeholder="Type...">
+        <button class="btn-luxury" style="width:auto; padding:0 20px;" onclick="sendMsg()"><i data-lucide="send"></i></button>
+    </div>
+</div>
+
+<script>
+    // 1. FIREBASE INITIALIZATION
+    const firebaseConfig = {
+        apiKey: "AIzaSyBLrdBzHOhsJW4_ixghTx96XpHT4QMS8s8",
+        authDomain: "executo-4ecd7.firebaseapp.com",
+        projectId: "executo-4ecd7",
+        storageBucket: "executo-4ecd7.firebasestorage.app",
+        messagingSenderId: "738758706005",
+        appId: "1:738758706005:web:383f547ce4ddb8b243e5dc"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // 2. STATE
+    let user = JSON.parse(localStorage.getItem('ec26_user'));
+    let isExecLogin = false;
+    let verifiedMediaUrl = "";
+    let activeChatId = null;
+
+    const EXECS = [
+        { name: "Ajiferuke Ridwanullahi", role: "President", pka: "AJII", img: "backggg.jfif", quote: "Leadership is the standard." },
+        { name: "Olaniyan Kehinde", role: "Vice President", pka: "ARMANI", img: "BGG2.jpg", quote: "Accuracy is our mandate." },
+        { name: "Obidare Ibrahim", role: "General Secretary", pka: "AJII", img: "newbg.JPG", quote: "Organization is greatness." },
+        { name: "Oyebode Blessing", role: "Financial Secretary", pka: "IRON LADY", img: "IMG_9196.JPG", quote: "Integrity is key." }
+    ];
+
+    // 3. STARTUP
+    window.onload = () => { 
+        if(user) showApp(); 
+        addCourseRow(); 
+        lucide.createIcons(); 
+    };
+
+    // 4. AUTH FUNCTIONS
+    function gate() { 
+        if(prompt("Passcode:") === "1234") { 
+            isExecLogin = true; 
+            showReg(); 
+        } else {
+            alert("Wrong code");
+        }
+    }
+
+    function showReg() {
+        document.getElementById('auth-choice').classList.add('hidden');
+        document.getElementById('reg-form').classList.remove('hidden');
+        if(isExecLogin) document.getElementById('exec-fields').classList.remove('hidden');
+    }
+
+    async function handleAuth() {
+        const n = document.getElementById('reg-name').value.trim();
+        const m = document.getElementById('reg-matric').value.trim();
+        const btn = document.getElementById('auth-submit-btn');
+
+        if(!n) return alert("Please enter your Full Name");
+        
+        btn.innerText = "VERIFYING...";
+        btn.disabled = true;
+
+        const userData = { 
+            id: "U"+Date.now(), 
+            name: n, 
+            matric: m || "N/A", 
+            isExec: isExecLogin, 
+            pic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${n}`, 
+            role: isExecLogin ? "Executive" : "Student" 
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const storage = firebase.storage();
 
-        let user = JSON.parse(localStorage.getItem('ec26_user'));
-        let isExec = false;
-        let fileData = { url: "", type: "" };
-        let activeChat = null;
-        let isAiDeco = false;
-
-        window.onload = () => { if(user) showApp(); lucide.createIcons(); };
-
-        function gate() { if(prompt("Passcode:") === "1234") { isExec = true; showReg('Executive'); } }
-        function showReg(t) {
-            document.getElementById('auth-choice').classList.add('hidden');
-            document.getElementById('reg-form').classList.remove('hidden');
-            if(isExec) document.getElementById('exec-fields').classList.remove('hidden');
-        }
-
-        async function handleAuth() {
-            const n = document.getElementById('reg-name').value;
-            const m = document.getElementById('reg-matric').value;
-            if(!n) return;
-            user = { id: "U"+Date.now(), name: n, matric: m, isExec, pic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${n}`, role: isExec ? "Executive" : "Student" };
-            localStorage.setItem('ec26_user', JSON.stringify(user));
-            await db.collection("users").doc(user.id).set(user);
+        try {
+            // Save to Database
+            await db.collection("users").doc(userData.id).set(userData);
+            
+            // Save locally
+            localStorage.setItem('ec26_user', JSON.stringify(userData));
+            user = userData;
             showApp();
+        } catch (e) {
+            console.error(e);
+            alert("Error: " + e.message + "\n\nTip: Check if your Firestore rules are set to Public/Test Mode.");
+            btn.innerText = "ACCESS HUB";
+            btn.disabled = false;
         }
+    }
 
-        function showApp() {
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            document.getElementById('u-pfp').src = user.pic;
-            document.getElementById('p-img').src = user.pic;
-            document.getElementById('p-name').innerText = user.name;
-            renderFeed(); renderChats();
+    function showApp() {
+    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('main-app').classList.remove('hidden');
+    document.getElementById('u-pfp').src = user.pic;
+    document.getElementById('p-img').src = user.pic;
+    document.getElementById('p-name').innerText = user.name;
+    document.getElementById('p-role').innerText = user.role;
+    
+    // Initializing all feeds
+    renderGallery(); 
+    renderFeed(); 
+    renderChatList();
+    renderMarketplace(); // <--- Added this
+}
+
+    // 5. FEED FUNCTIONS
+    function renderGallery() {
+        const gal = document.getElementById('exec-gallery');
+        gal.innerHTML = EXECS.map(e => `
+            <div class="member-card">
+                <img src="${e.img}" class="member-image" onerror="this.src='https://via.placeholder.com/80'">
+                <p class="exec-badge">${e.role}</p>
+                <h4 class="cambria" style="margin:5px 0;">${e.name}</h4>
+                <p style="font-size:0.6rem; opacity:0.6;">"${e.quote}"</p>
+            </div>
+        `).join('');
+    }
+
+    function sideScroll(dir) {
+        document.getElementById('exec-gallery').scrollLeft += (dir === 'left' ? -250 : 250);
+    }
+
+    function handleFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            verifiedMediaUrl = e.target.result;
+            document.getElementById('upload-progress').innerText = "✅ Image Ready";
+        };
+        reader.readAsDataURL(file);
+    }
+
+    async function publishPost() {
+        const txt = document.getElementById('post-text').value;
+        if(!txt && !verifiedMediaUrl) return;
+        
+        await db.collection("posts").add({
+            uid: user.id, name: user.name, role: user.role, pic: user.pic,
+            txt: txt, file: verifiedMediaUrl, likes: [], comments: [],
+            time: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        document.getElementById('post-text').value = "";
+        verifiedMediaUrl = "";
+        document.getElementById('upload-progress').innerText = "";
+    }
+    async function deletePost(postId) {
+    if(confirm("Are you sure you want to delete this post?")) {
+        try {
+            await db.collection("posts").doc(postId).delete();
+        } catch (e) {
+            alert("Error deleting: " + e.message);
         }
+    }
+}
 
-        async function handleFile(input) {
-            const file = input.files[0];
-            if(!file) return;
-            if(file.size > 15 * 1024 * 1024) return alert("File too large (Max 15MB)");
+function renderFeed() {
+    db.collection("posts").orderBy("time", "desc").onSnapshot(snap => {
+        const f = document.getElementById('feed-display');
+        if (!f) return; // Safety check
+        f.innerHTML = ""; 
+        
+        snap.forEach(doc => {
+            const d = doc.data();
+            const comments = d.comments || [];
+            const canDelete = d.uid === user.id || user.isExec;
+            const postTime = timeAgo(d.time);
 
-            document.getElementById('upload-progress').innerText = "Uploading Media...";
-            const ref = storage.ref(`media/${Date.now()}_${file.name}`);
-            const task = ref.put(file);
-            
-            task.on('state_changed', (snap) => {
-                let p = (snap.bytesTransferred / snap.totalBytes) * 100;
-                document.getElementById('upload-progress').innerText = `Uploading: ${Math.round(p)}%`;
-            }, null, async () => {
-                fileData.url = await ref.getDownloadURL();
-                fileData.type = file.type;
-                document.getElementById('upload-progress').innerText = "Media Ready.";
-            });
-        }
+            // FIXED: Added 'f.' before innerHTML
+            f.innerHTML += `
+                <div class="elite-card">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <img src="${d.pic}" style="width:30px; height:30px; border-radius:50%;">
+                            <div>
+                                <b style="font-size:0.7rem; display:block;">${d.name} <span class="exec-badge">${d.role}</span></b>
+                                <small style="font-size:0.55rem; opacity:0.5;">${postTime}</small>
+                            </div>
+                        </div>
+                        ${canDelete ? `<i data-lucide="trash-2" onclick="deletePost('${doc.id}')" style="color:var(--crimson); cursor:pointer; width:14px;"></i>` : ''}
+                    </div>
 
-        function applyAiDeco() {
-            isAiDeco = true;
-            document.getElementById('upload-progress').innerText = "AI Decoration Applied ✨";
-        }
-
-        async function publishPost() {
-            const txt = document.getElementById('post-text').value;
-            if(!txt && !fileData.url) return;
-
-            await db.collection("posts").add({
-                uid: user.id, name: user.name, role: user.role, pic: user.pic,
-                txt, file: fileData.url, fileType: fileData.type, deco: isAiDeco,
-                likes: [], comments: [], time: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            document.getElementById('post-text').value = "";
-            fileData = { url: "", type: "" };
-            isAiDeco = false;
-            document.getElementById('upload-progress').innerText = "";
-        }
-
-        function renderFeed() {
-            db.collection("posts").orderBy("time", "desc").onSnapshot(snap => {
-                const f = document.getElementById('feed-display'); f.innerHTML = "";
-                snap.forEach(doc => {
-                    const d = doc.data(); const pid = doc.id;
-                    const isVid = d.fileType && d.fileType.includes("video");
-                    const isTxtFile = d.fileType && d.fileType.includes("text");
+                    <p style="margin:10px 0; font-size:0.85rem; line-height:1.4;">${d.txt}</p>
+                    ${d.file ? `<img src="${d.file}" class="post-media">` : ''}
                     
-                    f.innerHTML += `
-                        <div class="elite-card ${d.deco ? 'deco-gold' : ''}">
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <img src="${d.pic}" style="width:30px; border-radius:50%;">
-                                    <b style="font-size:0.7rem;">${d.name}</b>
-                                </div>
-                                ${d.uid === user.id ? `<i data-lucide="trash-2" onclick="delPost('${pid}')" style="width:14px; color:var(--crimson);"></i>` : `<i data-lucide="flag" style="width:14px; opacity:0.3;"></i>`}
-                            </div>
-                            <p style="margin-top:10px; font-size:0.85rem;">${d.txt}</p>
-                            ${d.file ? (isVid ? `<video src="${d.file}" controls class="post-media"></video>` : (isTxtFile ? `<div class="elite-card" style="background:black; font-size:0.7rem;">📄 Text Document Attached</div>` : `<img src="${d.file}" class="post-media">`)) : ''}
-                            <div class="action-row">
-                                <div class="like-btn" onclick="like('${pid}')"><i data-lucide="heart"></i> ${d.likes.length}</div>
-                                <div onclick="alert('Comments coming soon')"><i data-lucide="message-circle"></i> ${d.comments.length}</div>
-                            </div>
-                        </div>`;
-                });
-                lucide.createIcons();
+                    <div style="display:flex; justify-content:space-between; margin-top:12px; opacity:0.7;">
+                        <small onclick="likePost('${doc.id}')" style="color:var(--gold); cursor:pointer; font-weight:600;">
+                            ❤ ${d.likes ? d.likes.length : 0} Likes
+                        </small>
+                        <small style="font-size:0.65rem;">${comments.length} Comments</small>
+                    </div>
+
+                    <div class="comment-vault" id="vault-${doc.id}">
+                        ${comments.map((c, index) => {
+    // Only the author of the comment or an Executive can delete it
+    const canDeleteComment = c.userId === user.id || user.isExec;
+    
+    // We stringify the comment object so we can pass it to the delete function later
+    const commentData = JSON.stringify(c).replace(/"/g, '&quot;');
+
+    return `
+        <div class="comment-item" 
+             style="user-select: none; -webkit-user-select: none;"
+             onmousedown="startHold('${doc.id}', ${commentData}, ${canDeleteComment})" 
+             onmouseup="clearHold()" 
+             mouseleave="clearHold()"
+             ontouchstart="startHold('${doc.id}', ${commentData}, ${canDeleteComment})" 
+             ontouchend="clearHold()">
+            <b style="color:var(--gold);">${c.userName}:</b> ${c.text}
+        </div>
+    `;
+}).join('')}
+                    </div>
+
+                    <div style="display:flex; gap:8px; margin-top:10px; background:rgba(0,0,0,0.2); padding:5px; border-radius:10px;">
+                        <input id="input-${doc.id}" class="form-input" 
+                               style="font-size:0.75rem; padding:8px; margin:0; border:none; background:transparent;" 
+                               placeholder="Share your thoughts...">
+                        <button onclick="sendComment('${doc.id}')" 
+                                style="background:transparent; border:none; color:var(--gold); cursor:pointer; padding:0 10px;">
+                            <i data-lucide="send" style="width:18px;"></i>
+                        </button>
+                    </div>
+                </div>`;
+        });
+        lucide.createIcons();
+    });
+}
+
+async function likePost(postId) {
+    const postRef = db.collection("posts").doc(postId);
+    const doc = await postRef.get();
+    const likes = doc.data().likes || [];
+
+    if (likes.includes(user.id)) {
+        // Unlike if already liked
+        await postRef.update({
+            likes: firebase.firestore.FieldValue.arrayRemove(user.id)
+        });
+    } else {
+        // Like if not liked
+        await postRef.update({
+            likes: firebase.firestore.FieldValue.arrayUnion(user.id)
+        });
+    }
+}
+
+    // 6. GP CALCULATOR
+    function addCourseRow() {
+        const row = document.createElement('div');
+        row.style = "display: flex; gap: 8px; margin-bottom: 10px;";
+        row.innerHTML = `
+            <input type="text" class="form-input" style="flex:2; margin:0;" placeholder="Course">
+            <input type="number" class="c-unit form-input" style="flex:1; margin:0;" placeholder="Unit">
+            <select class="c-grade form-input" style="flex:1; margin:0;">
+                <option value="4.0">A</option><option value="3.5">AB</option>
+                <option value="3.25">B</option><option value="3.0">BC</option>
+                <option value="2.75">C</option><option value="0.0">F</option>
+            </select>`;
+        document.getElementById('course-list').appendChild(row);
+    }
+
+    function calculateGP() {
+        const units = document.querySelectorAll('.c-unit');
+        const grades = document.querySelectorAll('.c-grade');
+        let tp = 0, tu = 0;
+        units.forEach((u, i) => {
+            const val = parseFloat(u.value);
+            if(val > 0) { tp += (val * parseFloat(grades[i].value)); tu += val; }
+        });
+        document.getElementById('gp-res').innerText = tu > 0 ? (tp/tu).toFixed(2) : "0.00";
+    }
+
+    // 7. CHAT & NAV
+    function renderChatList() {
+        db.collection("users").onSnapshot(snap => {
+            const list = document.getElementById('chat-list');
+            list.innerHTML = "";
+            snap.forEach(doc => {
+                const u = doc.data();
+                if(u.id !== user.id) {
+                    list.innerHTML += `<div class="elite-card" onclick="openChat('${u.id}', '${u.name}')" style="cursor:pointer;"><b>${u.name}</b><br><small>${u.role}</small></div>`;
+                }
             });
-        }
+        });
+    }
 
-        async function like(pid) {
-            const ref = db.collection("posts").doc(pid); const d = await ref.get();
-            let l = d.data().likes || [];
-            l.includes(user.id) ? l = l.filter(i => i !== user.id) : l.push(user.id);
-            await ref.update({ likes: l });
-        }
+    function openChat(id, name) {
+        activeChatId = id;
+        document.getElementById('chat-target').innerText = name;
+        document.getElementById('chat-drawer').classList.remove('hidden');
+        const rid = [user.id, id].sort().join('_');
+        db.collection("chats").doc(rid).collection("m").orderBy("time", "asc").onSnapshot(snap => {
+            const b = document.getElementById('chat-msgs');
+            b.innerHTML = "";
+        if(snap.empty) b.innerHTML = "<center style='opacity:0.5; margin-top:20px;'>No messages yet. Start the conversation.</center>";
+            snap.forEach(m => b.innerHTML += `<div class="chat-bubble ${m.data().sid === user.id ? 'sent' : 'received'}">${m.data().t}</div>`);
+            b.scrollTop = b.scrollHeight;
+        });
+    }
+    async function sendComment(postId) {
+    const input = document.getElementById(`input-${postId}`);
+    const text = input.value.trim();
+    if(!text) return;
 
-        async function delPost(pid) { if(confirm("Delete post?")) await db.collection("posts").doc(pid).delete(); }
+    try {
+        await db.collection("posts").doc(postId).update({
+            comments: firebase.firestore.FieldValue.arrayUnion({
+                userId: user.id,
+                userName: user.name,
+                text: text,
+                time: new Date().toISOString()
+            })
+        });
+        input.value = "";
+        
+        // Auto-scroll the vault to the bottom
+        const vault = document.getElementById(`vault-${postId}`);
+        vault.scrollTop = vault.scrollHeight;
+        
+    } catch (e) {
+        alert("Action failed. Check connection.");
+    }
+}
+function timeAgo(timestamp) {
+    if (!timestamp) return "just now";
+    
+    // Handle Firestore server timestamp vs regular date
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const seconds = Math.floor((new Date() - date) / 1000);
 
-        // CHAT LOGIC
-        function renderChats() {
-            const list = document.getElementById('chat-list'); list.innerHTML = "";
-            if(!user.isExec) {
-                // Students see all Executives
-                db.collection("users").where("isExec", "==", true).onSnapshot(snap => {
-                    list.innerHTML = "";
-                    snap.forEach(doc => {
-                        const u = doc.data();
-                        list.innerHTML += `<div class="elite-card" onclick="openChat('${u.id}', '${u.name}')" style="cursor:pointer;"><b>${u.name}</b><br><small>${u.role}</small></div>`;
-                    });
-                });
-            } else {
-                // Executives see students who are in their "chats" collection
-                db.collection("users").where("isExec", "==", false).onSnapshot(snap => {
-                    list.innerHTML = "";
-                    snap.forEach(doc => {
-                        const u = doc.data();
-                        list.innerHTML += `<div class="elite-card" onclick="openChat('${u.id}', '${u.name}')" style="cursor:pointer;"><b>${u.name}</b><br><small>Student</small></div>`;
-                    });
-                });
-            }
-        }
+    let interval = Math.floor(seconds / 31536000);
+    if (interval >= 1) return interval + "y ago";
+    
+    interval = Math.floor(seconds / 2592000);
+    if (interval >= 1) return interval + "mo ago";
+    
+    interval = Math.floor(seconds / 86400);
+    if (interval >= 1) return interval + "d ago";
+    
+    interval = Math.floor(seconds / 3600);
+    if (interval >= 1) return interval + "h ago";
+    
+    interval = Math.floor(seconds / 60);
+    if (interval >= 1) return interval + "m ago";
+    
+    return "just now";
+}
 
-        function openChat(id, name) {
-            activeChat = id; document.getElementById('chat-target').innerText = name;
-            document.getElementById('chat-drawer').classList.remove('hidden');
-            const rid = [user.id, id].sort().join('_');
-            db.collection("chats").doc(rid).collection("m").orderBy("time", "asc").onSnapshot(snap => {
-                const b = document.getElementById('chat-msgs'); b.innerHTML = "";
-                snap.forEach(m => {
-                    const d = m.data();
-                    b.innerHTML += `<div class="chat-bubble ${d.sid === user.id ? 'sent' : 'received'}">${d.t}</div>`;
-                });
-                b.scrollTop = b.scrollHeight;
+    async function sendMsg() {
+        const t = document.getElementById('msg-input').value;
+        if(!t || !activeChatId) return;
+        const rid = [user.id, activeChatId].sort().join('_');
+        await db.collection("chats").doc(rid).collection("m").add({ sid: user.id, t, time: firebase.firestore.FieldValue.serverTimestamp() });
+        document.getElementById('msg-input').value = "";
+    }
+
+    function closeChat() { document.getElementById('chat-drawer').classList.add('hidden'); }
+
+    function switchTab(t) {
+        document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+        document.getElementById('tab-'+t).classList.remove('hidden');
+        event.currentTarget.classList.add('active');
+        lucide.createIcons();
+    }
+
+    function logout() { localStorage.clear(); location.reload(); }
+
+    // Refresh the feed display every 60 seconds to update timestamps
+setInterval(() => {
+    if(user) renderFeed();
+}, 60000);
+
+let holdTimer;
+
+function startHold(postId, commentObj, canDelete) {
+    if (!canDelete) return; // Exit if user doesn't have permission
+
+    // Start a timer for 800 milliseconds
+    holdTimer = setTimeout(() => {
+        confirmDeleteComment(postId, commentObj);
+    }, 800); 
+}
+
+function clearHold() {
+    clearTimeout(holdTimer);
+}
+
+async function confirmDeleteComment(postId, commentObj) {
+    // Vibrate phone for feedback if supported
+    if (navigator.vibrate) navigator.vibrate(50);
+
+    if (confirm("Delete this comment?")) {
+        try {
+            await db.collection("posts").doc(postId).update({
+                comments: firebase.firestore.FieldValue.arrayRemove(commentObj)
             });
+        } catch (e) {
+            console.error("Error removing comment: ", e);
+            alert("Could not delete comment.");
         }
+    }
+}
 
-        async function sendMsg() {
-            const t = document.getElementById('msg-input').value; if(!t) return;
-            const rid = [user.id, activeChat].sort().join('_');
-            await db.collection("chats").doc(rid).collection("m").add({ sid: user.id, t, time: firebase.firestore.FieldValue.serverTimestamp() });
-            document.getElementById('msg-input').value = "";
+// 1. DELETE LISTING FUNCTION
+async function deleteMarketItem(itemId) {
+    if(confirm("Are you sure you want to remove this listing?")) {
+        try {
+            await db.collection("marketplace").doc(itemId).delete();
+            // The onSnapshot in renderMarketplace will automatically update the UI
+        } catch (e) {
+            alert("Error: " + e.message);
         }
+    }
+}
 
-        function switchTab(t) {
-            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-            document.getElementById('tab-'+t).classList.remove('hidden');
-            event.currentTarget.classList.add('active');
-            lucide.createIcons();
+// 2. SEARCH / FILTER FUNCTION
+function filterMarket() {
+    const query = document.getElementById('market-search').value.toLowerCase();
+    const cards = document.querySelectorAll('.market-card');
+
+    cards.forEach(card => {
+        const title = card.querySelector('h4').innerText.toLowerCase();
+        const desc = card.querySelector('p').innerText.toLowerCase();
+        
+        if (title.includes(query) || desc.includes(query)) {
+            card.style.display = "flex";
+        } else {
+            card.style.display = "none";
         }
-        function closeChat() { document.getElementById('chat-drawer').classList.add('hidden'); }
-        function logout() { localStorage.clear(); location.reload(); }
-    </script>
+    });
+}
+
+// 3. UPDATED RENDER FUNCTION (With Delete Icon & Permissions)
+function renderMarketplace() {
+    db.collection("marketplace").orderBy("time", "desc").onSnapshot(snap => {
+        const display = document.getElementById('market-display');
+        if(!display) return;
+        display.innerHTML = "";
+        
+        snap.forEach(doc => {
+            const item = doc.data();
+            const isOwner = item.sellerId === user.id;
+
+            display.innerHTML += `
+                <div class="market-card">
+                    <img src="${item.img}" class="market-img">
+                    <div style="padding:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                            <span class="price-tag">${item.price == 0 ? 'FREE' : '₦' + item.price}</span>
+                            ${isOwner ? `<i data-lucide="trash-2" onclick="deleteMarketItem('${doc.id}')" style="color:var(--crimson); cursor:pointer; width:14px;"></i>` : ''}
+                        </div>
+                        <h4 style="font-size:0.8rem; margin:0;">${item.name}</h4>
+                        <p style="font-size:0.6rem; opacity:0.6; height:30px; overflow:hidden; margin-top:4px;">${item.desc}</p>
+                        <button class="btn-luxury" style="font-size:0.55rem; margin-top:10px; height:30px; padding:0;" 
+                                onclick="buyItem('${item.price}', '${item.sellerId}', '${item.sellerName}', '${item.name.replace(/'/g, "\\'")}')">
+                            Buy Now
+                        </button>
+                    </div>
+                </div>`;
+        });
+        lucide.createIcons();
+    });
+}
+let marketImageUrl = "";
+
+function handleMarketFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        marketImageUrl = e.target.result; // This stores the image data
+        document.getElementById('market-upload-status').innerText = "✅ Photo Attached";
+    };
+    reader.readAsDataURL(file);
+}
+
+async function postItem() {
+    const name = document.getElementById('item-name').value;
+    const price = document.getElementById('item-price').value || 0;
+    const desc = document.getElementById('item-desc').value;
+
+    if (!name || !marketImageUrl) {
+        return alert("Please provide at least a name and a photo!");
+    }
+
+    try {
+        await db.collection("marketplace").add({
+            sellerId: user.id,
+            sellerName: user.name,
+            name: name,
+            price: parseFloat(price),
+            desc: desc,
+            img: marketImageUrl, // This ensures the image is saved to Firestore
+            time: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // Reset the form
+        document.getElementById('market-form').classList.add('hidden');
+        document.getElementById('item-name').value = "";
+        document.getElementById('item-price').value = "";
+        document.getElementById('item-desc').value = "";
+        document.getElementById('market-upload-status').innerText = "";
+        marketImageUrl = ""; 
+        
+        alert("Item listed successfully!");
+    } catch (e) {
+        console.error("Post Error:", e);
+        alert("Failed to post item.");
+    }
+}
+
+function renderMarketplace() {
+    db.collection("marketplace").orderBy("time", "desc").onSnapshot(snap => {
+        const display = document.getElementById('market-display');
+        const isOwner = item.sellerId === user.id;
+        display.innerHTML = "";
+        snap.forEach(doc => {
+            const item = doc.data();
+            display.innerHTML += `
+    <div class="market-card" id="item-${doc.id}">
+        <img src="${item.img}" class="market-img">
+        <div style="padding:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="price-tag">${item.price == 0 ? 'FREE' : '₦' + item.price}</span>
+                ${isOwner ? `<i data-lucide="trash-2" onclick="deleteMarketItem('${doc.id}')" style="color:var(--crimson); width:14px; cursor:pointer;"></i>` : ''}
+            </div>
+            <h4 style="font-size:0.8rem; margin:5px 0;">${item.name}</h4>
+                        <p style="font-size:0.6rem; opacity:0.6; height:30px; overflow:hidden;">${item.desc}</p>
+                        <button class="btn-luxury" style="font-size:0.5rem; margin-top:10px;" 
+        onclick="buyItem('${item.price}', '${item.sellerId}', '${item.sellerName}', '${item.name.replace(/'/g, "\\'")}')">
+    Buy Now
+</button>
+                    </div>
+                </div>`;
+        });
+    });
+}
+
+async function buyItem(price, sellerId, sellerName, itemName) {
+    if (sellerId === user.id) return alert("You cannot buy your own item!");
+
+    const method = confirm(`Interested in "${itemName}"?\n\nOK: Pay Online (Paystack)\nCancel: Pay on Delivery`);
+
+    if (method) {
+        payWithPaystack(price, itemName, sellerId, sellerName);
+    } else {
+        const msg = `Hi ${sellerName}, I'm interested in buying your "${itemName}" for ₦${price}. I'd like to pay on delivery.`;
+        await sendAutoMessage(sellerId, msg);
+        alert("Seller has been notified via DM!");
+        switchTab('chat'); 
+    }
+}
+
+function payWithPaystack(amount, item, sellerId, sellerName) {
+    let handler = PaystackPop.setup({
+        key: 'pk_test_YOUR_KEY_HERE', // Add your key here
+        email: user.name.replace(/\s/g, '') + "@equity.com",
+        amount: amount * 100,
+        currency: 'NGN',
+        callback: async function(response) {
+            const successMsg = `✅ PAID: I just paid ₦${amount} for "${item}" via Paystack. Ref: ${response.reference}`;
+            await sendAutoMessage(sellerId, successMsg);
+            alert('Payment Successful!');
+            switchTab('chat');
+        }
+    });
+    handler.openIframe();
+}
+
+async function sendAutoMessage(targetId, text) {
+    const rid = [user.id, targetId].sort().join('_');
+    await db.collection("chats").doc(rid).set({
+        users: [user.id, targetId],
+        lastMsg: text,
+        lastTime: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    await db.collection("chats").doc(rid).collection("m").add({
+        sid: user.id,
+        t: text,
+        time: firebase.firestore.FieldValue.serverTimestamp()
+    });
+}
+
+async function showPublicProfile(targetUid) {
+    const doc = await db.collection("users").doc(targetUid).get();
+    if (!doc.exists) return;
+    const u = doc.data();
+
+    document.getElementById('view-p-img').src = u.pic;
+    document.getElementById('view-p-name').innerText = u.name;
+    document.getElementById('view-p-role').innerText = u.role;
+    document.getElementById('view-p-matric').innerText = "Matric: " + u.matric;
+    
+    // Set up the chat button
+    const btn = document.getElementById('view-p-chat-btn');
+    btn.onclick = () => {
+        closePublicProfile();
+        openChat(u.id, u.name);
+    };
+
+    document.getElementById('public-profile-modal').classList.remove('hidden');
+    lucide.createIcons();
+}
+
+function closePublicProfile() {
+    document.getElementById('public-profile-modal').classList.add('hidden');
+}
+</script>
+
+<div id="public-profile-modal" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:3000; display:flex; align-items:center; justify-content:center; padding:20px;">
+    <div class="elite-card" style="width:100%; max-width:350px; text-align:center; position:relative;">
+        <i data-lucide="x" onclick="closePublicProfile()" style="position:absolute; top:15px; right:15px; cursor:pointer;"></i>
+        <img id="view-p-img" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--gold); margin-bottom:15px;">
+        <h2 id="view-p-name" class="cambria"></h2>
+        <p id="view-p-role" class="exec-badge" style="display:inline-block; margin-bottom:20px;"></p>
+        <p id="view-p-matric" style="font-size:0.7rem; opacity:0.5; margin-bottom:20px;"></p>
+        <button id="view-p-chat-btn" class="btn-luxury">Send Direct Message</button>
+    </div>
+</div>
+
 </body>
 </html>
