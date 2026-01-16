@@ -6,6 +6,10 @@
     <title>Minutes Vault | Equity Crew 26</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=Oswald:wght@500;700&family=Cinzel:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --primary-green: #10b981;
@@ -46,7 +50,7 @@
             background: linear-gradient(135deg, var(--accent-gold), #b08d29);
             color: #000; padding: 12px 24px; border-radius: 8px;
             font-weight: 700; border: none; cursor: pointer; 
-            text-transform: uppercase; font-size: 0.8rem;
+            text-transform: uppercase; font-size: 0.7rem;
             transition: 0.3s;
         }
 
@@ -55,13 +59,13 @@
         .container { padding: 40px 5%; max-width: 1300px; margin: auto; }
 
         .hero-title { text-align: center; margin-bottom: 50px; }
-        .hero-title h1 { font-family: 'Cinzel', serif; font-size: 3.5rem; color: var(--accent-gold); margin:0; text-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+        .hero-title h1 { font-family: 'Cinzel', serif; font-size: 3rem; color: var(--accent-gold); margin:0; text-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
         .hero-title p { opacity: 0.7; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; }
 
         /* --- BOOK DISPLAY AREA --- */
         .minutes-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px; margin-top: 40px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px; margin-top: 40px;
         }
 
         .book-item {
@@ -73,17 +77,16 @@
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
             position: relative;
-            overflow: hidden;
         }
 
         .book-item:hover {
             border-color: var(--accent-gold);
-            transform: translateY(-10px);
-            background: rgba(212, 175, 55, 0.05);
+            transform: translateY(-8px);
+            background: rgba(212, 175, 55, 0.08);
         }
 
         .book-cover {
-            width: 120px; height: 160px;
+            width: 100px; height: 140px;
             background: linear-gradient(135deg, var(--deep-emerald), #022c22);
             margin: 0 auto 15px;
             border-radius: 4px 10px 10px 4px;
@@ -92,53 +95,54 @@
             box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
         }
 
-        .book-cover i { font-size: 3rem; color: var(--accent-gold); opacity: 0.8; }
+        .book-cover i { font-size: 2.5rem; color: var(--accent-gold); opacity: 0.8; }
 
-        .book-item h3 { font-family: 'Oswald'; font-size: 1.1rem; margin-bottom: 5px; color: var(--primary-green); }
-        .book-item p { font-size: 0.8rem; opacity: 0.6; }
+        .book-item h3 { font-family: 'Oswald'; font-size: 1rem; margin-bottom: 5px; color: var(--primary-green); }
+        .book-item p { font-size: 0.75rem; opacity: 0.6; }
 
-        /* --- PDF MODAL (THE BOOK READER) --- */
+        /* --- PDF READER --- */
         .reader-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.95);
             z-index: 1000; display: none; flex-direction: column;
             padding: 20px;
         }
 
-        .reader-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 20px; color: var(--accent-gold);
-        }
-
         .pdf-frame {
             flex: 1; border-radius: 12px; border: 1px solid var(--card-border);
-            background: #fff; width: 90%; max-width: 1000px; margin: 20px auto;
+            background: #fff; width: 95%; max-width: 1100px; margin: 10px auto;
         }
 
-        /* --- FORM STYLING --- */
         .glass-card {
             background: var(--glass); border: 1px solid var(--card-border);
-            border-radius: 24px; padding: 30px; box-shadow: var(--shadow);
+            border-radius: 20px; padding: 25px; box-shadow: var(--shadow);
             backdrop-filter: blur(20px);
         }
 
         input, textarea {
-            width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border);
+            width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border);
             padding: 12px; border-radius: 8px; color: var(--text-color); margin-bottom: 15px;
-            font-family: inherit;
+            font-family: inherit; outline: none; box-sizing: border-box;
         }
 
-        label { color: var(--accent-gold); font-weight: bold; font-size: 0.75rem; letter-spacing: 1px; }
+        input:focus { border-color: var(--accent-gold); }
+
+        label { color: var(--accent-gold); font-weight: bold; font-size: 0.65rem; letter-spacing: 1.5px; display: block; margin-bottom: 5px; }
 
         footer {
             margin-top: 100px; padding: 60px 5%; background: rgba(0,0,0,0.3);
             border-top: 1px solid var(--card-border); text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title h1 { font-size: 2rem; }
+            .grid-split { grid-template-columns: 1fr !important; }
         }
     </style>
 </head>
 <body data-theme="dark">
 
     <nav class="nav-bar">
-        <a href="index.html" style="color:var(--primary-green); text-decoration:none; font-weight:bold; letter-spacing: 1px;">← HUB HOME</a>
+        <a href="index.html" style="color:var(--primary-green); text-decoration:none; font-weight:bold; font-size: 0.8rem; letter-spacing: 1px;">← HUB HOME</a>
         <div>
             <button onclick="toggleTheme()" style="background:none; border:none; color:var(--text-color); margin-right:20px; cursor:pointer;"><i id="tIcon" class="fas fa-sun"></i></button>
             <button class="gold-btn" onclick="openVault()"><i class="fas fa-key"></i> ADMIN PORTAL</button>
@@ -151,57 +155,72 @@
             <p>The Digital Record of Equity Crew '26</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 60px;">
+        <div class="grid-split" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; margin-bottom: 60px;">
             <div class="glass-card">
-                <h2 style="font-family:'Oswald'; color:var(--primary-green); margin-bottom: 25px;">NEW SESSION LOG</h2>
+                <h2 style="font-family:'Oswald'; color:var(--primary-green); margin-bottom: 20px;">NEW SESSION LOG</h2>
                 <div class="input-group">
                     <label>DOCUMENT TITLE</label>
-                    <input type="text" id="minTitle" placeholder="Ex: August Plenary Session">
+                    <input type="text" id="minTitle" placeholder="Ex: January Strategic Meeting">
                     <label>SESSION DATE</label>
                     <input type="date" id="minDate">
-                    <label>SUMMARY / SENSITIVE NOTES</label>
+                    <label>SUMMARY / PRIVATE LEDGER NOTES</label>
                     <textarea id="minText" rows="4" placeholder="Briefly summarize or log sensitive data for the admin vault..."></textarea>
                     <button class="gold-btn" style="width:100%" onclick="saveMinutes()">COMMIT TO VAULT</button>
                 </div>
             </div>
 
-            <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; text-align: center;">
-                <i class="fas fa-book-open" style="font-size: 4rem; color: var(--accent-gold); margin-bottom: 20px;"></i>
-                <h2 style="font-family:'Oswald';">ARCHIVE STATS</h2>
-                <p style="opacity: 0.6;">Total Minutes Logged: <span id="minuteCount" style="color: var(--primary-green); font-weight: bold;">20</span></p>
-                <p style="font-size: 0.8rem;">Documents are encrypted and stored in the secure legacy registry.</p>
+            <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; text-align: center; background: linear-gradient(to bottom, rgba(16, 185, 129, 0.05), transparent);">
+                <i class="fas fa-fingerprint" style="font-size: 3rem; color: var(--accent-gold); margin-bottom: 20px;"></i>
+                <h2 style="font-family:'Oswald';">VAULT STATUS</h2>
+                <p style="opacity: 0.6; font-size: 0.9rem;">Archived Volumes: <span id="minuteCount" style="color: var(--primary-green); font-weight: bold;">0</span></p>
+                <div style="margin-top: 15px; padding: 10px; border: 1px dashed var(--accent-gold); border-radius: 10px; font-size: 0.7rem; opacity: 0.8;">
+                    Encrypted General Secretariat Archive <br> Access restricted to Level 4 Executives
+                </div>
             </div>
         </div>
 
-        <h2 style="font-family:'Cinzel'; text-align: center; color: var(--accent-gold); border-bottom: 1px solid var(--card-border); padding-bottom: 15px;">THE REGISTRY</h2>
+        <h2 style="font-family:'Cinzel'; text-align: center; color: var(--accent-gold); border-bottom: 1px solid var(--card-border); padding-bottom: 15px; margin-bottom: 0;">THE REGISTRY</h2>
         
         <div class="minutes-grid" id="bookRegistry">
             </div>
 
         <div id="adminVault" style="display:none; margin-top:50px;" class="glass-card">
-            <h2 style="color:var(--accent-gold); font-family:'Oswald';"><i class="fas fa-lock"></i> SECURE ADMIN LEDGER</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 15px; margin-bottom: 20px;">
+                <h2 style="color:var(--accent-gold); font-family:'Oswald'; margin:0;"><i class="fas fa-lock"></i> SECURE ADMIN LEDGER</h2>
+                <button class="gold-btn" style="padding: 5px 15px; font-size: 0.6rem;" onclick="document.getElementById('adminVault').style.display='none'">Hide</button>
+            </div>
             <div id="vaultContent"></div>
         </div>
     </div>
 
     <div class="reader-overlay" id="readerModal">
-        <div class="reader-header">
-            <h2 id="readerTitle" style="font-family:'Oswald'; margin:0;">DOCUMENT VIEW</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 5%;">
+            <h2 id="readerTitle" style="font-family:'Oswald'; color: var(--accent-gold); margin:0;">DOCUMENT VIEW</h2>
             <button class="gold-btn" onclick="closeReader()">CLOSE BOOK</button>
         </div>
         <iframe id="pdfViewer" class="pdf-frame" src=""></iframe>
     </div>
 
     <footer>
-        <div class="footer-logo" style="font-family: 'Cinzel'; color: var(--accent-gold);">EQUITY CREW '26</div>
-        <p style="opacity:0.5; font-size:0.8rem; letter-spacing: 1px;">GENERAL SECRETARIAT ARCHIVE SUITE<br>Office of the General Secretary</p>
-        <div style="margin-top:20px; font-size:1.2rem; gap:20px; display:flex; justify-content:center; color:var(--primary-green);">
-            <i class="fab fa-facebook-f"></i> <i class="fab fa-instagram"></i> <i class="fab fa-linkedin-in"></i>
-        </div>
+        <div style="font-family: 'Cinzel'; color: var(--accent-gold); font-size: 1.2rem;">EQUITY CREW '26</div>
+        <p style="opacity:0.5; font-size:0.7rem; letter-spacing: 1px; margin-top: 10px;">GENERAL SECRETARIAT ARCHIVE SUITE<br>Office of the General Secretary</p>
     </footer>
 
     <script>
-        // 1. Theme Logic
+        // 1. Firebase Config (Replace with your actual keys from the other page)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLrdBzHOhsJW4_ixghTx96XpHT4QMS8s8",
+            authDomain: "executo-4ecd7.firebaseapp.com",
+            projectId: "executo-4ecd7",
+            storageBucket: "executo-4ecd7.firebasestorage.app",
+            messagingSenderId: "738758706005",
+            appId: "1:738758706005:web:383f547ce4ddb8b243e5dc"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // 2. Theme Logic
         function toggleTheme() {
             const b = document.body;
             const isDark = b.getAttribute('data-theme') === 'dark';
@@ -209,87 +228,89 @@
             document.getElementById('tIcon').className = isDark ? 'fas fa-moon' : 'fas fa-sun';
         }
 
-        // 2. Populate Registry as Books
-        const bookRegistry = document.getElementById('bookRegistry');
+        // 3. Render Registry (First Book: 2026-01-15)
+       function renderArchive() {
+    const registry = document.getElementById('bookRegistry');
+    registry.innerHTML = "";
+    
+    // Define your specific meeting dates here
+    const meetingDates = [
+        "2026-01-15",
+        "2026-01-19",
+        "2026-02-05",
+        "2026-02-18"
+    ];
+    
+    meetingDates.forEach((dateString, index) => {
+        const volTitle = `Executive Plenary Vol. ${101 + index}`;
         
-        // Mock PDF URLs - You will replace these with your uploaded paths
-        const mockPdfs = [
-            "path/to/your/document1.pdf",
-            "path/to/your/document2.pdf"
-        ];
+        registry.innerHTML += `
+            <div class="book-item" onclick="alert('Sync pending...')">
+                <div class="book-cover">
+                    <i class="fas fa-scroll"></i>
+                </div>
+                <h3>${volTitle}</h3>
+                <p><i class="far fa-calendar-alt"></i> ${dateString}</p>
+                <span style="font-size:0.6rem; color:var(--accent-gold); font-weight:bold;">ACCESS RECORD</span>
+            </div>`;
+    });
+}
 
-        function renderArchive() {
-            bookRegistry.innerHTML = "";
-            for(let i=1; i<=20; i++) {
-                const date = `2026-01-${i < 10 ? '0'+i : i}`;
-                const title = `Executive Sitting Vol. ${200 + i}`;
-                
-                let book = `
-                <div class="book-item" onclick="openBook('${title}', 'mock.pdf')">
-                    <div class="book-cover">
-                        <i class="fas fa-scroll"></i>
-                    </div>
-                    <h3>${title}</h3>
-                    <p><i class="far fa-calendar-alt"></i> ${date}</p>
-                    <span style="font-size:0.7rem; color:var(--accent-gold);">READ MINUTE</span>
-                </div>`;
-                bookRegistry.innerHTML += book;
+        // 4. Save to Firestore
+        async function saveMinutes() {
+            const title = document.getElementById('minTitle').value;
+            const date = document.getElementById('minDate').value;
+            const content = document.getElementById('minText').value;
+
+            if(!title || !date || !content) return alert("All vault fields required.");
+
+            try {
+                await db.collection("minutes_vault").add({
+                    title: title,
+                    date: date,
+                    content: content,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                alert("Data committed to the Secure Registry.");
+                location.reload();
+            } catch (e) {
+                alert("Vault sync failed. Check connection.");
             }
         }
 
-        renderArchive();
-
-        // 3. Reader Logic
-        function openBook(title, pdfUrl) {
-            document.getElementById('readerTitle').innerText = title;
-            // Note: In a real scenario, you'd set the src to the pdfUrl
-            // For now, it stays empty or loads a placeholder
-            document.getElementById('pdfViewer').src = pdfUrl; 
-            document.getElementById('readerModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Prevent scrolling
-        }
-
-        function closeReader() {
-            document.getElementById('readerModal').style.display = 'none';
-            document.getElementById('pdfViewer').src = "";
-            document.body.style.overflow = 'auto';
-        }
-
-        // 4. Admin Vault
-        let secretData = JSON.parse(localStorage.getItem('minutes_vault')) || [];
-
-        function saveMinutes() {
-            const title = document.getElementById('minTitle').value;
-            const text = document.getElementById('minText').value;
-            if(!title || !text) return alert("Archive requires complete data.");
-
-            const entry = { time: new Date().toLocaleString(), title: title, content: text };
-            secretData.push(entry);
-            localStorage.setItem('minutes_vault', JSON.stringify(secretData));
+        // 5. Fetch Stats and Ledger
+        async function loadVault() {
+            const snap = await db.collection("minutes_vault").orderBy("date", "desc").get();
+            document.getElementById('minuteCount').innerText = snap.size;
             
-            alert("Record successfully synchronized with the Secure Vault.");
-            document.getElementById('minTitle').value = '';
-            document.getElementById('minText').value = '';
+            const vBody = document.getElementById('vaultContent');
+            vBody.innerHTML = "";
+            snap.forEach(doc => {
+                const d = doc.data();
+                vBody.innerHTML += `
+                    <div style="border-bottom:1px solid var(--card-border); padding:15px 0;">
+                        <small style="color:var(--primary-green)">${d.date}</small>
+                        <h4 style="margin:5px 0; color:var(--accent-gold);">${d.title}</h4>
+                        <p style="font-size:0.8rem; opacity:0.8; margin:0;">${d.content}</p>
+                    </div>`;
+            });
         }
 
         function openVault() {
-            const pass = prompt("Enter Vault Access Key:");
+            const pass = prompt("Enter General Secretary Access Key:");
             if(pass === "DolapoAdmin") {
-                const vault = document.getElementById('adminVault');
-                vault.style.display = 'block';
-                const vBody = document.getElementById('vaultContent');
-                vBody.innerHTML = secretData.map(d => `
-                    <div style="border-bottom:1px solid var(--card-border); padding:15px 0;">
-                        <small style="color:var(--primary-green)">${d.time}</small>
-                        <h4 style="margin:5px 0; color:var(--accent-gold);">${d.title}</h4>
-                        <p style="font-size:0.9rem; opacity:0.8; margin:0;">${d.content}</p>
-                    </div>
-                `).join('');
-                vault.scrollIntoView({behavior: "smooth"});
+                document.getElementById('adminVault').style.display = 'block';
+                document.getElementById('adminVault').scrollIntoView({behavior: "smooth"});
             } else {
-                alert("Unauthorized Access Attempt Recorded.");
+                alert("Access Denied.");
             }
         }
+
+        // Init
+        window.onload = () => {
+            renderArchive();
+            loadVault();
+        };
     </script>
 </body>
 </html>
