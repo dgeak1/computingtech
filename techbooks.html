@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechBook 50 | Comprehensive Archive</title>
+    <title>Faculty Portal | Secure Archive</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -20,169 +20,232 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: radial-gradient(circle at top, var(--dark-emerald), var(--deep-forest));
-            color: #ffffff; min-height: 100vh; scroll-behavior: smooth;
+            color: #ffffff; min-height: 100vh;
         }
 
-        /* Nav */
+        /* Nav & Headers */
         .nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 5%; background: rgba(2, 44, 34, 0.95);
+            padding: 1rem 8%; background: rgba(2, 44, 34, 0.95);
             backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
             position: sticky; top: 0; z-index: 1000;
         }
-        .nav-links { display: flex; gap: 20px; align-items: center; }
-        .back-home { color: var(--primary-green); text-decoration: none; font-weight: 800; font-size: 0.8rem; transition: 0.3s; }
-        .back-home:hover { color: white; }
+        .logo { font-family: 'Cinzel', serif; font-size: 1.4rem; color: #fff; }
 
-        .container { max-width: 1400px; margin: 40px auto; padding: 0 20px; }
-        
-        /* Search & Filter */
-        .search-box {
-            width: 100%; max-width: 600px; margin: 0 auto 40px; position: relative;
+        /* New Quick Access Section */
+        .quick-access {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px; max-width: 1200px; margin: 30px auto; padding: 0 20px;
         }
-        .search-box input {
-            width: 100%; background: var(--glass); border: 1px solid var(--border);
-            padding: 15px 25px; border-radius: 50px; color: white; outline: none;
-        }
-
-        h2 { font-family: 'Cinzel'; color: var(--primary-green); margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
-
-        /* Grids */
-        .grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px; margin-bottom: 80px;
-        }
-
-        /* Cards */
-        .card {
+        .access-card {
             background: var(--glass); border: 1px solid var(--border);
-            padding: 20px; border-radius: 15px; position: relative; transition: 0.3s;
-            display: flex; flex-direction: column;
+            padding: 20px; border-radius: 20px; text-align: center;
+            text-decoration: none; color: white; transition: 0.3s;
         }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary-green); }
-        .fav-btn { position: absolute; top: 15px; right: 15px; cursor: pointer; color: #4b5563; border: none; background: none; font-size: 1.2rem; }
-        .fav-btn.active { color: #fbbf24; }
-        
-        code {
-            background: #000; padding: 12px; border-radius: 8px; font-family: 'Courier New', monospace;
-            font-size: 0.75rem; margin-top: 15px; color: #10b981; overflow-x: auto; white-space: pre-wrap;
+        .access-card:hover { background: rgba(16, 185, 129, 0.1); border-color: var(--primary-green); }
+        .access-card i { font-size: 1.5rem; color: var(--primary-green); margin-bottom: 10px; }
+
+        /* Admin Dashboard */
+        .admin-box {
+            max-width: 800px; margin: 40px auto; padding: 40px;
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.05), rgba(0,0,0,0.3));
+            border-radius: 30px; border: 1px solid var(--border); text-align: center;
+        }
+        .btn-main {
+            background: var(--primary-green); color: var(--deep-forest);
+            border: none; padding: 15px 40px; border-radius: 50px;
+            font-weight: 800; cursor: pointer; transition: 0.3s;
+        }
+        .btn-danger {
+            background: transparent; color: #ef4444; border: 1px solid #ef4444;
+            padding: 8px 20px; border-radius: 50px; cursor: pointer; font-size: 0.8rem;
         }
 
-        .tag { font-size: 0.6rem; text-transform: uppercase; background: var(--border); padding: 2px 8px; border-radius: 4px; margin-bottom: 10px; display: inline-block; }
+        /* Gallery Grid */
+        .gallery-container { max-width: 1200px; margin: 0 auto; padding: 20px 20px 100px; }
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .item {
+            position: relative; border-radius: 25px; overflow: hidden;
+            background: #000; border: 1px solid var(--border); aspect-ratio: 1/1;
+        }
+        .item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; cursor: pointer; }
+        .item:hover img { transform: scale(1.05); filter: brightness(0.4); }
+
+        /* Delete Badge */
+        .del-overlay {
+            position: absolute; top: 15px; right: 15px; z-index: 10;
+            opacity: 0; transition: 0.3s;
+        }
+        .item:hover .del-overlay { opacity: 1; }
+
+        /* AI Lightbox */
+        .lightbox {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            display: none; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 2000; padding: 20px; backdrop-filter: blur(15px);
+        }
+        .lightbox.active { display: flex; }
+        .lb-card { max-width: 500px; text-align: center; }
+        .lb-card img { width: 100%; border-radius: 20px; border: 1px solid var(--primary-green); }
+        .ai-quote-box {
+            margin-top: 15px; padding: 20px; background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--primary-green); border-radius: 10px;
+        }
+
+        .close-btn { position: absolute; top: 20px; right: 30px; font-size: 3rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <nav class="nav">
-        <div class="nav-links">
-            <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> BACK TO HOME</a>
-            <div class="logo" style="font-family: 'Cinzel'; margin-left: 20px;">TECH<span>BOOK</span></div>
-        </div>
-        <div style="font-size: 0.7rem; color: var(--primary-green); font-weight: 800;">50+ MODULES LOADED</div>
+        <div class="logo">FACULTY <span>ARCHIVE</span></div>
+        <div style="font-size: 0.7rem; color: var(--primary-green); font-weight: 800;">MANAGED BY DOLAPO</div>
     </nav>
 
-    <div class="container">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search Python, CSS, HTML concepts..." onkeyup="filterCards()">
+    <div class="quick-access">
+        <a href="DolpGraceTechBook.html" class="access-card">
+            <i class="fas fa-book-open"></i>
+            <h3>TechBook</h3>
+            <p style="font-size: 0.7rem; color: #94a3b8;">Study Materials & Resources</p>
+        </a>
+        <a href="Bulletin.html" class="access-card">
+            <i class="fas fa-bullhorn"></i>
+            <h3>Bulletins</h3>
+            <p style="font-size: 0.7rem; color: #94a3b8;">Official Announcements</p>
+        </a>
+        <a href="security.html" class="access-card">
+            <i class="fas fa-bullhorn"></i>
+            <h3> Security </h3>
+            <p style="font-size: 0.7rem; color: #94a3b8;"> Check the Security Log (Public)</p>
+        </a>
+        <!-- <div class="access-card" style="cursor: default;">
+            <i class="fas fa-shield-halved"></i>
+            <h3>Security</h3>
+            <p style="font-size: 0.7rem; color: #94a3b8;">Protocol: ACTIVE</p>
+        </div> -->
+    </div>
+
+    <section class="admin-box">
+        <h2 style="font-family: 'Cinzel'; color: var(--primary-green);">General Secretary Portal</h2>
+        <p style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 25px;">Upload memories to the permanent faculty record</p>
+        <button class="btn-main" onclick="handleSecureUpload()">
+            <i class="fas fa-cloud-upload-alt"></i> UPLOAD TO ARCHIVE
+        </button>
+        <input type="file" id="file-input" style="display:none" accept="image/*">
+    </section>
+
+    <main class="gallery-container">
+        <div class="grid" id="gallery-grid">
+            </div>
+    </main>
+
+    <div class="lightbox" id="lightbox">
+        <span class="close-btn" onclick="closeLB()">&times;</span>
+        <div class="lb-card">
+            <img id="lb-img" src="">
+            <div class="ai-quote-box">
+                <p style="color: var(--primary-green); font-size: 0.6rem; font-weight: 800; margin-bottom: 5px;">AI CONTENT GENERATED</p>
+                <p id="ai-text" style="font-style: italic;">Processing metadata...</p>
+            </div>
+            <button class="btn-main" style="margin-top: 15px; width: 100%;" onclick="downloadImage()">DOWNLOAD MEMORY</button>
         </div>
-
-        <section id="fav-section" style="display:none;">
-            <h2><i class="fas fa-star"></i> Favorites</h2>
-            <div class="grid" id="favorites-grid"></div>
-        </section>
-
-        <section>
-            <h2><i class="fas fa-book"></i> Core Library</h2>
-            <div class="grid" id="library-grid"></div>
-        </section>
     </div>
 
     <script>
-        // Generating 50 Items (Mixing HTML, CSS, Python)
-        const categories = ["html", "css", "python"];
-        const libraryData = [];
+        const MASTER_KEY = "DolapoAdmin";
+        const QUOTES = [
+            "Leadership is the capacity to translate vision into reality.",
+            "Legacy is not what we leave for people, but what we leave in them.",
+            "Innovation distinguishes between a leader and a follower.",
+            "A snapshot of excellence in our academic journey.",
+            "Community is built on shared moments and digital records.",
+            "The future belongs to those who archive their growth today."
+        ];
 
-        // Sample Data Generation to reach 50
-        for (let i = 1; i <= 50; i++) {
-            let cat = categories[i % 3];
-            let title, code, desc;
+        const grid = document.getElementById('gallery-grid');
+        const fileIn = document.getElementById('file-input');
 
-            if (cat === "python") {
-                title = `Python Concept #${i}`;
-                desc = "Logic, Data Structures, and Automation.";
-                code = `def function_${i}(data):\n    # Process logic\n    return [x for x in data if x > ${i}]`;
-            } else if (cat === "css") {
-                title = `CSS Styling #${i}`;
-                desc = "Visual design and layout mastery.";
-                code = `.element-${i} {\n    display: grid;\n    gap: ${i}px;\n    filter: blur(2px);\n}`;
-            } else {
-                title = `HTML Element #${i}`;
-                desc = "Structuring web content effectively.";
-                code = `<section id="sec-${i}">\n  <h${(i%6)+1}>Heading ${i}</h${(i%6)+1}>\n</section>`;
-            }
-
-            libraryData.push({ id: i, type: cat, title, desc, code });
+        // --- AUTH & UPLOAD ---
+        function handleSecureUpload() {
+            if(prompt("GEN SEC VERIFICATION: Enter Password:") === MASTER_KEY) fileIn.click();
+            else alert("Unauthorized Access.");
         }
 
-        let favorites = JSON.parse(localStorage.getItem('techbook_favs')) || [];
-
-        function render() {
-            const libraryGrid = document.getElementById('library-grid');
-            const favGrid = document.getElementById('favorites-grid');
-            const favSection = document.getElementById('fav-section');
-
-            // Render Library
-            libraryGrid.innerHTML = libraryData.map(item => createCard(item)).join('');
-            
-            // Render Favorites
-            const favItems = libraryData.filter(item => favorites.includes(item.id));
-            if (favItems.length > 0) {
-                favSection.style.display = 'block';
-                favGrid.innerHTML = favItems.map(item => createCard(item)).join('');
-            } else {
-                favSection.style.display = 'none';
+        fileIn.onchange = (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const id = Date.now();
+                    const src = event.target.result;
+                    savePhoto(id, src);
+                    renderPhoto(id, src);
+                };
+                reader.readAsDataURL(file);
             }
-        }
+        };
 
-        function createCard(item) {
-            const isFav = favorites.includes(item.id);
-            return `
-                <div class="card" data-title="${item.title.toLowerCase()}" data-type="${item.type}">
-                    <span class="tag">${item.type}</span>
-                    <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(${item.id})">
-                        <i class="${isFav ? 'fas' : 'far'} fa-star"></i>
-                    </button>
-                    <h3 style="font-size: 1rem;">${item.title}</h3>
-                    <p style="font-size: 0.75rem; color: #94a3b8; margin: 10px 0;">${item.desc}</p>
-                    <code>${escapeHTML(item.code)}</code>
+        // --- RENDER & DELETE ---
+        function renderPhoto(id, src) {
+            const div = document.createElement('div');
+            div.className = 'item';
+            div.innerHTML = `
+                <div class="del-overlay">
+                    <button class="btn-danger" onclick="deleteArchive(${id})"><i class="fas fa-trash"></i> DELETE</button>
                 </div>
+                <img src="${src}" onclick="openLB('${src}')">
             `;
+            grid.prepend(div);
         }
 
-        function toggleFav(id) {
-            if (favorites.includes(id)) {
-                favorites = favorites.filter(f => f !== id);
+        function deleteArchive(id) {
+            event.stopPropagation();
+            if(prompt("SECURE DELETE: Enter Admin Password:") === MASTER_KEY) {
+                let data = JSON.parse(localStorage.getItem('faculty_archive') || '[]');
+                data = data.filter(item => item.id !== id);
+                localStorage.setItem('faculty_archive', JSON.stringify(data));
+                location.reload(); // Refresh to update grid
             } else {
-                favorites.push(id);
+                alert("Incorrect Key. Delete request ignored.");
             }
-            localStorage.setItem('techbook_favs', JSON.stringify(favorites));
-            render();
         }
 
-        function filterCards() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('#library-grid .card');
-            cards.forEach(card => {
-                const text = card.getAttribute('data-title') + card.getAttribute('data-type');
-                card.style.display = text.includes(query) ? 'flex' : 'none';
-            });
+        // --- LIGHTBOX & AI ---
+        function openLB(src) {
+            document.getElementById('lb-img').src = src;
+            const text = document.getElementById('ai-text');
+            document.getElementById('lightbox').classList.add('active');
+            
+            text.innerText = "Analyzing visual signatures...";
+            setTimeout(() => {
+                text.innerText = `"${QUOTES[Math.floor(Math.random() * QUOTES.length)]}"`;
+            }, 800);
         }
 
-        function escapeHTML(str) {
-            return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+        function closeLB() { document.getElementById('lightbox').classList.remove('active'); }
+
+        function downloadImage() {
+            const a = document.createElement('a');
+            a.href = document.getElementById('lb-img').src;
+            a.download = `Archive_${Date.now()}.png`;
+            a.click();
         }
 
-        window.onload = render;
+        // --- STORAGE ---
+        function savePhoto(id, src) {
+            const data = JSON.parse(localStorage.getItem('faculty_archive') || '[]');
+            data.push({id, src});
+            localStorage.setItem('faculty_archive', JSON.stringify(data));
+        }
+
+        window.onload = () => {
+            const saved = JSON.parse(localStorage.getItem('faculty_archive') || '[]');
+            saved.forEach(item => renderPhoto(item.id, item.src));
+        };
     </script>
 </body>
+
 </html>
