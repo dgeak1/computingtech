@@ -3,31 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Science Members</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Elite Hub | Meet the Excos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* ELITE THEME VARIABLES */
+        :root {
+            --gold: #d4af37;
+            --gold-bright: #f9e29b;
+            --emerald: #064e3b;
+            --deep-green: #022c22;
+            --glass: rgba(2, 44, 34, 0.85);
+            --border: rgba(212, 175, 55, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--deep-green);
+            color: white;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at top right, #064e3b, #022c22);
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-weight: 800;
+            color: var(--gold);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .hero p {
+            opacity: 0.7;
+            font-weight: 300;
+        }
+
+        /* MEMBERS SECTION */
+        .members-section {
+            padding: 40px 0;
+            width: 100%;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            color: var(--gold);
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        /* HORIZONTAL SCROLL CONTAINER */
+        .members-scroll-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 25px;
+            padding: 20px 5% 40px 5%;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+        }
+
+        /* Hide scrollbar */
+        .members-scroll-container::-webkit-scrollbar {
+            height: 4px;
+        }
+        .members-scroll-container::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        /* EXECUTIVE CARD STYLING */
+        .member-card {
+            position: relative;
+            min-width: 280px;
+            height: 400px;
+            background: #011a14;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            overflow: hidden;
+            scroll-snap-align: center;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .member-card:hover {
+            transform: scale(1.03) translateY(-10px);
+            border-color: var(--gold-bright);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .member-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+            transition: 0.5s;
+            z-index: 1;
+        }
+
+        .member-card:hover .member-img {
+            opacity: 0.8;
+            transform: scale(1.1);
+        }
+
+        .member-info {
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(to top, rgba(2, 44, 34, 1) 30%, rgba(2, 44, 34, 0.8) 60%, transparent);
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .m-role-badge {
+            background: var(--gold);
+            color: var(--deep-green);
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 5px 15px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .m-name {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 5px 0;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .m-pka {
+            color: var(--gold-bright);
+            font-size: 0.8rem;
+            font-weight: 400;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        /* FOOTER */
+        .main-footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid var(--border);
+            margin-top: 50px;
+            opacity: 0.6;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.8rem; }
+            .member-card { min-width: 250px; height: 380px; }
+        }
+    </style>
 </head>
 <body>
+
     <nav class="navbar">
-        <div class="logo">The Federal Polytechnic Ede.</div>
+        <div class="logo"> School of Computing Technology </div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
-            <li><a href="excos.html">Meet the Excos</a></li>
+            <li><a href="excos.html" style="color: var(--gold);">Excos</a></li>
         </ul>
     </nav>
+
     <header class="hero">
-        <h1>Computer Science Members</h1>
-        <p>View all members of the Computer Science department.</p>
+        <h1>THE COUNCIL</h1>
+        <p>Executives of the Computer Science Department</p>
     </header>
-    <main class="grid-container">
+
+    <main>
         <section class="members-section">
-            <!-- Add member cards or animation here -->
-            <div class="placeholder">Members will be displayed here.</div>
+            <div class="section-header">
+                <h2>LEADERSHIP</h2>
+                <span style="opacity: 0.5; font-size: 0.7rem;">Swipe Left/Right &rarr;</span>
+            </div>
+            
+            <div class="members-scroll-container" id="members-list">
+                </div>
         </section>
     </main>
+
     <footer class="main-footer">
-        <div class="footer-content">
-            <span>Developed by <b>Equity Crew 26</b> &copy; 2026</span>
-        </div>
+        <div>Developed by <b>Equity Crew 26</b> &copy; 2026</div>
     </footer>
+
+    <script>
+        const executives = [
+            { 
+                name: "OLANIYI BABATUNDE OLAMILEKAN", 
+                pka: "Leklous", 
+                role: "President",
+                img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=500"
+            },
+            { 
+                name: "Akinbola Ajolayo Opeyemi", 
+                pka: "AJAY", 
+                role: "Vice President",
+                img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=500"
+            },
+            { 
+                name: "OLANIYAN ABDUL-LATEEF", 
+                pka: "WISDOM", 
+                role: "General Secretary",
+                img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=500"
+            },
+            { 
+                name: "Adesakin oluwaseun Hezekiah", 
+                pka: "Ife", 
+                role: "Treasurer",
+                img: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=500"
+            },
+            { 
+                name: "ADEBAYO SUNDAY KAYODE", 
+                pka: "FROSH", 
+                role: "Welfare Director",
+                img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=500"
+            },
+            { 
+                name: "ADEBAYO ISMAHEEL ADEKOLA", 
+                pka: "ADEBAYO", 
+                role: "Sport Director",
+                img: "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=500"
+            },
+            { 
+                name: "Abdulhameed Abdulqudus Olubodun", 
+                pka: "DesignovaQ", 
+                role: "Software Director",
+                img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=500"
+            },
+            { 
+                name: "ADETUNJI STEPHEN BAMIDELE", 
+                pka: "ABEFE", 
+                role: "Social Director",
+                img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=500"
+            },
+            { 
+                name: "ADELAKUN QUDUS", 
+                pka: "DAMOLA", 
+                role: "PRO",
+                img: "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=500"
+            },
+            { 
+                name: "Omolade Boluwatife Dorcas", 
+                pka: "Only saint", 
+                role: "Financial Secretary",
+                img: "https://images.unsplash.com/photo-1573163281538-506e33a93581?q=80&w=500"
+            }
+        ];
+
+        function loadMembers() {
+            const container = document.getElementById('members-list');
+            if(!container) return;
+            
+            container.innerHTML = executives.map(ex => `
+                <div class="member-card">
+                    <img src="${ex.img}" class="member-img" alt="${ex.name}">
+                    <div class="member-info">
+                        <span class="m-role-badge">${ex.role}</span>
+                        <div class="m-name">${ex.name}</div>
+                        <div class="m-pka">PKA: ${ex.pka}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize
+        loadMembers();
+    </script>
 </body>
 </html>
