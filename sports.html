@@ -2,1279 +2,797 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Equity Elite | Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athletes Welcome | Faculty Sports Center</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
 
     <style>
-        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap");
 
         :root {
-            --primary-gold: #D4AF37;
-            --gold: #D4AF37;
-            --deep-emerald: #011a14;
-            --accent-green: #059669;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(212, 175, 55, 0.15);
-            --border: rgba(212, 175, 55, 0.15);
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
-            --card-radius: 24px;
+            --gold: #4fd04f;
+            --dark-green: #022C22;
+            --deep-black: #01140F;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(212, 175, 55, 0.3);
         }
 
-        * {  margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Poppins', sans-serif; }
-
-        body { 
-            background: rgb(31, 23, 0); 
-            color: var(--text-main); 
-            min-height: 100vh;
-            background-image: radial-gradient(circle at top right, #000000, transparent),
-                              radial-gradient(circle at bottom left, #2e0202, transparent);
-            overflow-x: hidden; padding-bottom: 100px;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        body { background: var(--deep-black); color: white; font-family: 'Montserrat', sans-serif; line-height: 1.6; }
+        .container { max-width: 500px; margin: 0 auto; padding: 0 20px; }
+        .cambria { font-family: 'Cinzel', serif; }
+        .gold-text { color: var(--gold); }
         .hidden { display: none !important; }
-        .app-container { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; padding: 20px; }
-        .heading-font { font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
 
-        .post-box-container {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px; padding: 20px; margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        .sports-header {
+            padding: 60px 20px 30px;
+            text-align: center;
+            background: linear-gradient(to bottom, #022c22, transparent);
+            border-bottom: 1px solid var(--border);
         }
 
-        .post-textarea {
-            width: 100%; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border);
-            border-radius: 15px; padding: 15px; color: white; font-size: 0.9rem;
-            resize: none; outline: none; margin-bottom: 15px;
+        .elite-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
-        .post-actions { display: flex; justify-content: space-between; align-items: center; }
-
-        .media-button {
-            display: flex; align-items: center; gap: 8px; color: var(--gold);
-            font-size: 0.75rem; font-weight: 600; padding: 8px 12px;
-            border-radius: 10px; background: rgba(130, 108, 36, 0.1);
+        .form-input {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            padding: 15px; border-radius: 12px; color: white; margin-bottom: 12px;
+            font-family: 'Montserrat', sans-serif;
         }
 
-        .glass-card {
-            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border); border-radius: var(--card-radius);
-            padding: 20px; margin-bottom: 20px;
+        .btn-luxury {
+            width: 100%; background: var(--gold); color: var(--dark-green);
+            padding: 16px; border-radius: 12px; font-weight: 800; border: none;
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
         }
 
-        #market-display {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+        footer { margin-top: 50px; padding: 40px 20px; background: rgba(0,0,0,0.5); text-align: center; border-top: 1px solid var(--border); }
+        
+        /* Modal Style */
+        #ledger-modal {
+            position: fixed; inset: 0; background: var(--deep-black); 
+            z-index: 9999; padding: 20px; overflow-y: auto;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; color: black; }
+            .elite-card { border: 1px solid #000; color: black; background: none; }
+        }
+        @media print {
+    /* Hide the UI, only show the document */
+    body * { visibility: hidden; }
+    #ledger-modal, #ledger-modal * { visibility: visible; }
+    #ledger-modal { position: absolute; left: 0; top: 0; width: 100%; background: white !important; }
+    .no-print { display: none !important; }
+    
+    /* Force background colors to print */
+    #printable-doc { 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact; 
+    }
 }
 
-/* Make market cards feel high-tech */
-#market-display .glass-card {
-    border-left: 3px solid var(--primary-gold);
-    transition: transform 0.3s ease;
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+/* Card Gallery Styling */
+.player-card {
+    min-width: 130px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    scroll-snap-align: start;
+    transition: 0.3s;
 }
 
-#market-display .glass-card:hover {
-    transform: translateY(-5px);
+.player-card:hover {
+    border-color: var(--gold);
+    background: rgba(212, 175, 55, 0.05);
 }
 
-        .btn-gold {
-            background: linear-gradient(135deg, #D4AF37 0%, #B08D29 100%);
-            color: #011a14; padding: 16px; border-radius: 16px; border: none;
-            font-weight: 800; font-size: 0.8rem; text-transform: uppercase; width: 100%;
-        }
-
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0; background: rgba(1, 26, 20, 0.95);
-            border-top: 1px solid var(--glass-border); display: flex; justify-content: space-around;
-            padding: 15px 10px 30px; z-index: 1000;
-        }
-
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-dim); gap: 4px; }
-        .nav-item.active { color: var(--primary-gold); }
-
-        .chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-        .bubble { max-width: 80%; padding: 12px 16px; border-radius: 20px; font-size: 0.85rem; line-height: 1.5; }
-        .bubble.sent { align-self: flex-end; background: var(--primary-gold); color: #011a14; border-bottom-right-radius: 4px; }
-        .bubble.received { align-self: flex-start; background: var(--glass-bg); border: 1px solid var(--glass-border); border-bottom-left-radius: 4px; }
-
-        .glass-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 12px; padding: 14px; color: white; outline: none; margin-bottom: 12px; }
-
-        .progress-circle { width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; margin: 20px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary-gold); width: 0%; transition: width 1s ease-in-out; }
-
-        .id-card-view {
-            height: 220px; border-radius: 24px; background: linear-gradient(135deg, #064e3b 0%, #011a14 100%);
-            border: 1px solid var(--primary-gold); padding: 25px; position: relative; overflow: hidden;
-        }
-        /* Custom Scrollbar for Comments */
-#tab-feed div div::-webkit-scrollbar {
-    width: 3px;
+.player-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid var(--gold);
+    background: #222;
 }
-.bubble {
-    padding: 10px 14px;
-    border-radius: 18px;
-    font-size: 0.85rem;
-    max-width: 80%;
-    line-height: 1.4;
-}
-.bubble.sent {
-    background: var(--primary-gold);
-    color: #011a14;
-    border-bottom-right-radius: 4px;
-}
-.bubble.received {
-    background: rgba(255, 255, 255, 0.08);
+
+.player-card h5 {
+    font-size: 0.8rem;
+    margin: 5px 0;
     color: white;
-    border-bottom-left-radius: 4px;
-    border: 1px solid var(--glass-border);
 }
 
-.id-card-view {
-    height: 200px;
-    border-radius: 24px;
-    background: linear-gradient(145deg, #022c22 0%, #011a14 100%);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    padding: 25px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+.p-dept {
+    display: block;
+    font-size: 0.55rem;
+    color: #888;
+    margin-bottom: 5px;
 }
 
-#p-card-img {
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-    transition: transform 0.5s ease;
+.p-stat {
+    font-size: 0.65rem;
+    color: var(--gold);
+    font-weight: 700;
 }
 
-.id-card-view:active #p-card-img {
-    transform: scale(1.05);
-}
-
-@keyframes typingDots {
-    0% { opacity: 0.3; }
-    50% { opacity: 1; }
-    100% { opacity: 0.3; }
-}
-
-#chat-list-container [id^="typing-"] {
-    animation: typingDots 1.5s infinite;
-    font-weight: 800;
-    letter-spacing: 1px;
-}
-
-/* Instant scroll behavior */
-.chat-container {
-    scroll-behavior: smooth;
-}
-
-@keyframes pulse-ai {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2); opacity: 0.5; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-.ai-node {
-    animation: pulse-ai 3s infinite ease-in-out;
-}
-#tab-feed div div::-webkit-scrollbar-thumb {
-    background: var(--glass-border);
-    border-radius: 10px;
-}
-
-.comment-item {
-    padding: 4px 0;
-    transition: background 0.2s;
-}
-.comment-item:active {
-    background: rgba(239, 68, 68, 0.1); /* Flash red on hold */
-}
-/* AI Neural Node Decoration */
-.ai-node {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--primary-gold);
-    box-shadow: 0 0 10px var(--primary-gold);
-    animation: ai-pulse 2s infinite ease-in-out;
-}
-
-@keyframes ai-pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.3); opacity: 0.6; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-/* Comment Item Styling */
-.comment-item { padding: 4px; border-radius: 4px; transition: 0.2s; }
-.comment-item:active { background: rgba(239, 68, 68, 0.2); }
-
-.bubble {
-    position: relative;
-    max-width: 75% !important;
-    word-wrap: break-word;
-}
-
-.bubble.sent {
-    background: linear-gradient(135deg, var(--primary-gold), #b08d29) !important;
-    color: #011a14 !important;
-    font-weight: 500;
-}
-
-/* Ensure icons in chat scale properly */
-[data-lucide] {
-    stroke-width: 3px;
+.highlight-border {
+    border: 1px solid var(--gold);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
 }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    
-    <section id="auth-screen" style="padding-top: 80px;">
-        <div class="glass-card" style="text-align: center;">
-            <h1 class="heading-font" style="color: var(--primary-gold); font-size: 1.6rem;"> EQUITY HUB </h1>
-            <p style="font-size: 0.6rem; opacity: 0.5; margin-top: 5px; letter-spacing: 4px;">CLASS OF 2026</p>
-            
-            <div id="auth-ui" style="margin-top: 40px;">
-                <button class="btn-gold" onclick="showForm()">Sync Identity</button>
-                <button class="btn-gold" style="background: transparent; border: 1px solid var(--primary-gold); color: var(--primary-gold); margin-top: 15px;" onclick="gate()">Executive Access</button>
+<header class="sports-header">
+    <div style="width: 60px; height: 60px; border: 2px solid var(--gold); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+        <i data-lucide="trophy" class="gold-text"></i>
+    </div>
+    <h1 class="cambria gold-text">Faculty Sports Center</h1>
+    <p style="font-size: 0.6rem; letter-spacing: 3px; opacity: 0.6;">EQUITY CREW '26 ATHLETICS</p>
+</header>
+<div class="container">
+    <div class="elite-card" style="margin-top: -20px; border: 1px solid var(--gold); background: linear-gradient(145deg, #022c22, #01140f);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 0.6rem; font-weight: 800; color: var(--gold); display: flex; align-items: center; gap: 5px;">
+                <span style="width: 6px; height: 6px; background: #ef4444; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span>
+                MATCHDAY LIVE
+            </span>
+            <span id="match-time" style="font-size: 0.6rem; opacity: 0.6;">LOADING...</span>
+        </div>
+        
+        <div style="display: flex; justify-content: space-around; align-items: center; padding: 10px 0;">
+            <div style="text-align: center; flex: 1;">
+                <div style="font-size: 0.6rem; font-weight: 800; text-transform: uppercase; opacity: 0.8;">Software & Web</div>
+                <div id="score-home" style="font-family: 'Cinzel', serif; font-size: 2.5rem; color: var(--gold);">0</div>
             </div>
 
-            <div class="glass-card" style="padding: 15px; text-align: center; margin: 0; cursor: pointer;" onclick="openEditModal()">
-    <i data-lucide="edit-3" size="20" style="color: var(--primary-gold); margin-bottom: 8px;"></i>
-    <p style="font-size: 0.7rem;">Edit Profile</p>
-</div>
-        
-    </section>
+            <div style="font-family: 'Cinzel', serif; font-size: 1rem; opacity: 0.3; padding: 0 15px;">VS</div>
 
-    <main id="main-app" class="hidden">
-        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <div style="text-align: center; flex: 1;">
+                <div style="font-size: 0.6rem; font-weight: 800; text-transform: uppercase; opacity: 0.8;">N & C Computing</div>
+                <div id="score-away" style="font-family: 'Cinzel', serif; font-size: 2.5rem; color: var(--gold);">0</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container" style="margin-top: 20px;">
+    <h3 class="cambria gold-text" style="font-size: 0.9rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+        <i data-lucide="history" size="16"></i> MATCH RESULTS LEDGER
+    </h3>
+    <div class="elite-card" style="padding: 0; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: center;">
+            <thead style="background: rgba(79, 208, 79, 0.1); color: var(--gold);">
+                <tr>
+                    <th style="padding: 12px; border-bottom: 1px solid var(--border);">DATE</th>
+                    <th style="padding: 12px; border-bottom: 1px solid var(--border);">MATCHUP</th>
+                    <th style="padding: 12px; border-bottom: 1px solid var(--border);">SCORE</th>
+                    <th style="padding: 12px; border-bottom: 1px solid var(--border);">WINNER</th>
+                </tr>
+            </thead>
+            <tbody id="results-body">
+                </tbody>
+        </table>
+    </div>
+</div>
+<div class="container">
+    <div class="elite-card" style="border: 1px solid var(--gold); margin-top: 20px;">
+        <h3 class="cambria gold-text" style="font-size: 1.1rem; margin-bottom: 10px;">FIFA 26 Entry</h3>
+        <div id="fifa-ui">
+            <input type="text" id="f-email" class="form-input" placeholder="Gmail">
+            <input type="text" id="f-whatsapp" class="form-input" placeholder="Whatsapp Number">
+            <input type="text" id="f-gamer" class="form-input" placeholder="Gamer Tag">
+            <input type="text" id="f-dept" class="form-input" placeholder="Department & Level">
+            <button id="fifa-submit-btn" class="btn-luxury" onclick="handleFifaRegistration()">
+                Join Tournament (<span id="slot-count">--</span>)
+            </button>
+        </div>
+    </div>
+
+    <div class="elite-card">
+        <h3 class="cambria gold-text" style="font-size: 1.1rem; margin-bottom: 5px;">Athlete Registry</h3>
+        <div id="ath-ui">
+            <input type="text" id="a-name" placeholder="Full Name (Surname First)" class="form-input">
+            <input type="text" id="a-matric" placeholder="Matric Number" class="form-input">
+            <select id="a-dept" class="form-input" style="color: #fff; background-color: #022C22;">
+                <option value="" disabled selected>Select Department</option>
+                <option value="Software">Software and Web Development</option>
+                <option value="Networking">Networking and Cloud Computing</option>
+                <option value="ComputerScience">Computer Science</option>
+            </select>
+            <select id="a-sport" class="form-input" style="color: #fff; background-color: #022C22;">
+                <option value="" disabled selected>Primary Sport Choice</option>
+                <option value="Football">Football</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Athletics">Track & Field</option>
+            </select>
+            <input type="tel" id="a-phone" placeholder="WhatsApp Number" class="form-input">
+            <button id="ath-submit-btn" class="btn-luxury" style="background:transparent; border:1px solid var(--gold); color:var(--gold);" onclick="handleAthleteRegistration()">
+                Join the Squad
+            </button>
+        </div>
+    </div>
+
+    <div id="exec-gate" class="hidden">
+        <div class="elite-card" style="border: 1px dashed var(--gold); text-align: center;">
+            <i data-lucide="shield-check" class="gold-text"></i>
+            <h3 class="cambria gold-text" style="font-size: 0.9rem; margin-top: 5px;">Executive Dashboard</h3>
+            <button class="btn-luxury" style="margin-top: 15px; padding: 10px; font-size: 0.7rem;" onclick="openLedger()">Access Records & Update Live</button>
+        </div>
+    </div>
+</div>
+
+<div id="ledger-modal" class="hidden">
+    <div class="container no-print">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 class="cambria gold-text">Management</h2>
+            <button onclick="closeLedger()" style="background:none; border:none; color:white; font-size: 1.5rem;">✕</button>
+        </div>
+    </div>
+    <div id="ledger-content"></div>
+    <div class="container no-print" style="margin-top: 20px;">
+        <button class="btn-luxury" onclick="window.print()">Print Official PDF</button>
+    </div>
+</div>
+<div class="container">
+    <h2 class="cambria gold-text" style="font-size: 1.1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+        <i data-lucide="newspaper" size="18"></i> Faculty Sporttainment
+    </h2>
+
+    <div style="display: grid; gap: 15px;">
+        
+        <div class="elite-card" style="border-left: 4px solid var(--gold); background: linear-gradient(90deg, rgba(212,175,55,0.1), transparent);">
+            <div style="display:flex; justify-content:space-between;">
+                <span class="tag">Cups '26</span>
+                <span style="font-size:0.6rem; opacity:0.5;">LIVE</span>
+            </div>
+            <h4 style="margin:10px 0 5px;">Road to Cups Prelims</h4>
+            <p style="font-size:0.7rem; opacity:0.7;">The HOD has approved the final training camp for our athletes. Inter-Poly zonals starts soon!</p>
+        </div>
+
+        <div class="elite-card">
+            <h4 style="font-size:0.85rem;">Grand Finale: HND 2 vs ND 2</h4>
+            <p style="font-size:0.7rem; opacity:0.7;">The "Battle of the Titans" football final holds at the School Main Pitch. Who takes the Dean's Trophy?</p>
+        </div>
+
+        <div class="elite-card" style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2);">
+            <h4 style="font-size:0.85rem; color: #ef4444;">SUG Cup: Registration Closing</h4>
+            <p style="font-size:0.7rem; opacity:0.7;">Departmental Presidents must submit their 22-man roster to the Sports Director by Wednesday.</p>
+        </div>
+
+        <div class="elite-card" style="text-align: center; border: 1px dashed var(--gold);">
+            <i data-lucide="shopping-bag" class="gold-text"></i>
+            <h4 style="font-size:0.85rem; margin-top:5px;">New Departmental Jerseys</h4>
+            <p style="font-size:0.65rem; opacity:0.6;">High-quality customized sets now available at the Sports Director office. Represent your Dept in style!</p>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="margin-top: 40px;">
+    <h2 class="cambria gold-text" style="font-size: 1.1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+        <i data-lucide="layout-grid" size="18"></i> 2026 World Star Gallery
+    </h2>
+
+    <div class="elite-card" style="background: linear-gradient(135deg, #022C22, #01140F); border: 2px solid #10b981; margin-bottom: 20px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="width: 100px; height: 100px; border-radius: 12px; background: url('osimhen.jpeg') center/cover; border: 2px solid var(--gold);"></div>
             <div>
-                <h2 class="heading-font" style="font-size: 0.8rem; color: var(--primary-gold);"> STUDENT CHAT AND SELL HUB</h2>
-                <small id="welcome-name" style="opacity: 0.6;">Welcome, Champ </small>
-            </div>
-            <img id="u-pfp-top" src="" style="width: 40px; height: 40px; border-radius: 12px; border: 1.5px solid var(--primary-gold);">
-        </header>
-
-        <section id="tab-feed">
-            <div class="post-box-container">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-                    <img id="u-pfp-small" src="" style="width: 35px; height: 35px; border-radius: 50%; border: 1.5px solid var(--gold);">
-                    <span style="font-size: 0.8rem; font-weight: 600; opacity: 0.8;">What's on your mind?</span>
-                </div>
-                <textarea id="post-text" class="post-textarea" placeholder="What's going on today?..." rows="3"></textarea>
-                <div class="post-actions">
-                    <label class="media-button" style="cursor: pointer;">
-                        <i data-lucide="image" size="18"></i>
-                        <span id="upload-status-text">Add Photo</span>
-<input type="file" id="post-file" class="hidden" accept="image/*,video/*" onchange="handleFile(this)">                    </label>
-                    <button class="btn-gold" style="width: auto; padding: 10px 30px; border-radius: 30px;" onclick="publishPost()">Post</button>
+                <span style="font-size: 0.5rem; background: #10b981; color: white; padding: 2px 6px; border-radius: 4px;">AFRICAN POTY</span>
+                <h4 class="cambria" style="font-size: 1.2rem; color: white; margin: 5px 0;">Victor Osimhen</h4>
+                <p style="font-size: 0.7rem; color: #10b981; font-weight: 800;">32 Goals for Nigeria | Super Eagles Legend</p>
+                <div style="display: flex; gap: 10px; margin-top: 8px;">
+                    <span style="font-size: 0.6rem; color: #aaa;">Speed: 34km/h</span>
+                    <span style="font-size: 0.6rem; color: #aaa;">Club: Galatasaray</span>
                 </div>
             </div>
-            <div id="feed-display"></div>
-        </section>
-
-        <section id="tab-market" class="hidden">
-            <div class="glass-card" style="display: flex; justify-content: space-between; padding: 15px;">
-                <div style="text-align: center;">
-                    <small style="opacity: 0.5; font-size: 0.5rem;">LISTED VALUE</small>
-                    <p id="m-stats-val" style="color: var(--primary-gold); font-weight: 800; font-size: 0.9rem;">₦0.00</p>
-                </div>
-                <div style="text-align: center;">
-                    <small style="opacity: 0.5; font-size: 0.5rem;">ACTIVE ITEMS</small>
-                    <p id="m-stats-count" style="font-weight: 800; font-size: 0.9rem;">0</p>
-                </div>
-            </div>
-            <input type="text" id="market-search" class="glass-input" placeholder="Search textbooks, gadgets..." onkeyup="renderMarket()">
-            <div class="glass-card" style="border-style: dashed; border-color: var(--primary-gold);">
-    <h4 class="heading-font" style="font-size: 0.7rem; color: var(--primary-gold); margin-bottom: 15px;">LIST NEW ITEM</h4>
-    <input type="text" id="m-item-name" class="glass-input" placeholder="What are you selling?">
-    <input type="number" id="m-item-price" class="glass-input" placeholder="Price (₦)">
-    
-    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
-        <label class="media-button" style="flex: 1; cursor: pointer; justify-content: center;">
-            <i data-lucide="camera" size="16"></i>
-            <span id="m-upload-status">Add Photo</span>
-            <input type="file" id="m-item-file" class="hidden" accept="image/*" onchange="handleMarketFile(this)">
-        </label>
-        <button class="btn-gold" style="flex: 1; padding: 10px;" onclick="listMarketItem()">List Item</button>
-    </div>
-</div>
-
-<div id="market-display"></div>
-            <div id="market-display"></div>
-        </section>
-
-       <section id="tab-gp" class="hidden">
-    <div class="glass-card" style="text-align: center; border-bottom: 3px solid var(--primary-gold);">
-        <h4 class="heading-font" style="font-size: 0.6rem; color: var(--primary-gold); margin-bottom: 10px;">WEIGHTED GPA</h4>
-        <h1 id="cgpa-display" style="font-size: 3.5rem; font-weight: 800; text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);">0.00</h1>
-        <div class="progress-circle"><div id="gp-progress" class="progress-fill"></div></div>
-        <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.75rem; font-weight: 600;">
-            <span id="gp-class" style="color: var(--primary-gold);">Class: ---</span>
-            <span id="total-units" style="opacity: 0.7;">Units: 0</span>
         </div>
     </div>
 
-    <div id="course-container" style="margin-top: 20px;"></div>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-        <button class="btn-gold" style="background: rgba(212, 175, 55, 0.1); color: var(--primary-gold); border: 1px solid var(--primary-gold);" onclick="addCourse()">+ Add Course</button>
-        <button class="btn-gold" onclick="calculateGP()">Sync Standings</button>
-    </div>
-</section>
-
-        <section id="tab-chat" class="hidden">
-            <div class="glass-card" style="padding: 10px;">
-                <input type="text" id="member-search" class="glass-input" style="margin:0;" placeholder="Search members..." onkeyup="filterMembers()">
-            </div>
-            <div id="chat-list-container"></div>
-        </section>
-
-        <section id="tab-profile" class="hidden">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-        <h2 class="heading-font" style="font-size: 0.8rem; color: var(--primary-gold);">DIGITAL IDENTITY</h2>
-        <div style="display: flex; gap: 15px;">
-            <i data-lucide="settings" size="20" style="opacity: 0.6; cursor: pointer;"></i>
-            <i data-lucide="bell" size="20" style="opacity: 0.6; cursor: pointer;"></i>
-        </div>
-    </div>
-
-    <div class="id-card-view" id="digital-id-card">
-        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; pointer-events: none; background-image: radial-gradient(circle at 2px 2px, var(--primary-gold) 1px, transparent 0); background-size: 20px 20px;"></div>
+    <div style="overflow-x: auto; display: flex; gap: 15px; padding-bottom: 20px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
         
-        <div style="display: flex; gap: 20px; align-items: center; position: relative; z-index: 1;">
-            <div style="position: relative;">
-                <img id="p-card-img" src="" style="width: 85px; height: 85px; border-radius: 20px; border: 2px solid var(--primary-gold); object-fit: cover; background: #000;">
-                <div id="role-badge" style="position: absolute; -bottom: 10px; left: 50%; transform: translateX(-50%); background: var(--primary-gold); color: #011a14; padding: 2px 10px; border-radius: 20px; font-size: 0.5rem; font-weight: 800; white-space: nowrap; letter-spacing: 1px;">MEMBER</div>
-            </div>
-            
-            <div style="flex: 1;">
-                <h3 id="p-card-name" class="heading-font" style="font-size: 0.9rem; margin-bottom: 5px; color: white;">---- ----</h3>
-                <p id="p-card-uid" style="font-family: monospace; font-size: 0.65rem; color: var(--primary-gold); opacity: 0.8;">MATRIC LOADING...</p>
-                
-                <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
-                    <div style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 8px;">
-                        <small style="display: block; font-size: 0.45rem; opacity: 0.6;">CURRENT GP</small>
-                        <b id="p-card-gp" style="font-size: 0.8rem; color: var(--primary-gold);">0.00</b>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 8px;">
-                        <small style="display: block; font-size: 0.45rem; opacity: 0.6;">STANDING</small>
-                        <b id="p-card-standing" style="font-size: 0.6rem; white-space: nowrap;">Loading...</b>
-                    </div>
-                </div>
-            </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Salah" alt="Salah">
+            <h5>Mo Salah</h5>
+            <span class="p-dept">Egypt / Liverpool</span>
+            <p class="p-stat">30+ Goals '26</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lookman" alt="Lookman">
+            <h5>A. Lookman</h5>
+            <span class="p-dept">Nigeria / Atalanta</span>
+            <p class="p-stat">AFCON Hero</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Hakimi" alt="Hakimi">
+            <h5>A. Hakimi</h5>
+            <span class="p-dept">Morocco / PSG</span>
+            <p class="p-stat">Best Fullback</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Mane" alt="Mane">
+            <h5>Sadio Mané</h5>
+            <span class="p-dept">Senegal / Al-Nassr</span>
+            <p class="p-stat">Senegal Icon</p>
         </div>
 
-        <div style="position: absolute; bottom: 20px; right: 20px; opacity: 0.3;">
-            <i data-lucide="fingerprint" size="40" style="color: var(--primary-gold);"></i>
+        <div class="player-card highlight-border">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Mbappe" alt="Mbappe">
+            <h5>K. Mbappé</h5>
+            <span class="p-dept">France / Madrid</span>
+            <p class="p-stat">34 Gls / 29 Gms</p>
         </div>
-        
-        <div style="position: absolute; bottom: 20px; left: 20px;">
-            <small style="font-size: 0.4rem; letter-spacing: 2px; opacity: 0.5;">EQUITY ELITE HUB v2.0</small>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Haaland" alt="Haaland">
+            <h5>E. Haaland</h5>
+            <span class="p-dept">Norway / City</span>
+            <p class="p-stat">39 Gls in '26</p>
         </div>
-    </div>
-
-    <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <div class="glass-card" style="padding: 15px; text-align: center; margin: 0;">
-            <i data-lucide="edit-3" size="20" style="color: var(--primary-gold); margin-bottom: 8px;"></i>
-            <p style="font-size: 0.7rem;">Edit Profile</p>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Yamal" alt="Yamal">
+            <h5>Lamine Yamal</h5>
+            <span class="p-dept">Spain / Barca</span>
+            <p class="p-stat">Golden Boy '26</p>
         </div>
-        <div class="glass-card" style="padding: 15px; text-align: center; margin: 0;" onclick="logout()">
-            <i data-lucide="log-out" size="20" style="color: #ef4444; margin-bottom: 8px;"></i>
-            <p style="font-size: 0.7rem;">Sign Out</p>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Vinicius" alt="Vini">
+            <h5>Vini Jr</h5>
+            <span class="p-dept">Brazil / Madrid</span>
+            <p class="p-stat">Dribble King</p>
         </div>
-    </div>
-</section>
-    </main>
-
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('feed')"><i data-lucide="home"></i><small>Feed</small></div>
-        <div class="nav-item" onclick="switchTab('market')"><i data-lucide="shopping-bag"></i><small>Market</small></div>
-        <div class="nav-item" onclick="switchTab('gp')"><i data-lucide="calculator"></i><small>GP</small></div>
-        <div class="nav-item" onclick="switchTab('chat')"><i data-lucide="message-square"></i><small>Chat</small></div>
-        <div class="nav-item" onclick="switchTab('profile')"><i data-lucide="user"></i><small>Profile</small></div>
-    </nav>
-
-    <div id="chat-overlay" class="hidden" style="position: fixed; inset: 0; background: var(--deep-emerald); z-index: 2000; display: flex; flex-direction: column;">
-        <header style="padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 15px;">
-            <i data-lucide="chevron-left" onclick="closeChat()"></i>
-            <b id="chat-header-name" style="color: var(--primary-gold);">---</b>
-        </header>
-        <div class="chat-container" id="chat-msgs"></div>
-        <div style="padding: 20px; display: flex; gap: 10px; background: rgba(0,0,0,0.3);">
-            <input type="text" id="chat-input" class="glass-input" style="margin:0;" placeholder="Message..." onkeypress="if(event.key==='Enter') sendMsg()">
-            <button class="btn-gold" style="width: auto; padding: 12px 20px;" onclick="sendMsg()"><i data-lucide="send"></i></button>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bellingham" alt="Jude">
+            <h5>J. Bellingham</h5>
+            <span class="p-dept">England / Madrid</span>
+            <p class="p-stat">Midfield General</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Messi" alt="Messi">
+            <h5>L. Messi</h5>
+            <span class="p-dept">Argentina / Miami</span>
+            <p class="p-stat">World Champion</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ronaldo" alt="CR7">
+            <h5>C. Ronaldo</h5>
+            <span class="p-dept">Portugal / Nassr</span>
+            <p class="p-stat">900+ Career Goals</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Musiala" alt="Musiala">
+            <h5>J. Musiala</h5>
+            <span class="p-dept">Germany / Bayern</span>
+            <p class="p-stat">Playmaker</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Kane" alt="Kane">
+            <h5>Harry Kane</h5>
+            <span class="p-dept">England / Bayern</span>
+            <p class="p-stat">Golden Boot '26</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Palmer" alt="Palmer">
+            <h5>Cole Palmer</h5>
+            <span class="p-dept">England / Chelsea</span>
+            <p class="p-stat">Ice Cold Finisher</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rodri" alt="Rodri">
+            <h5>Rodri</h5>
+            <span class="p-dept">Spain / City</span>
+            <p class="p-stat">Balon d'Or '25</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=DeBruyne" alt="KDB">
+            <h5>De Bruyne</h5>
+            <span class="p-dept">Belgium / City</span>
+            <p class="p-stat">Master of Assist</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Wirtz" alt="Wirtz">
+            <h5>Florian Wirtz</h5>
+            <span class="p-dept">Germany / Bayer</span>
+            <p class="p-stat">Bundesliga POTY</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lewandowski" alt="Lewy">
+            <h5>Lewandowski</h5>
+            <span class="p-dept">Poland / Barca</span>
+            <p class="p-stat">Veteran Elite</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Saka" alt="Saka">
+            <h5>Bukayo Saka</h5>
+            <span class="p-dept">England / Arsenal</span>
+            <p class="p-stat">Star Boy '26</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Griezmann" alt="Grizzy">
+            <h5>Griezmann</h5>
+            <span class="p-dept">France / Atleti</span>
+            <p class="p-stat">Tactical Master</p>
+        </div>
+        <div class="player-card">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alvarez" alt="Alvarez">
+            <h5>Julian Alvarez</h5>
+            <span class="p-dept">Argentina / Atleti</span>
+            <p class="p-stat">Winner of All</p>
         </div>
     </div>
 </div>
 
-<div id="edit-profile-overlay" class="hidden" style="position: fixed; inset: 0; background: rgba(1, 26, 20, 0.98); z-index: 3000; padding: 25px; display: flex; flex-direction: column; backdrop-filter: blur(20px);">
-    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-        <div>
-            <h2 class="heading-font" style="font-size: 0.9rem; color: var(--primary-gold);">IDENTITY CONFIG</h2>
-            <p style="font-size: 0.5rem; opacity: 0.5;">Update your digital presence</p>
-        </div>
-        <button onclick="closeEditModal()" style="background: none; border: none; color: white;">
-            <i data-lucide="x" size="24"></i>
-        </button>
-    </header>
+ <div class="elite-card" style="text-align: center; padding: 10px; background: rgba(212,175,55,0.05);">
 
-    <div style="flex: 1; overflow-y: auto; padding-right: 5px;">
-        <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 25px;">
-            <img id="edit-preview-img" src="" style="width: 100px; height: 100px; border-radius: 25px; border: 2px solid var(--primary-gold); object-fit: cover; margin-bottom: 10px;">
-            <label class="media-button" style="cursor: pointer;">
-                <i data-lucide="camera" size="14"></i>
-                <span>Change Photo</span>
-                <input type="file" id="edit-file-input" class="hidden" accept="image/*" onchange="handleProfilePicChange(this)">
-            </label>
-        </div>
+        <p style="font-size: 0.6rem; opacity: 0.7;">"Hard work beats talent when talent fails to work hard."</p>
 
-        <label style="font-size: 0.6rem; color: var(--primary-gold); margin-bottom: 8px; display: block;">FULL NAME</label>
-        <input type="text" id="edit-username" class="glass-input" placeholder="Display name">
-
-        <label style="font-size: 0.6rem; color: var(--primary-gold); margin-bottom: 8px; display: block; margin-top: 20px;">BIO / TAGLINE</label>
-        <textarea id="edit-bio" class="glass-input" rows="3" placeholder="Elite Member since 2026..."></textarea>
-
-        <label style="font-size: 0.6rem; color: var(--primary-gold); margin-bottom: 8px; display: block; margin-top: 20px;">NEW ACCESS PIN (OPTIONAL)</label>
-        <input type="password" id="edit-pass" class="glass-input" placeholder="Update digital key">
     </div>
 
-    <button class="btn-gold" onclick="saveProfileChanges()" style="margin-top: 20px;">Save & Re-Sync</button>
-</div>
+<footer>
+    <p class="cambria gold-text" style="font-size: 0.8rem;">Equity Crew '26</p>
+    <p style="font-size: 0.5rem; opacity: 0.4; margin-top: 5px;">© 2026 Office of the General Secretary</p>
+</footer>
 
 <script>
     const firebaseConfig = {
-        apiKey: "AIzaSyBLrdBzHOhsJW4_ixghTx96XpHT4QMS8s8",
-        authDomain: "executo-4ecd7.firebaseapp.com",
-        projectId: "executo-4ecd7",
-        storageBucket: "executo-4ecd7.firebasestorage.app",
-        messagingSenderId: "738758706005",
-        appId: "1:738758706005:web:383f547ce4ddb8b243e5dc"
+        apiKey: "AIzaSyAgIOS8MY4myQYQe2W_FihFY0f7ZA0I_dg",
+        authDomain: "dolpgrace01.firebaseapp.com",
+        projectId: "dolpgrace01",
+        storageBucket: "dolpgrace01.firebasestorage.app",
+        messagingSenderId: "61754484780",
+        appId: "1:61754484780:web:8b1aa1faaf337d66b7c989"
     };
-
+    
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    let user = JSON.parse(localStorage.getItem('ec26_user'));
-    let activeChatId = null;
-    let chatSub = null;
-    let postImageBase64 = "";
+    // FIFA REGISTRATION
+    async function handleFifaRegistration() {
+        const data = {
+            email: document.getElementById('f-email').value,
+            whatsapp: document.getElementById('f-whatsapp').value,
+            gamerTag: document.getElementById('f-gamer').value,
+            dept: document.getElementById('f-dept').value,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
 
-    const EXECS = [
-        { name: "Ajiferuke Ridwanullahi", role: "President", key: "PREZ26-AJ" },
-        { name: "Olaniyan Kehinde", role: "Vice President", key: "VP26-AR" }
-    ];
+        if(!data.gamerTag || !data.dept) return alert("Fill required fields");
 
-    window.onload = () => {
-        if(user) showMainApp();
-        lucide.createIcons();
-    };
-
-    function gate() {
-        const key = prompt("Executive Portal Key:");
-        const found = EXECS.find(e => e.key === key);
-        if(found) {
-            document.getElementById('reg-name').value = found.name;
-            document.getElementById('reg-matric').value = "EXEC-" + found.key.split('-')[1];
-            showForm();
-        } else alert("Denied");
+        try {
+            await db.collection("fifa_registry").add(data);
+            alert("FIFA Slot Secured!");
+            location.reload();
+        } catch(e) { alert("Error: " + e.message); }
     }
 
-    function showForm() {
-        document.getElementById('auth-ui').classList.add('hidden');
-        document.getElementById('reg-form').classList.remove('hidden');
-    }
-
-    async function handleAuth() {
-        const name = document.getElementById('reg-name').value.trim();
-        const matric = document.getElementById('reg-matric').value.trim().toUpperCase();
-        if(!name || !matric) return;
-
-        const userData = {
-            id: matric.replace(/\//g, '_'),
-            name, matric,
-            role: matric.startsWith('EXEC') ? "Executive" : "Student",
-            pic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`,
-            cgpa: user ? user.cgpa : "0.00"
+    // ATHLETE REGISTRATION
+    async function handleAthleteRegistration() {
+        const athleteData = {
+            fullName: document.getElementById('a-name').value,
+            matricNo: document.getElementById('a-matric').value,
+            department: document.getElementById('a-dept').value,
+            sportChoice: document.getElementById('a-sport').value,
+            whatsapp: document.getElementById('a-phone').value,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
         try {
-            await db.collection("users").doc(userData.id).set(userData, {merge: true});
-            localStorage.setItem('ec26_user', JSON.stringify(userData));
-            user = userData;
-            showMainApp();
-        } catch(e) { alert("Permission Error: Check Firestore Rules"); }
+            await db.collection("athlete_registry").add(athleteData);
+            alert("Joined the squad!");
+            location.reload();
+        } catch(e) { alert("Error: " + e.message); }
     }
 
-    function showMainApp() {
-        document.getElementById('auth-screen').classList.add('hidden');
-        document.getElementById('main-app').classList.remove('hidden');
-        document.getElementById('u-pfp-top').src = user.pic;
-        document.getElementById('u-pfp-small').src = user.pic;
-        document.getElementById('welcome-name').innerText = `Welcome, ${user.name.split(' ')[0]}`;
-        renderFeed();
-        renderMarket();
-        renderChatList();
-        addCourse();
-        updateProfileUI();
-    }
-
-    function switchTab(tab) {
-        document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById('tab-' + tab).classList.remove('hidden');
-        event.currentTarget.classList.add('active');
-        if(tab === 'profile') updateProfileUI();
-        lucide.createIcons();
-    }
-
-    
-
-    async function publishPost() {
-    const txt = document.getElementById('post-text').value.trim();
-    if (!txt && !postImageBase64) return;
-    
-    try {
-        await db.collection("posts").add({
-            uid: user.id, // CRITICAL: This is needed for delete permissions
-            name: user.name, 
-            pic: user.pic, 
-            role: user.role,
-            txt: txt, 
-            file: postImageBase64, 
-            time: firebase.firestore.FieldValue.serverTimestamp(),
-            likes: [],      // Initialize as empty
-            comments: []    // Initialize as empty
-        });
-        // ... rest of reset logic
-    } catch (e) { alert("Upload failed."); }
-}
-
-    
-// 1. Updated File Handler for Media & Compression
-async function handleFile(input) {
-    const file = input.files[0];
-    const statusText = document.getElementById('upload-status-text');
-    if (!file) return;
-
-    statusText.innerText = "Optimizing...";
-    
-    if (file.type.startsWith('video/')) {
-        // Since we are limited to 1MB, we warn if video is huge
-        if (file.size > 1.5 * 1024 * 1024) { 
-            alert("Video too large for Hub storage. Max 1.5MB (Approx 5 secs).");
-            return;
+    // ADMIN LOGIN LOGIC
+    let tapCount = 0;
+    document.querySelector('.sports-header div').onclick = function() {
+        tapCount++;
+        if (tapCount === 3) {
+            const pin = prompt("ENTER GEN-SEC ACCESS PIN:");
+            if (pin === "1234") {
+                alert("Access Granted, Gen-Sec.");
+                document.getElementById('exec-gate').classList.remove('hidden');
+            } else { alert("Wrong PIN."); }
+            tapCount = 0;
         }
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            postImageBase64 = e.target.result;
-            statusText.innerText = "Video Ready 🎬";
-        };
-        reader.readAsDataURL(file);
-    } else {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let width = img.width, height = img.height;
-                const MAX = 700; 
-                if (width > MAX) { height *= MAX / width; width = MAX; }
-                canvas.width = width; canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                postImageBase64 = canvas.toDataURL('image/jpeg', 0.5); // 50% quality
-                statusText.innerText = "Image Ready ✅";
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-// 2. Render Feed with AI Decoration and Social Features
-function renderFeed() {
-    db.collection("posts").orderBy("time", "desc").onSnapshot(snap => {
-        const container = document.getElementById('feed-display');
-        container.innerHTML = "";
-        
-        snap.forEach(doc => {
-            const d = doc.data();
-            const postId = doc.id;
-            const likes = d.likes || [];
-            const comments = d.comments || [];
-            const isLiked = likes.includes(user.id);
-            const isVideo = d.file && (d.file.includes("video/") || d.file.startsWith("data:video"));
-
-            // DELETE PERMISSION: Only show trash icon if User owns post OR is Executive
-            const deleteBtn = (d.uid === user.id || user.role === "Executive") ? 
-                `<i data-lucide="trash-2" size="14" style="color:#ef4444; cursor:pointer; opacity:0.7;" 
-                    onclick="deletePost('${postId}', '${d.uid}')"></i>` : '';
-
-            container.innerHTML += `
-                <div style="display: flex; gap: 12px; margin-bottom: 25px;">
-                    <div style="display: flex; flex-direction: column; align-items: center; width: 15px; padding-top: 10px;">
-                        <div class="ai-node"></div>
-                        <div style="width: 1px; flex: 1; background: linear-gradient(to bottom, var(--primary-gold), transparent); opacity: 0.2;"></div>
-                    </div>
-
-                    <div class="glass-card" style="flex: 1; margin-bottom: 0;">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <img src="${d.pic}" style="width: 35px; height: 35px; border-radius: 8px; border: 1px solid var(--primary-gold); object-fit: cover;">
-                                <div>
-                                    <h6 style="font-size: 0.8rem;">${d.name}</h6>
-                                    <small style="opacity: 0.5; font-size: 0.6rem;">${d.role}</small>
-                                </div>
-                            </div>
-                            ${deleteBtn}
-                        </div>
-
-                        <p style="font-size: 0.85rem; margin-bottom: 10px;">${d.txt}</p>
-                        
-                        ${d.file ? (isVideo ? 
-                            `<video src="${d.file}" controls style="width:100%; border-radius:12px; border: 1px solid var(--glass-border);" muted autoplay loop></video>` : 
-                            `<img src="${d.file}" style="width:100%; border-radius:12px; border: 1px solid var(--glass-border);">`
-                        ) : ''}
-
-                        <div style="display: flex; gap: 15px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--glass-border);">
-                            <div onclick="toggleLike('${postId}', ${JSON.stringify(likes)})" style="display: flex; align-items: center; gap: 5px; cursor: pointer; color: ${isLiked ? 'var(--primary-gold)' : 'inherit'}">
-                                <i data-lucide="heart" fill="${isLiked ? 'var(--primary-gold)' : 'none'}" size="16"></i>
-                                <span style="font-size: 0.7rem;">${likes.length}</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 5px; opacity: 0.7;">
-                                <i data-lucide="message-square" size="16"></i>
-                                <span style="font-size: 0.7rem;">${comments.length}</span>
-                            </div>
-                        </div>
-
-                        <div style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 12px;">
-                            <div style="max-height: 120px; overflow-y: auto; margin-bottom: 8px;">
-                                ${comments.length > 0 ? comments.map((c, i) => `
-                                    <div class="comment-item" 
-                                         ontouchstart="startCommentHold('${postId}', ${i})" 
-                                         onmousedown="startCommentHold('${postId}', ${i})"
-                                         style="font-size: 0.7rem; margin-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px;">
-                                        <b style="color: var(--primary-gold);">${c.name}:</b> ${c.txt}
-                                    </div>
-                                `).join('') : '<p style="font-size: 0.6rem; opacity: 0.3; text-align: center;">No comments yet</p>'}
-                            </div>
-
-                            <div style="display: flex; gap: 5px;">
-                                <input id="inp-${postId}" class="glass-input" style="margin:0; padding: 6px; font-size: 0.7rem;" placeholder="Write a comment...">
-                                <button class="btn-gold" style="width: auto; padding: 0 10px;" onclick="addComment('${postId}')">
-                                    <i data-lucide="send" size="12"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-        });
-        lucide.createIcons();
-    });
-}
-let holdTimer;
-function startCommentHold(postId, idx) {
-    holdTimer = setTimeout(async () => {
-        if(confirm("Delete this comment?")) {
-            const snap = await db.collection("posts").doc(postId).get();
-            let cms = snap.data().comments;
-            if(cms[idx].uid === user.id || user.role === "Executive") {
-                cms.splice(idx, 1);
-                await db.collection("posts").doc(postId).update({ comments: cms });
-            } else { alert("Not yours to delete!"); }
-        }
-    }, 800);
-}
-function cancelCommentHold() { clearTimeout(holdTimer); }
-
-async function toggleLike(postId, currentLikes) {
-    let newLikes = currentLikes.includes(user.id) ? 
-        currentLikes.filter(id => id !== user.id) : [...currentLikes, user.id];
-    await db.collection("posts").doc(postId).update({ likes: newLikes });
-}
-
-async function addComment(postId) {
-    const el = document.getElementById(`inp-${postId}`);
-    const txt = el.value.trim();
-    if(!txt) return;
-
-    const comment = { 
-        uid: user.id, 
-        name: user.name.split(' ')[0], 
-        txt: txt, 
-        time: Date.now() 
     };
 
+    // --- ENHANCED LEDGER FOR PDF ---
+    async function openLedger() {
+    const modal = document.getElementById('ledger-modal');
+    const content = document.getElementById('ledger-content');
+    modal.classList.remove('hidden');
+    
+    // 1. Pre-generate the Admin Control Panel and Document Header
+    let html = `
+        <div class="container no-print" style="background: rgba(79, 208, 79, 0.05); padding: 15px; border-radius: 15px; margin-bottom: 25px; border: 1px dashed var(--gold);">
+            <h4 class="cambria gold-text" style="font-size: 0.8rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="radio"></i> LIVE SCORE CONTROLLER
+            </h4>
+            <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between;">
+                <input type="number" id="new-home" placeholder="Soft" style="width: 22%; padding: 10px; background: #000; color: #fff; border: 1px solid var(--border); border-radius: 8px; font-size: 0.8rem;">
+                <input type="number" id="new-away" placeholder="N&C" style="width: 22%; padding: 10px; background: #000; color: #fff; border: 1px solid var(--border); border-radius: 8px; font-size: 0.8rem;">
+                <input type="text" id="new-time" placeholder="Time (90')" style="width: 28%; padding: 10px; background: #000; color: #fff; border: 1px solid var(--border); border-radius: 8px; font-size: 0.8rem;">
+                <button onclick="updateLiveScore()" style="background: var(--gold); color: #022C22; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; font-size: 0.7rem; cursor: pointer;">SET</button>
+            </div>
+            <p style="font-size: 0.5rem; opacity: 0.5; margin-top: 8px; text-align: center;">Updates appear instantly for all users</p>
+        </div>
+
+        <div id="printable-doc" style="background: white; color: black; padding: 40px; font-family: 'Montserrat', sans-serif;">
+            <div style="text-align:center; border-bottom: 3px double #000; padding-bottom: 20px; margin-bottom: 30px;">
+                <h1 style="font-family: 'Cinzel', serif; font-size: 22px; margin:0;">EQUITY CREW '26 ATHLETICS</h1>
+                <p style="font-size: 12px; margin: 5px 0;">OFFICE OF THE GENERAL SECRETARY / SPORTS DIRECTOR</p>
+                <h2 style="font-size: 16px; text-decoration: underline; margin-top: 15px;">OFFICIAL GAMES REGISTRY & ROSTER</h2>
+            </div>`;
+
+    content.innerHTML = html + "<p style='text-align:center; color: black;'>Fetching database records...</p></div>";
+
     try {
-        await db.collection("posts").doc(postId).update({
-            comments: firebase.firestore.FieldValue.arrayUnion(comment)
+        // 2. Fetch Data from Firebase
+        const fSnap = await db.collection("fifa_registry").orderBy('timestamp', 'desc').get();
+        const aSnap = await db.collection("athlete_registry").orderBy('sportChoice').get();
+        
+        // 3. Build FIFA Table
+        html += `
+            <h3 style="background: #f0f0f0; padding: 10px; font-size: 14px; border-left: 5px solid #4fd04f;">FIFA '26 TOURNAMENT (${fSnap.size} SLOTS)</h3>
+            <table style="width:100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; margin-bottom: 30px;">
+                <thead>
+                    <tr style="background: #eee;">
+                        <th style="border: 1px solid #ddd; padding: 8px;">S/N</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Gamer Tag</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">WhatsApp</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Department</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+        let i = 1;
+        fSnap.forEach(doc => {
+            const d = doc.data();
+            html += `
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align:center;">${i++}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${d.gamerTag || '---'}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${d.whatsapp || '---'}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${d.dept || '---'}</td>
+                </tr>`;
         });
-        el.value = ""; // Clear input immediately
-    } catch (e) {
-        console.error("Comment Error:", e);
-        alert("Could not send comment.");
+
+        html += `</tbody></table>`;
+
+        // 4. Build Athlete Table
+        html += `
+            <h3 style="background: #f0f0f0; padding: 10px; font-size: 14px; border-left: 5px solid #4fd04f;">ATHLETE SELECTION POOL</h3>
+            <table style="width:100%; border-collapse: collapse; margin-top: 10px; font-size: 10px;">
+                <thead>
+                    <tr style="background: #eee;">
+                        <th style="border: 1px solid #ddd; padding: 8px;">Full Name</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Sport</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Department</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">WhatsApp</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+        aSnap.forEach(doc => {
+            const d = doc.data();
+            html += `
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px; font-weight:bold;">${d.fullName}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${d.sportChoice}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${d.department}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${d.whatsapp}</td>
+                </tr>`;
+        });
+
+        html += `</tbody></table>
+            
+            <div style="margin-top: 50px; display: flex; justify-content: space-between; font-size: 12px;">
+                <div style="text-align: center; width: 200px; border-top: 1px solid #000; padding-top: 5px;">General Secretary</div>
+                <div style="text-align: center; width: 200px; border-top: 1px solid #000; padding-top: 5px;">Sports Director</div>
+            </div>
+            <p style="text-align:center; font-size: 9px; margin-top: 30px; color: #888;">Generated on: ${new Date().toLocaleString()}</p>
+        </div>`; // Close printable-doc
+        
+        content.innerHTML = html;
+        lucide.createIcons(); // Refresh icons inside modal
+    } catch (error) {
+        content.innerHTML = "<p style='color:red; padding:20px;'>Error loading records: " + error.message + "</p>";
     }
 }
 
-// --- DELETE COMMENT LOGIC (LONG PRESS) ---
+    function closeLedger() { document.getElementById('ledger-modal').classList.add('hidden'); }
 
-function startCommentHold(postId, commentIdx) {
-    holdTimer = setTimeout(() => {
-        confirmDeleteComment(postId, commentIdx);
-    }, 800); // 800ms trigger
-}
+    function updateSlots() {
+        db.collection("fifa_registry").onSnapshot(snap => {
+            document.getElementById('slot-count').innerText = 20 - snap.size;
+        });
+    }
 
-function cancelCommentHold() {
-    clearTimeout(holdTimer);
-}
-
-async function confirmDeleteComment(postId, index) {
-    if (!confirm("Delete this comment?")) return;
-    
-    const doc = await db.collection("posts").doc(postId).get();
-    if (doc.exists) {
-        let comments = doc.data().comments;
-        // Verify ownership or executive status
-        if (comments[index].uid === user.id || user.role === "Executive") {
-            comments.splice(index, 1);
-            await db.collection("posts").doc(postId).update({ comments: comments });
-        } else {
-            alert("Not authorized to delete this comment.");
+    updateSlots();
+    lucide.createIcons();
+    // 1. Listen for Live Updates (For everyone viewing the site)
+function listenToScores() {
+    db.collection("live_match").doc("current_game").onSnapshot((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            document.getElementById('score-home').innerText = data.homeScore || 0;
+            document.getElementById('score-away').innerText = data.awayScore || 0;
+            
+            // This is the line that makes the clock tick!
+            runClock(data); 
         }
+    });
+}
+
+// Run this when the page loads
+listenToScores();
+
+// 2. Update Function (For you, the Admin)
+async function updateLiveScore() {
+    const h = document.getElementById('new-home').value;
+    const a = document.getElementById('new-away').value;
+    const t = document.getElementById('new-time').value;
+
+    try {
+        await db.collection("live_match").doc("current_game").set({
+            homeScore: h || "0",
+            awayScore: a || "0",
+            matchTime: t || "0'",
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert("Score Updated Live!");
+    } catch(e) { alert("Error updating score: " + e.message); }
+}
+
+// Start the listener when page loads
+listenToScores();
+
+// 1. Save the Current Live Game to the Table
+async function archiveMatch() {
+    const hScore = parseInt(document.getElementById('score-home').innerText);
+    const aScore = parseInt(document.getElementById('score-away').innerText);
+    
+    let winner = "Draw";
+    if (hScore > aScore) winner = "Software & Web";
+    if (aScore > hScore) winner = "N & C Comp";
+
+    if(!confirm(`Archive this result? ${hScore} - ${aScore}`)) return;
+
+    try {
+        await db.collection("match_history").add({
+            date: new Date().toLocaleDateString(),
+            homeName: "Software & Web",
+            awayName: "N & C Comp",
+            homeScore: hScore,
+            awayScore: aScore,
+            winner: winner,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert("Match saved to history!");
+    } catch(e) { alert("Error saving: " + e.message); }
+}
+
+let timerInterval;
+
+// ADMIN: Toggle Start/Stop
+async function toggleTimer() {
+    const docRef = db.collection("live_match").doc("current_game");
+    const snap = await docRef.get();
+    const data = snap.data() || {};
+    
+    // If not running, start it. If running, stop it.
+    const isStarting = !data.timerActive;
+
+    if (isStarting) {
+        await docRef.set({
+            ...data,
+            timerActive: true,
+            startTime: firebase.firestore.FieldValue.serverTimestamp(),
+            // If it's 0, it starts from 0. If you reset it to 45, it starts from 45.
+            lastKnownTime: data.lastKnownTime || 0 
+        }, { merge: true });
+    } else {
+        // STOPPING: Calculate where we stopped so it stays there
+        const timeDisplay = document.getElementById('match-time').innerText;
+        const stopMin = parseInt(timeDisplay) || 0;
+        
+        await docRef.set({
+            ...data,
+            timerActive: false,
+            lastKnownTime: stopMin
+        }, { merge: true });
     }
 }
 
-async function deletePost(postId, postOwnerId) {
-    // Only allow if it's my post OR if I am an Executive
-    const canDelete = (postOwnerId === user.id) || (user.role === "Executive");
+// ADMIN: Reset for Second Half
+async function resetTimer() {
+    const startTime = prompt("Enter Start Minute (0 for kickoff, 45 for 2nd half):", "45");
+    if (startTime === null) return;
+
+    await db.collection("live_match").doc("current_game").set({
+        timerActive: false,
+        lastKnownTime: parseInt(startTime),
+        addedTime: 0
+    }, { merge: true });
     
-    if (!canDelete) {
-        alert("Access Denied: You can only delete your own broadcasts.");
+    alert("Clock set to " + startTime + "'. Ready for kickoff!");
+}
+
+// EVERYONE: The Clock Animation
+function runClock(data) {
+    clearInterval(timerInterval);
+    const timeDisplay = document.getElementById('match-time');
+    const adminBtn = document.getElementById('timer-btn');
+    
+    // Update Admin Button if open
+    if (adminBtn) {
+        adminBtn.innerText = data.timerActive ? "PAUSE CLOCK" : "START CLOCK";
+        adminBtn.style.background = data.timerActive ? "#ef4444" : "#4fd04f";
+    }
+
+    if (!data.timerActive) {
+        timeDisplay.innerText = (data.lastKnownTime || 0) + "'";
         return;
     }
 
-    if (confirm("Permanently delete this broadcast?")) {
-        try {
-            await db.collection("posts").doc(postId).delete();
-        } catch (e) {
-            alert("Error deleting post.");
-        }
-    }
-}
+    // Calculation for real-time sync
+    const serverStart = data.startTime.toDate().getTime();
+    const baseMin = data.lastKnownTime || 0;
 
-// Open Modal and Pre-fill data
-
-
-let newProfilePicBase64 = "";
-
-function updateProfileUI() {
-    if (!user) return;
-
-    // 1. Core Profile Data
-    document.getElementById('p-card-img').src = user.pic;
-    document.getElementById('p-card-name').innerText = user.name;
-    
-    // 2. ID Card Info with Bio Integration
-    const bioText = user.bio ? user.bio : "Elite Member";
-    document.getElementById('p-card-uid').innerHTML = `
-        ${user.matric} <br> 
-        <span style="font-size: 0.55rem; color: white; opacity: 0.5; font-family: 'Poppins'; font-style: italic;">
-            "${bioText}"
-        </span>`;
-    
-    // 3. GPA & Standing Chips
-    document.getElementById('p-card-gp').innerText = user.cgpa || "0.00";
-    document.getElementById('p-card-standing').innerText = user.standing || "N/A";
-
-    // 4. Executive Role Visuals
-    const roleBadge = document.getElementById('role-badge');
-    const isExec = user.role === "Executive" || user.matric.startsWith('EXEC');
-    
-    if (isExec) {
-        roleBadge.innerText = "EXECUTIVE";
-        roleBadge.style.background = "var(--primary-gold)";
-        roleBadge.style.color = "#011a14";
-        document.getElementById('digital-id-card').style.border = "1.5px solid var(--primary-gold)";
-        document.getElementById('digital-id-card').style.boxShadow = "0 0 25px rgba(212, 175, 55, 0.2)";
-    } else {
-        roleBadge.innerText = "MEMBER";
-        roleBadge.style.background = "rgba(255,255,255,0.2)";
-        roleBadge.style.color = "white";
-        document.getElementById('digital-id-card').style.border = "1px solid var(--glass-border)";
-    }
-
-    lucide.createIcons();
-}
-
-// OPEN MODAL
-function openEditModal() {
-    document.getElementById('edit-profile-overlay').classList.remove('hidden');
-    document.getElementById('edit-preview-img').src = user.pic;
-    document.getElementById('edit-username').value = user.name;
-    document.getElementById('edit-bio').value = user.bio || "";
-    document.getElementById('edit-pass').value = "";
-    newProfilePicBase64 = ""; // Reset temp image
-}
-
-function closeEditModal() {
-    document.getElementById('edit-profile-overlay').classList.add('hidden');
-}
-
-// HANDLE NEW PHOTO PREVIEW
-function handleProfilePicChange(input) {
-    const file = input.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const MAX = 300; // Small size for profile pics
-                let w = img.width, h = img.height;
-                if (w > h) { w = MAX; h = img.height * (MAX/img.width); }
-                else { h = MAX; w = img.width * (MAX/img.height); }
-                canvas.width = w; canvas.height = h;
-                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                newProfilePicBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                document.getElementById('edit-preview-img').src = newProfilePicBase64;
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-// SAVE TO FIRESTORE
-async function saveProfileChanges() {
-    const newName = document.getElementById('edit-username').value.trim();
-    const newBio = document.getElementById('edit-bio').value.trim();
-    const newPass = document.getElementById('edit-pass').value.trim();
-
-    if (!newName) return alert("Name is required.");
-
-    try {
-        let updateData = { name: newName, bio: newBio };
-        if (newPass) updateData.password = newPass;
-        if (newProfilePicBase64) updateData.pic = newProfilePicBase64;
-
-        await db.collection("users").doc(user.id).update(updateData);
-
-        // Update local state
-        user = { ...user, ...updateData };
-        localStorage.setItem('ec26_user', JSON.stringify(user));
-
-        updateProfileUI();
-        closeEditModal();
-        alert("Identity Resynced Successfully.");
-    } catch (e) {
-        alert("Update Error: " + e.message);
-    }
-}
-
-
-    // RESTORED MARKETPLACE LOGIC
-    function renderMarket() {
-        const search = document.getElementById('market-search').value.toLowerCase();
-        db.collection("marketplace").onSnapshot(snap => {
-            const container = document.getElementById('market-display');
-            container.innerHTML = "";
-            let totalVal = 0;
-            snap.forEach(doc => {
-                const d = doc.data();
-                if(d.itemName.toLowerCase().includes(search)) {
-                    totalVal += d.itemPrice;
-                    container.innerHTML += `
-                        <div class="glass-card">
-                            <h5 style="color: var(--primary-gold);">${d.itemName}</h5>
-                            <p style="font-weight: 800; margin: 5px 0;">₦${d.itemPrice.toLocaleString()}</p>
-                            <button class="btn-gold" style="padding: 8px;" onclick="openChat('${d.sellerId}', '${d.sellerName}')">Contact Seller</button>
-                        </div>`;
-                }
-            });
-            document.getElementById('m-stats-val').innerText = "₦" + totalVal.toLocaleString();
-            document.getElementById('m-stats-count').innerText = snap.size;
-        });
-    }
-
-
-
-    function addCourse() {
-    const container = document.getElementById('course-container');
-    const div = document.createElement('div');
-    div.style = "display: grid; grid-template-columns: 1.2fr 1.3fr 0.5fr; gap: 8px; margin-bottom: 10px; align-items: center;";
-    
-    div.innerHTML = `
-        <input type="text" class="c-name glass-input" placeholder="Course" style="margin:0; font-size:0.7rem;">
-        <select class="c-grade glass-input" style="margin:0; font-size:0.7rem; color: var(--primary-gold);">
-            <option value="4.0">A (4.00)</option>
-            <option value="3.5">AB (3.50)</option>
-            <option value="3.25">B (3.25)</option>
-            <option value="3.0">BC (3.00)</option>
-            <option value="2.75">C (2.75)</option>
-            <option value="2.5">CD (2.50)</option>
-            <option value="2.25">D (2.25)</option>
-            <option value="2.0">E (2.00)</option>
-            <option value="0.0">F (0.00)</option>
-        </select>
-        <input type="number" class="c-unit glass-input" placeholder="U" style="margin:0; font-size:0.7rem;" min="1">
-    `;
-    container.appendChild(div);
-}
-
-async function calculateGP() {
-    const grades = document.querySelectorAll('.c-grade');
-    const units = document.querySelectorAll('.c-unit');
-    
-    let totalWeightedPoints = 0;
-    let totalUnits = 0;
-
-    units.forEach((unitInput, i) => {
-        const u = parseFloat(unitInput.value);
-        const g = parseFloat(grades[i].value);
-
-        if (!isNaN(u) && u > 0) {
-            totalWeightedPoints += (u * g);
-            totalUnits += u;
-        }
-    });
-
-    const gpa = totalUnits > 0 ? (totalWeightedPoints / totalUnits).toFixed(2) : "0.00";
-    
-    // Update Display
-    document.getElementById('cgpa-display').innerText = gpa;
-    document.getElementById('total-units').innerText = `Units: ${totalUnits}`;
-    document.getElementById('gp-progress').style.width = (gpa / 4 * 100) + "%";
-    
-    // Class Classifications (Based on your scale)
-    let standing = "Pass";
-    if (gpa >= 3.50) standing = "Distinction";
-    else if (gpa >= 3.00) standing = "Upper";
-    else if (gpa >= 2.50) standing = "Lower";
-    else if (gpa >= 2.00) standing = "Pass";
-    else if (gpa > 0) standing = "Probation";
-    else standing = "N/A";
-
-    document.getElementById('gp-class').innerText = `Class: ${standing}`;
-
-    // Cloud Sync
-    if (user) {
-        try {
-            await db.collection("users").doc(user.id).update({ 
-                cgpa: gpa,
-                standing: standing 
-            });
-            user.cgpa = gpa;
-            user.standing = standing;
-            localStorage.setItem('ec26_user', JSON.stringify(user));
-            alert("Academic standing successfully synced to the Hub.");
-        } catch (e) {
-            console.error(e);
-            alert("Sync failed. Check connection.");
-        }
-    }
-}
-
-    function filterMembers() {
-        const query = document.getElementById('member-search').value.toLowerCase();
-        renderChatList(query);
-    }
-
-    function renderChatList(query = "") {
-    // Listen to the users list
-    db.collection("users").onSnapshot(snap => {
-        const container = document.getElementById('chat-list-container');
-        container.innerHTML = "";
+    timerInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const elapsedSec = Math.floor((now - serverStart) / 1000);
+        const currentMin = baseMin + Math.floor(elapsedSec / 60);
         
-        snap.forEach(doc => {
-            const u = doc.data();
-            if(u.id === user.id || (query && !u.name.toLowerCase().includes(query))) return;
-
-            const chatId = [user.id, u.id].sort().join('_');
-            
-            // Render basic UI first
-            const userDiv = document.createElement('div');
-            userDiv.id = `list-item-${u.id}`;
-            userDiv.className = "glass-card";
-            userDiv.style = "display: flex; align-items: center; gap: 15px; padding: 15px; cursor: pointer; position: relative;";
-            userDiv.onclick = () => openChat(u.id, u.name);
-            
-            userDiv.innerHTML = `
-                <img src="${u.pic}" style="width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid var(--primary-gold);">
-                <div style="flex: 1;">
-                    <div style="display: flex; justify-content: space-between;">
-                        <h6 style="font-size: 0.85rem;">${u.name}</h6>
-                        <small id="time-${chatId}" style="opacity: 0.4; font-size: 0.6rem;"></small>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                        <p id="preview-${chatId}" style="font-size: 0.7rem; opacity: 0.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">Start chatting...</p>
-                        <div id="typing-${chatId}" class="hidden" style="color: var(--primary-gold); font-size: 0.6rem; font-style: italic;">typing...</div>
-                    </div>
-                </div>
-            `;
-            container.appendChild(userDiv);
-
-            // REAL-TIME: Listen to the last message of THIS specific chat
-            db.collection("chats").doc(chatId).collection("m")
-              .orderBy("time", "desc").limit(1).onSnapshot(mSnap => {
-                  if(!mSnap.empty) {
-                      const m = mSnap.docs[0].data();
-                      document.getElementById(`preview-${chatId}`).innerText = m.t;
-                      if(m.time) {
-                          const date = m.time.toDate();
-                          document.getElementById(`time-${chatId}`).innerText = date.getHours() + ":" + date.getMinutes().toString().padStart(2, '0');
-                      }
-                  }
-              });
-
-            // REAL-TIME: Listen for Typing Status
-            db.collection("chats").doc(chatId).onSnapshot(docSnap => {
-                const data = docSnap.data();
-                const typingEl = document.getElementById(`typing-${chatId}`);
-                const previewEl = document.getElementById(`preview-${chatId}`);
-                
-                if(data && data.typing && data.typing !== user.id) {
-                    typingEl.classList.remove('hidden');
-                    previewEl.classList.add('hidden');
-                } else {
-                    typingEl.classList.add('hidden');
-                    previewEl.classList.remove('hidden');
-                }
-            });
-        });
-    });
+        timeDisplay.innerText = currentMin + "'";
+        
+        // Visual indicator that it's live
+        timeDisplay.style.color = (now % 2000 < 1000) ? "var(--gold)" : "#fff";
+    }, 1000);
 }
 
-    async function openChat(tid, tname) {
-    activeChatId = [user.id, tid].sort().join('_');
-    document.getElementById('chat-header-name').innerText = tname;
-    document.getElementById('chat-overlay').classList.remove('hidden');
-    
-    if(chatSub) chatSub();
-
-    chatSub = db.collection("chats").doc(activeChatId).collection("m")
-        .orderBy("time", "asc").onSnapshot(snap => {
-            const box = document.getElementById('chat-msgs');
-            box.innerHTML = "";
-            
-            snap.forEach(m => {
-                const data = m.data();
-                const isMe = data.sid === user.id;
-                const timeStr = data.time ? data.time.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "";
-                
-                // If it's a message sent to me, mark it as read in background
-                if(!isMe && !data.read) {
-                    m.ref.update({ read: true });
-                }
-
-                box.innerHTML += `
-                    <div style="display: flex; flex-direction: column; align-items: ${isMe ? 'flex-end' : 'flex-start'}; gap: 2px;">
-                        <div class="bubble ${isMe ? 'sent' : 'received'}">
-                            ${data.t}
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 4px; padding: 0 5px;">
-                            <small style="font-size: 0.55rem; opacity: 0.4;">${timeStr}</small>
-                            ${isMe ? `
-                                <i data-lucide="${data.read ? 'check-check' : 'check'}" 
-                                   style="width: 10px; color: ${data.read ? '#3b82f6' : 'inherit'}; opacity: 0.6;"></i>
-                            ` : ''}
-                        </div>
-                    </div>`;
-            });
-            lucide.createIcons();
-            box.scrollTop = box.scrollHeight;
-        });
-}
-
-// Updated sendMsg to include timestamps properly
-async function sendMsg() {
-    const inp = document.getElementById('chat-input');
-    const val = inp.value.trim();
-    if(!val || !activeChatId) return;
-
-    const msgText = val;
-    inp.value = ""; 
-
-    const now = firebase.firestore.FieldValue.serverTimestamp();
-
-    // 1. Add message to sub-collection
-    await db.collection("chats").doc(activeChatId).collection("m").add({
-        sid: user.id,
-        t: msgText,
-        read: false,
-        time: now
-    });
-
-    // 2. UPDATE PARENT: This triggers the real-time sorting in the chat list
-    await db.collection("chats").doc(activeChatId).set({
-        lastUpdated: now,
-        lastMsg: msgText,
-        typing: null
-    }, { merge: true });
-}
-
-
-    function closeChat() { document.getElementById('chat-overlay').classList.add('hidden'); }
-   
-    function logout() { localStorage.clear(); location.reload(); }
-
-    async function deletePost(postId) {
-    if (!confirm("Are you sure you want to delete this broadcast?")) return;
-
-    try {
-        await db.collection("posts").doc(postId).delete();
-        // Post will disappear automatically due to onSnapshot
-    } catch (e) {
-        console.error("Delete error:", e);
-        alert("Action denied: You don't have permission to delete this.");
-    }
-}
-let marketImageBase64 = "";
-
-// 1. Handle Market Image Compression
-function handleMarketFile(input) {
-    const file = input.files[0];
-    const statusText = document.getElementById('m-upload-status');
-    if (file) {
-        statusText.innerText = "Processing...";
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let width = img.width, height = img.height;
-                const MAX = 500; // Smaller for market
-                if (width > MAX) { height *= MAX / width; width = MAX; }
-                canvas.width = width; canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                marketImageBase64 = canvas.toDataURL('image/jpeg', 0.5);
-                statusText.innerText = "Photo Added ✅";
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-// 2. Upload Item to Firestore
-async function listMarketItem() {
-    const name = document.getElementById('m-item-name').value.trim();
-    const price = document.getElementById('m-item-price').value.trim();
-
-    if (!name || !price || !marketImageBase64) return alert("Please fill all fields and add a photo.");
-
-    try {
-        await db.collection("marketplace").add({
-            sellerId: user.id,
-            sellerName: user.name,
-            itemName: name,
-            itemPrice: parseInt(price),
-            itemImage: marketImageBase64,
-            time: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        // Reset
-        document.getElementById('m-item-name').value = "";
-        document.getElementById('m-item-price').value = "";
-        marketImageBase64 = "";
-        document.getElementById('m-upload-status').innerText = "Add Photo";
-        alert("Item listed successfully!");
-    } catch (e) { alert("Listing failed. Check storage limits."); }
-}
-
-// 3. Updated Render Market with Contact & Automated Message
-function renderMarket() {
-    const search = document.getElementById('market-search').value.toLowerCase();
-    db.collection("marketplace").orderBy("time", "desc").onSnapshot(snap => {
-        const container = document.getElementById('market-display');
-        container.innerHTML = "";
-        let totalVal = 0;
+// 2. Load the History Table (For everyone)
+function listenToHistory() {
+    db.collection("match_history").orderBy("timestamp", "desc").onSnapshot(snap => {
+        const tbody = document.getElementById('results-body');
+        let html = "";
         
         snap.forEach(doc => {
             const d = doc.data();
-            if(d.itemName.toLowerCase().includes(search)) {
-                totalVal += d.itemPrice;
-                container.innerHTML += `
-                    <div class="glass-card" style="padding: 10px;">
-                        <img src="${d.itemImage}" style="width:100%; height:150px; object-fit:cover; border-radius:15px; margin-bottom:10px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                            <div>
-                                <h5 style="color:var(--primary-gold); font-size:0.9rem;">${d.itemName}</h5>
-                                <p style="font-weight:800;">₦${d.itemPrice.toLocaleString()}</p>
-                            </div>
-                            ${d.sellerId === user.id ? 
-                                `<i data-lucide="trash" size="16" style="color:#ef4444;" onclick="deleteMarketItem('${doc.id}')"></i>` : ''}
-                        </div>
-                        <button class="btn-gold" style="padding: 10px; font-size:0.7rem;" 
-                            onclick="contactSeller('${d.sellerId}', '${d.sellerName}', '${d.itemName}')">
-                            Contact Seller
-                        </button>
-                    </div>`;
-            }
+            const isWinnerGold = d.winner !== "Draw" ? "color: var(--gold); font-weight:bold;" : "";
+            
+            html += `
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 12px; opacity: 0.6;">${d.date}</td>
+                    <td style="padding: 12px;">SOFT vs N&C</td>
+                    <td style="padding: 12px; font-weight: 800;">${d.homeScore} - ${d.awayScore}</td>
+                    <td style="padding: 12px; ${isWinnerGold}">${d.winner}</td>
+                </tr>`;
         });
-        document.getElementById('m-stats-val').innerText = "₦" + totalVal.toLocaleString();
-        document.getElementById('m-stats-count').innerText = snap.size;
-        lucide.createIcons();
+        tbody.innerHTML = html || '<tr><td colspan="4" style="padding:20px; opacity:0.5;">No matches archived yet.</td></tr>';
     });
 }
 
-// 4. Contact Seller + Automated Message
-async function contactSeller(sid, sname, itemName) {
-    if (sid === user.id) return alert("This is your item!");
-    
-    const chatId = [user.id, sid].sort().join('_');
-    const autoMsg = `Hi ${sname.split(' ')[0]}, is the "${itemName}" still available? I'm interested!`;
-    const now = firebase.firestore.FieldValue.serverTimestamp();
-
-    await db.collection("chats").doc(chatId).collection("m").add({
-        sid: user.id,
-        t: autoMsg,
-        read: false,
-        time: now
-    });
-
-    // Update parent for sorting
-    await db.collection("chats").doc(chatId).set({
-        lastUpdated: now,
-        lastMsg: autoMsg
-    }, { merge: true });
-
-    openChat(sid, sname);
-}
-
-async function deleteMarketItem(id) {
-    if(confirm("Remove this listing?")) await db.collection("marketplace").doc(id).delete();
-}
-
-// Add these variables at the top of your script
-let typingTimeout;
-
-const chatInput = document.getElementById('chat-input');
-chatInput.addEventListener('input', () => {
-    if (!activeChatId) return;
-
-    // Set typing status to My ID
-    db.collection("chats").doc(activeChatId).set({
-        typing: user.id
-    }, { merge: true });
-
-    // Clear status after 2 seconds of no typing
-    clearTimeout(typingTimeout);
-    typingTimeout = setTimeout(() => {
-        db.collection("chats").doc(activeChatId).set({
-            typing: null
-        }, { merge: true });
-    }, 2000);
-});
+// Make sure to call this at the bottom of your script
+listenToHistory();
 </script>
 </body>
 </html>
