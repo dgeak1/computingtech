@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Vault | Faculty of Computing Tech</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark-bg: #050505;
+            --card-bg: #0a0a0a;
+            --border: rgba(212, 175, 55, 0.3);
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(to bottom, #000, var(--dark-bg));
+        }
+
+        h1 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0; font-size: 1.5rem; letter-spacing: 2px; }
+        
+        .elite-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .vault-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn-luxury {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        select {
+            background: #000;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        /* Quiz Overlay */
+        #quiz-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.98);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hidden { display: none !important; }
+        
+        .option-btn {
+            width: 100%;
+            padding: 15px;
+            margin: 8px 0;
+            background: transparent;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+.option-btn.selected {
+    border-color: var(--gold) !important;
+    background: rgba(212, 175, 55, 0.2) !important;
+}
+
+button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+        .option-btn:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.1); }
+    </style>
+</head>
+<body>
+
+<header>
+    <i data-lucide="graduation-cap" style="color: var(--gold); width: 40px; height: 40px;"></i>
+    <h1>ACADEMIC VAULT</h1>
+    <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 10px;">FACULTY OF COMPUTING TECHNOLOGY</p>
+</header>
+
+<div class="container">
+    <div class="elite-card" style="text-align: center; border: 2px solid var(--gold); background: linear-gradient(45deg, #0a0a0a, #111);">
+        <h3 class="gold-text">CBT PRACTICE ARENA</h3>
+        <p style="font-size: 0.8rem; opacity: 0.8;">Test your readiness for upcoming Semester Exams.</p>
+        <button onclick="startQuiz()" class="btn-luxury" style="margin-top: 10px;">ENTER EXAM HALL</button>
+    </div>
+
+    <div class="filter-bar">
+        <h2 style="font-size: 0.9rem; color: var(--gold);">PAST QUESTIONS</h2>
+        <select id="levelFilter" onchange="filterResources()">
+            <option value="all">ALL LEVELS</option>
+            <option value="ND1">ND 1</option>
+            <option value="ND2">ND 2</option>
+            <option value="HND1">HND 1</option>
+            <option value="HND2">HND 2</option>
+        </select>
+    </div>
+
+    <div class="vault-grid" id="resourceGrid">
+        <div class="elite-card resource-item" data-level="ND1">
+            <i data-lucide="file-text" style="color: var(--gold); width: 20px;"></i>
+            <h4 style="font-size: 0.8rem; margin: 10px 0 5px;">COM 111</h4>
+            <p style="font-size: 0.6rem; opacity: 0.7; margin-bottom: 15px;">Intro to Computing (PDF)</p>
+            <a href="#" class="btn-luxury" style="font-size: 0.6rem; width: 100%; box-sizing: border-box; text-align: center;">DOWNLOAD</a>
+        </div>
+        
+        <div class="elite-card resource-item" data-level="HND1">
+            <i data-lucide="file-text" style="color: var(--gold); width: 20px;"></i>
+            <h4 style="font-size: 0.8rem; margin: 10px 0 5px;">COM 312</h4>
+            <p style="font-size: 0.6rem; opacity: 0.7; margin-bottom: 15px;">Data Structures (PDF)</p>
+            <a href="#" class="btn-luxury" style="font-size: 0.6rem; width: 100%; box-sizing: border-box; text-align: center;">DOWNLOAD</a>
+        </div>
+    </div>
+</div>
+
+<div id="quiz-modal">
+    <div class="container" id="quiz-box" style="max-width: 500px;">
+        </div>
+</div>
+
+<script>
+    lucide.createIcons();
+
+    // Data Structure for Questions
+    const questions = [
+        { q: "Which of the following is an example of an Operating System?", a: "Windows", options: ["Chrome", "Windows", "Office", "Java"] },
+        { q: "What is the primary function of a Compiler?", a: "Convert code to machine lang", options: ["Browse the web", "Convert code to machine lang", "Edit images", "Protect from virus"] },
+        { q: "In Networking, what does IP stand for?", a: "Internet Protocol", options: ["Internal Power", "Internet Protocol", "Instant Port", "Intelligent Path"] },
+        { q: "Which logic gate outputs 1 only if both inputs are 1?", a: "AND", options: ["OR", "NOT", "AND", "XOR"] },
+        { "q": "What is the primary purpose of 'Version Control' in software development?", "a": "Tracking changes in source code", "options": ["Speeding up compilation", "Tracking changes in source code", "Scanning for viruses", "Designing the UI"], "cat": "Software Development" },
+  { "q": "In Cloud Computing, what does 'SaaS' stand for?", "a": "Software as a Service", "options": ["System as a Service", "Software as a Service", "Storage as a System", "Server as a Software"], "cat": "Cloud Computing" },
+  { "q": "Which HTML element is used for the largest heading?", "a": "<h1>", "options": ["<head>", "<h6>", "<heading>", "<h1>"], "cat": "Web Development" },
+  { "q": "What is the time complexity of searching in a balanced Binary Search Tree?", "a": "O(log n)", "options": ["O(1)", "O(n)", "O(log n)", "O(n^2)"], "cat": "Computer Science" },
+  { "q": "In JavaScript, which keyword is used to declare a variable that cannot be reassigned?", "a": "const", "options": ["var", "let", "const", "fixed"], "cat": "Software Development" },
+  { "q": "Which Cloud provider owns 'AWS' (Amazon Web Services)?", "a": "Amazon", "options": ["Microsoft", "Google", "Amazon", "Oracle"], "cat": "Cloud Computing" },
+  { "q": "What is the correct CSS syntax to change the text color of all <p> elements to red?", "a": "p {color: red;}", "options": ["p:color=red;", "p {text-color: red;}", "p {color: red;}", "<p> {color: red;}"], "cat": "Web Development" },
+  { "q": "Which data structure follows the First-In-First-Out (FIFO) principle?", "a": "Queue", "options": ["Stack", "Queue", "Tree", "Array"], "cat": "Computer Science" },
+  { "q": "In Cloud Computing, what is 'Elasticity'?", "a": "Scaling resources based on demand", "options": ["Encrypting data", "Backing up files", "Scaling resources based on demand", "Reducing internet speed"], "cat": "Cloud Computing" },
+  { "q": "Which of these is a 'Backend' programming language?", "a": "PHP", "options": ["HTML", "CSS", "PHP", "XML"], "cat": "Web Development" },
+  { "q": "What does API stand for?", "a": "Application Programming Interface", "options": ["Applied Protocol Interface", "Application Programming Interface", "Automated Program Index", "Advanced Processing Integration"], "cat": "Software Development" },
+  { "q": "In Computer Science, what is a 'Recursive' function?", "a": "A function that calls itself", "options": ["A function with no return", "A function that calls itself", "A loop that never ends", "A function used for math only"], "cat": "Computer Science" },
+  { "q": "Which Cloud service model provides virtualized computing resources over the internet?", "a": "IaaS", "options": ["PaaS", "SaaS", "IaaS", "DaaS"], "cat": "Cloud Computing" },
+  { "q": "What is the purpose of the 'git push' command?", "a": "Upload local code to a remote server", "options": ["Download code", "Delete code", "Upload local code to a remote server", "Save code locally"], "cat": "Software Development" },
+  { "q": "Which HTTP status code represents 'Page Not Found'?", "a": "404", "options": ["200", "500", "404", "403"], "cat": "Web Development" },
+  { "q": "What is 'Docker' primarily used for?", "a": "Containerization", "options": ["Writing code", "Containerization", "Styling websites", "Sorting data"], "cat": "Cloud Computing" },
+  { "q": "In Computer Science, what is 'Deadlock'?", "a": "Processes waiting for each other forever", "options": ["A virus", "A forgotten password", "Processes waiting for each other forever", "A broken hard drive"], "cat": "Computer Science" },
+  { "q": "Which CSS property is used to make text bold?", "a": "font-weight", "options": ["text-style", "font-weight", "text-bold", "font-bold"], "cat": "Web Development" },
+  { "q": "What is a 'Unit Test' in software development?", "a": "Testing individual parts of code", "options": ["Testing the whole website", "Testing internet speed", "Testing individual parts of code", "Testing user behavior"], "cat": "Software Development" },
+  { "q": "In Cloud Networking, what is a 'VPC'?", "a": "Virtual Private Cloud", "options": ["Verified Port Connection", "Virtual Private Cloud", "Visual Processing Center", "Variable Power Control"], "cat": "Cloud Computing" },
+  { "q": "Which of these is a NoSQL database?", "a": "MongoDB", "options": ["MySQL", "PostgreSQL", "Oracle", "MongoDB"], "cat": "Software Development" },
+  { "q": "What does JSON stand for?", "a": "JavaScript Object Notation", "options": ["Java Standard Output", "JavaScript Object Notation", "Joined System Online", "Just Simple Open Node"], "cat": "Web Development" },
+  { "q": "What is the base case in recursion used for?", "a": "To stop the function from repeating", "options": ["To start the function", "To stop the function from repeating", "To perform calculation", "To return an error"], "cat": "Computer Science" },
+  { "q": "In Web Dev, what is 'Responsive Design'?", "a": "Website adapting to screen size", "options": ["Website loading fast", "Website adapting to screen size", "Website with many images", "Website that responds to voice"], "cat": "Web Development" },
+  { "q": "Which Cloud platform provides 'Azure'?", "a": "Microsoft", "options": ["Amazon", "Google", "Microsoft", "DigitalOcean"], "cat": "Cloud Computing" },
+  { "q": "What is 'Inheritance' in Object-Oriented Programming?", "a": "A child class acquiring properties of a parent class", "options": ["Sharing data on social media", "A child class acquiring properties of a parent class", "Creating new variables", "Deleting old code"], "cat": "Software Development" },
+  { "q": "Which HTML tag is used to create a bulleted list?", "a": "<ul>", "options": ["<ol>", "<li>", "<ul>", "<list>"], "cat": "Web Development" },
+  { "q": "What is a 'Load Balancer' in Cloud Networking?", "a": "Distributing traffic across multiple servers", "options": ["Increasing internet speed", "Charging the laptop", "Distributing traffic across multiple servers", "Cleaning the server"], "cat": "Cloud Computing" },
+  { "q": "What is the result of 10 % 3 in programming?", "a": "1", "options": ["3", "1", "0", "0.3"], "cat": "Computer Science" },
+  { "q": "Which JavaScript method is used to select an element by its ID?", "a": "getElementById()", "options": ["selectID()", "queryID()", "getElementById()", "findID()"], "cat": "Web Development" },
+  { "q": "What is 'Serverless Computing'?", "a": "Developer writes code without managing servers", "options": ["Using a computer without a screen", "Developer writes code without managing servers", "A network with no cables", "Storing data on a USB"], "cat": "Cloud Computing" },
+  { "q": "What is an 'Algorithm'?", "a": "A step-by-step set of instructions", "options": ["A type of computer", "A step-by-step set of instructions", "A programming language", "A hardware component"], "cat": "Computer Science" },
+  { "q": "In Software Dev, what is 'Agile'?", "a": "An iterative project management methodology", "options": ["A fast programming language", "An iterative project management methodology", "A type of database", "A security protocol"], "cat": "Software Development" },
+  { "q": "Which CSS property controls the space between content and border?", "a": "padding", "options": ["margin", "border-width", "padding", "spacing"], "cat": "Web Development" },
+  { "q": "In Cloud Computing, what is 'Latency'?", "a": "The time delay in data transmission", "options": ["Storage capacity", "The time delay in data transmission", "The number of users", "The cost of service"], "cat": "Cloud Computing" },
+  { "q": "Which of these is a High-Level language?", "a": "Python", "options": ["Assembly", "Machine Code", "Binary", "Python"], "cat": "Computer Science" },
+  { "q": "What is the purpose of 'GitHub'?", "a": "Hosting and collaborating on code", "options": ["Creating graphics", "Hosting and collaborating on code", "Searching the web", "Watching videos"], "cat": "Software Development" },
+  { "q": "Which HTML tag is used for internal CSS?", "a": "<style>", "options": ["<css>", "<script>", "<style>", "<link>"], "cat": "Web Development" },
+  { "q": "In Cloud Networking, what is 'CDN'?", "a": "Content Delivery Network", "options": ["Cloud Data Node", "Content Delivery Network", "Central Data Network", "Custom Domain Name"], "cat": "Cloud Computing" },
+  { "q": "What is 'Big O Notation' used for?", "a": "Measuring algorithm efficiency", "options": ["Writing big code", "Measuring algorithm efficiency", "Designing logos", "Checking for errors"], "cat": "Computer Science" },
+  { "q": "Which keyword is used to handle errors in JavaScript?", "a": "try...catch", "options": ["error...stop", "try...catch", "if...else", "check...do"], "cat": "Software Development" },
+  { "q": "What is 'SQL Injection'?", "a": "A security vulnerability in database queries", "options": ["Updating a database fast", "A security vulnerability in database queries", "A type of join", "Deleting a database"], "cat": "Software Development" },
+  { "q": "Which of these is a CSS Framework?", "a": "Bootstrap", "options": ["Django", "React", "Bootstrap", "Laravel"], "cat": "Web Development" },
+  { "q": "In Cloud Computing, what is 'Hybrid Cloud'?", "a": "Combination of public and private cloud", "options": ["Cloud and physical server", "Combination of public and private cloud", "A cloud with two names", "Cloud using renewable energy"], "cat": "Cloud Computing" },
+  { "q": "What is a 'Primary Key' in a database?", "a": "A unique identifier for a record", "options": ["The most important data", "A unique identifier for a record", "A password", "The first column in a table"], "cat": "Software Development" },
+  { "q": "Which HTML attribute specifies an alternate text for an image?", "a": "alt", "options": ["title", "src", "alt", "longdesc"], "cat": "Web Development" },
+  { "q": "What is the role of a 'Router' in a Cloud Network?", "a": "Directing data packets between networks", "options": ["Storing files", "Directing data packets between networks", "Cooling the server", "Translating code"], "cat": "Cloud Computing" },
+  { "q": "What is 'Object-Oriented Programming'?", "a": "A paradigm based on objects and classes", "options": ["Programming for cameras", "A paradigm based on objects and classes", "Writing code in circles", "Using only images in code"], "cat": "Computer Science" },
+  { "q": "In Git, what does 'Branching' allow you to do?", "a": "Work on different features independently", "options": ["Delete your work", "Work on different features independently", "Merge two computers", "Speed up your internet"], "cat": "Software Development" },
+  { "q": "Which symbol is used for comments in Python?", "a": "#", "options": ["//", "/*", "#", "--"], "cat": "Computer Science" },
+  { "q": "In Cloud Computing, what is 'Shared Responsibility Model'?", "a": "Security tasks split between provider and customer", "options": ["Providers paying for electricity", "Security tasks split between provider and customer", "Users sharing passwords", "Multiple clouds using one database"], "cat": "Cloud Computing" },
+  { "q": "What does 'API First' development mean?", "a": "Designing the API before the application logic", "options": ["Writing code in Python first", "Designing the API before the application logic", "Building the mobile app before the web app", "Using only Google APIs"], "cat": "Software Development" },
+  { "q": "Which data structure is used for 'Depth-First Search' (DFS)?", "a": "Stack", "options": ["Queue", "Stack", "Array", "Heap"], "cat": "Computer Science" },
+  { "q": "What is the function of a 'Web Crawler'?", "a": "Browsing the web to index content for search engines", "options": ["Fixing broken HTML tags", "Browsing the web to index content for search engines", "Checking internet speed", "Deleting old cookies"], "cat": "Web Development" },
+  { "q": "In Cybersecurity, what is an 'In-Man-In-The-Middle' (MITM) attack?", "a": "Intercepting communication between two parties", "options": ["Stealing a physical server", "Intercepting communication between two parties", "Guessing a WiFi password", "Sending a very large email"], "cat": "Cybersecurity" },
+  { "q": "What is 'Lazy Loading' in web development?", "a": "Delaying the loading of non-critical resources", "options": ["A programmer who works slowly", "Delaying the loading of non-critical resources", "A website that never updates", "Using low-quality images"], "cat": "Web Development" },
+  { "q": "In Database Systems, what is a 'View'?", "a": "A virtual table based on a SQL result-set", "options": ["The way a user looks at the screen", "A virtual table based on a SQL result-set", "A backup of the database", "The physical location of data"], "cat": "Database Systems" },
+  { "q": "What is 'Big O Notation' for a Linear Search?", "a": "O(n)", "options": ["O(1)", "O(n)", "O(log n)", "O(n^2)"], "cat": "Computer Science" },
+  { "q": "In Cloud Networking, what is 'Egress Traffic'?", "a": "Data leaving the cloud network", "options": ["Data entering the cloud", "Data leaving the cloud network", "Data moving between internal servers", "Data that has been deleted"], "cat": "Cloud Computing" },
+  { "q": "What does 'SLA' stand for in Cloud services?", "a": "Service Level Agreement", "options": ["System Logic Access", "Secure Level Authentication", "Service Level Agreement", "Software License Area"], "cat": "Cloud Computing" },
+  { "q": "Which CSS property is used to create space outside of an element's border?", "a": "margin", "options": ["padding", "spacing", "margin", "border-width"], "cat": "Web Development" },
+  { "q": "What is 'Polymorphism' in OOP?", "a": "Performing a single action in different ways", "options": ["Having many variables", "Performing a single action in different ways", "Encrypting a file twice", "A database with many tables"], "cat": "Software Development" },
+  { "q": "In Cybersecurity, what is a 'Zero-Day Vulnerability'?", "a": "A flaw unknown to the software creator", "options": ["A bug that takes 0 days to fix", "A flaw unknown to the software creator", "A password with 0 characters", "A virus that only works at midnight"], "cat": "Cybersecurity" },
+  { "q": "What is the purpose of the 'JOIN' clause in SQL?", "a": "Combine rows from two or more tables", "options": ["Add a new user", "Combine rows from two or more tables", "Delete duplicate data", "Split a table into two"], "cat": "Database Systems" },
+  { "q": "Which of these is a 'CSS Preprocessor'?", "a": "Sass", "options": ["React", "Sass", "Laravel", "MySQL"], "cat": "Web Development" },
+  { "q": "What is 'Container Orchestration'?", "a": "Managing the lifecycle of containers (e.g. Kubernetes)", "options": ["Writing code for music apps", "Managing the lifecycle of containers (e.g. Kubernetes)", "Sorting files in a folder", "Building a hardware rack"], "cat": "Cloud Computing" },
+  { "q": "What is a 'Hash Function' used for?", "a": "Mapping data to a fixed-size string", "options": ["Creating a website layout", "Mapping data to a fixed-size string", "Calculating interest rates", "Sorting an array"], "cat": "Computer Science" },
+  { "q": "In Git, what is a 'Repository'?", "a": "A storage location for your project code", "options": ["A type of error", "A storage location for your project code", "A backup server", "A command to delete code"], "cat": "Software Development" },
+  { "q": "What is 'Cross-Site Scripting' (XSS)?", "a": "Injecting malicious scripts into trusted websites", "options": ["Writing CSS for two websites", "Injecting malicious scripts into trusted websites", "Linking two different databases", "Using a fake email address"], "cat": "Cybersecurity" },
+  { "q": "What is the function of the 'alt' attribute in an HTML image tag?", "a": "Text description for accessibility", "options": ["Alternative image source", "Text description for accessibility", "Alignment of the image", "Background color"], "cat": "Web Development" },
+  { "q": "In Cloud Computing, what is 'Cold Site' disaster recovery?", "a": "A backup facility without hardware/software ready", "options": ["A data center in a cold country", "A backup facility without hardware/software ready", "A server that is turned off", "A backup on a USB drive"], "cat": "Cloud Computing" },
+  { "q": "What is a 'Null Pointer Exception'?", "a": "An error when a program tries to use a null reference", "options": ["A virus in the code", "An error when a program tries to use a null reference", "A database connection error", "A forgotten variable name"], "cat": "Software Development" },
+  { "q": "Which SQL statement is used to remove a record?", "a": "DELETE", "options": ["DROP", "REMOVE", "DELETE", "TRUNCATE"], "cat": "Database Systems" },
+  { "q": "What is 'Encryption at Rest'?", "a": "Protecting data while it is stored on disk", "options": ["Encrypting data while a user is sleeping", "Protecting data while it is stored on disk", "Encrypting data during transfer", "A password that never changes"], "cat": "Cybersecurity" },
+  { "q": "In JavaScript, what does 'NaN' mean?", "a": "Not a Number", "options": ["New and Next", "Not a Number", "Node and Network", "Null and Negative"], "cat": "Web Development" },
+  { "q": "What is 'Asymptotic Analysis'?", "a": "Evaluating algorithm performance as input grows", "options": ["A type of math test", "Evaluating algorithm performance as input grows", "Checking for syntax errors", "Connecting to a cloud database"], "cat": "Computer Science" },
+  { "q": "Which Cloud model allows users to rent a full server for themselves?", "a": "Bare Metal", "options": ["SaaS", "Shared Hosting", "Bare Metal", "PaaS"], "cat": "Cloud Computing" },
+  { "q": "What is 'Code Review'?", "a": "Systematic examination of source code by others", "options": ["Running a program to see if it works", "Systematic examination of source code by others", "Reading a book about coding", "Updating a software version"], "cat": "Software Development" },
+  { "q": "What is the 'Box Model' in CSS?", "a": "Layout concept involving margins, borders, and padding", "options": ["A 3D design tool", "Layout concept involving margins, borders, and padding", "A way to pack hardware", "A type of input form"], "cat": "Web Development" },
+  { "q": "In Database Systems, what is 'Redundancy'?", "a": "Storing the same data in multiple places", "options": ["Deleting old records", "Storing the same data in multiple places", "Speeding up a query", "Encrypted data"], "cat": "Database Systems" },
+  { "q": "What is a 'DDoS' attack?", "a": "Overwhelming a server with traffic from many sources", "options": ["Stealing a single password", "Overwhelming a server with traffic from many sources", "A virus that deletes files", "A hardware failure"], "cat": "Cybersecurity" },
+  { "q": "In Cloud Networking, what is a 'Public IP'?", "a": "An address accessible via the internet", "options": ["A password shared by everyone", "An address accessible via the internet", "An IP used only inside an office", "A website domain"], "cat": "Cloud Computing" },
+  { "q": "What is a 'Linked List'?", "a": "A linear data structure where elements point to the next", "options": ["A list of website links", "A linear data structure where elements point to the next", "A group of connected computers", "A database table"], "cat": "Computer Science" },
+  { "q": "Which HTTP method is typically used to update an existing resource?", "a": "PUT", "options": ["GET", "POST", "PUT", "DELETE"], "cat": "Web Development" },
+  { "q": "What is 'Version Control' (e.g. Git) primarily used for?", "a": "Tracking and managing changes to code", "options": ["Scanning for viruses", "Tracking and managing changes to code", "Compressing files", "Designing a database schema"], "cat": "Software Development" },
+  { "q": "What is the 'Control Plane' in Cloud Networking?", "a": "Part of the network that manages data routing", "options": ["The screen where admins log in", "Part of the network that manages data routing", "The physical cables in a data center", "The speed of the processor"], "cat": "Cloud Computing" },
+  { "q": "What is 'Social Engineering' in Cybersecurity?", "a": "Manipulating people into giving up secrets", "options": ["Building a social media site", "Manipulating people into giving up secrets", "Coding for a government", "Hacking a Facebook account"], "cat": "Cybersecurity" },
+  { "q": "Which HTML tag is used to create a dropdown list?", "a": "<select>", "options": ["<input>", "<list>", "<select>", "<dropdown>"], "cat": "Web Development" },
+  { "q": "In Database design, what does '1-to-Many' mean?", "a": "One record in table A relates to many in table B", "options": ["One person using many computers", "One record in table A relates to many in table B", "One query that takes many minutes", "One database with many admins"], "cat": "Database Systems" },
+  { "q": "What is 'Abstraction' in Software Engineering?", "a": "Hiding complex details and showing only essentials", "options": ["Drawing a complex diagram", "Hiding complex details and showing only essentials", "Removing all comments from code", "Using fake data"], "cat": "Software Development" },
+  { "q": "In Computer Science, what is a 'Graph'?", "a": "A collection of nodes and the edges between them", "options": ["A chart showing progress", "A collection of nodes and the edges between them", "A type of printer", "An image file format"], "cat": "Computer Science" },
+  { "q": "What is a 'Snapshot' in Cloud Computing?", "a": "A point-in-time copy of a disk/server", "options": ["A photo of the server rack", "A point-in-time copy of a disk/server", "A very fast internet connection", "A small programming script"], "cat": "Cloud Computing" },
+  { "q": "Which CSS property is used to change the background color?", "a": "background-color", "options": ["color", "bg-color", "background-color", "surface-color"], "cat": "Web Development" },
+  { "q": "What is 'Encryption in Transit'?", "a": "Protecting data while it travels over the network", "options": ["Encrypting data on a train", "Protecting data while it travels over the network", "Encrypting data on a hard drive", "A password used only once"], "cat": "Cybersecurity" },
+  { "q": "In Database Systems, what is a 'Schema'?", "a": "The structural design of the database", "options": ["A plan to hack a server", "The structural design of the database", "A list of user passwords", "The physical hardware layout"], "cat": "Database Systems" },
+  { "q": "What is 'Bootstrap'?", "a": "A popular CSS framework for responsive design", "options": ["A way to start a computer", "A popular CSS framework for responsive design", "A type of cloud storage", "A programming language"], "cat": "Web Development" },
+  { "q": "In Cloud Computing, what is 'Vendor Lock-in'?", "a": "Difficulty moving data away from one provider", "options": ["A physical lock on a server", "Difficulty moving data away from one provider", "A special discount for long-term users", "A software license error"], "cat": "Cloud Computing" },
+  { "q": "What is 'Merge Sort'?", "a": "A divide-and-conquer sorting algorithm", "options": ["Combining two databases", "A divide-and-conquer sorting algorithm", "Adding two numbers together", "Deleting duplicate files"], "cat": "Computer Science" },
+  { "q": "What is the purpose of 'Favicon' in web development?", "a": "Small icon displayed in the browser tab", "options": ["To save a favorite website", "Small icon displayed in the browser tab", "To secure the login page", "To optimize image sizes"], "cat": "Web Development" },
+  { "q": "In Software Development, what is 'Legacy Code'?", "a": "Old code that is still in use but hard to maintain", "options": ["Code written by a famous person", "Old code that is still in use but hard to maintain", "Code that has many comments", "A backup of the source code"], "cat": "Software Development" }
+    ];
+
+    lucide.createIcons();
+
+// The original questions array stays the same (I've truncated for brevity)
+const allQuestions = [
+    /* ... your 150+ questions go here ... */
+];
+
+let sessionQuestions = [];
+let currentQ = 0;
+let score = 0;
+let userAnswers = {}; // Stores { questionIndex: chosenOption }
+let timeLeft = 15;
+let timerInterval;
+
+function startQuiz() {
+    // 1. Pick 30 Random Questions for this session
+    sessionQuestions = [...questions].sort(() => 0.5 - Math.random()).slice(0, 30);
+    
+    document.getElementById('quiz-modal').style.display = 'flex';
+    currentQ = 0; 
+    score = 0;
+    userAnswers = {};
+    
+    showQuestion();
+}
+
+function startTimer() {
+    clearInterval(timerInterval);
+    timeLeft = 15;
+    updateTimerUI();
+    
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerUI();
+        if (timeLeft <= 0) {
+            // Auto-move to next or submit if last question
+            if (currentQ < sessionQuestions.length - 1) {
+                nextQuestion();
+            } else {
+                submitQuiz();
+            }
+        }
+    }, 1000);
+}
+
+function updateTimerUI() {
+    const timerDisplay = document.getElementById('timer-text');
+    if (timerDisplay) {
+        timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+        timerDisplay.style.color = timeLeft <= 5 ? 'red' : 'var(--gold)';
+    }
+}
+
+function showQuestion() {
+    const data = sessionQuestions[currentQ];
+    const isLast = currentQ === sessionQuestions.length - 1;
+    const isFirst = currentQ === 0;
+
+    let html = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <span style="color:var(--gold); font-weight:bold;">Q: ${currentQ + 1} / 30</span>
+            <span id="timer-text" style="font-weight:800;">Time Left: 15s</span>
+        </div>
+        
+        <div style="height:4px; width:100%; background:#222; margin-bottom:20px; border-radius:2px;">
+            <div style="height:100%; width:${((currentQ + 1) / 30) * 100}%; background:var(--gold); transition:0.3s;"></div>
+        </div>
+
+        <p style="margin: 20px 0; text-align:center; font-size:1.1rem; min-height:60px;">${data.q}</p>
+        
+        <div id="options-container">
+            ${data.options.map(opt => `
+                <button class="option-btn ${userAnswers[currentQ] === opt ? 'selected' : ''}" 
+                        id="btn-${opt}" 
+                        onclick="selectOption('${opt}')">
+                    ${opt}
+                </button>
+            `).join('')}
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-top:30px; gap:10px;">
+            <button onclick="prevQuestion()" class="btn-luxury" style="background:#333; color:white; flex:1;" ${isFirst ? 'disabled' : ''}>Previous</button>
+            
+            ${isLast 
+                ? `<button onclick="submitQuiz()" class="btn-luxury" style="flex:1; border:2px solid white;">SUBMIT EXAM</button>`
+                : `<button onclick="nextQuestion()" class="btn-luxury" style="flex:1;">Next</button>`
+            }
+        </div>
+    `;
+    
+    document.getElementById('quiz-box').innerHTML = html;
+    startTimer();
+}
+
+function selectOption(choice) {
+    userAnswers[currentQ] = choice;
+    // Visually highlight
+    const btns = document.querySelectorAll('.option-btn');
+    btns.forEach(btn => btn.style.borderColor = '#333');
+    document.getElementById(`btn-${choice}`).style.borderColor = 'var(--gold)';
+    document.getElementById(`btn-${choice}`).style.background = 'rgba(212, 175, 55, 0.1)';
+}
+
+function nextQuestion() {
+    if (currentQ < sessionQuestions.length - 1) {
+        currentQ++;
+        showQuestion();
+    }
+}
+
+function prevQuestion() {
+    if (currentQ > 0) {
+        currentQ--;
+        showQuestion();
+    }
+}
+
+function submitQuiz() {
+    clearInterval(timerInterval);
+    score = 0;
+    sessionQuestions.forEach((q, index) => {
+        if (userAnswers[index] === q.a) {
+            score++;
+        }
+    });
+    showResult();
+}
+
+function showResult() {
+    const percentage = Math.round((score / 30) * 100);
+    let grade = percentage >= 70 ? "DISTINCTION" : percentage >= 45 ? "PASS" : "FAIL";
+
+    document.getElementById('quiz-box').innerHTML = `
+        <div class="elite-card" style="text-align:center; border:2px solid var(--gold);">
+            <h2 class="gold-text">EXAM RESULT</h2>
+            <h1 style="font-size:3rem; margin:10px 0;">${score}/30</h1>
+            <p style="font-size:1.2rem; letter-spacing:2px;">GRADE: ${grade}</p>
+            <div style="margin:20px 0; font-size:0.8rem; opacity:0.7;">
+                Performance: ${percentage}%
+            </div>
+            <button onclick="location.reload()" class="btn-luxury" style="width:100%;">EXIT ARENA</button>
+        </div>
+    `;
+}
+
+function filterResources() {
+    const level = document.getElementById('levelFilter').value;
+    const items = document.querySelectorAll('.resource-item');
+    items.forEach(item => {
+        if(level === 'all' || item.dataset.level === level) item.style.display = 'block';
+        else item.style.display = 'none';
+    });
+}
+</script>
+
+</body>
+</html>

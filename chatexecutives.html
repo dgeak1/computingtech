@@ -234,9 +234,8 @@
     </style>
 </head>
 <body>
-
+<section></section>
 <div class="app-container">
-    
     <section id="auth-screen" style="padding-top: 80px;">
         <div class="glass-card" style="text-align: center;">
             <h1 class="heading-font" style="color: var(--primary-gold); font-size: 1.6rem;"> EQUITY HUB </h1>
@@ -247,12 +246,15 @@
                 <button class="btn-gold" style="background: transparent; border: 1px solid var(--primary-gold); color: var(--primary-gold); margin-top: 15px;" onclick="gate()">Executive Access</button>
             </div>
 
-            <div class="glass-card" style="padding: 15px; text-align: center; margin: 0; cursor: pointer;" onclick="openEditModal()">
-    <i data-lucide="edit-3" size="20" style="color: var(--primary-gold); margin-bottom: 8px;"></i>
-    <p style="font-size: 0.7rem;">Edit Profile</p>
-</div>
-        
+            <div id="reg-form" class="hidden" style="margin-top: 30px;">
+                <input type="text" id="reg-name" class="glass-input" placeholder="Full Name">
+                <input type="text" id="reg-matric" class="glass-input" placeholder="Matric Number (e.g. 2026/001)">
+                <button class="btn-gold" onclick="handleAuth()">Access Hub</button>
+                <p onclick="location.reload()" style="font-size: 0.6rem; margin-top: 15px; opacity: 0.5; cursor: pointer;">← Back</p>
+            </div>
+        </div>
     </section>
+        
 
     <main id="main-app" class="hidden">
         <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
@@ -468,9 +470,21 @@
     let chatSub = null;
     let postImageBase64 = "";
 
+    // FULL 11 MEMBER EXECUTIVE PANEL
+    // To change a password, just edit the "key" value.
     const EXECS = [
         { name: "Ajiferuke Ridwanullahi", role: "President", key: "PREZ26-AJ" },
-        { name: "Olaniyan Kehinde", role: "Vice President", key: "VP26-AR" }
+        { name: "Olaniyan Kehinde", role: "Vice President", key: "VP26-AR" },
+        { name: "Obidare Ibrahim Boluwatife", role: "General Secretary", key: "SEC26-03" },
+        { name: "Muslimah", role: "Assistant General Secretary", key: "AUD26-10" },
+        { name: "Executive Member 4", role: "Financial Secretary", key: "FIN26-04" },
+        { name: "Executive Member 5", role: "Treasurer", key: "TRS26-05" },
+        { name: "Executive Member 6", role: "P.R.O", key: "PRO26-06" },
+        { name: "Executive Member 7", role: "Director of Socials", size: "SOC26-07" },
+        { name: "Executive Member 8", role: "Director of Sports", key: "SPT26-08" },
+        { name: "Executive Member 9", role: "Welfare Officer", key: "WEL26-09" },
+        { name: "Executive Member 10", role: "Auditor", key: "AUD26-10" }
+        
     ];
 
     window.onload = () => {
