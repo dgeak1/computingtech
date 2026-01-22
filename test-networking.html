@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Ops | HND II Networking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Outfit:wght@300;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cloud-cyan: #22d3ee;
+            --server-blue: #1e3a8a;
+        }
+        body { background: #020617; font-family: 'Outfit', sans-serif; color: #e2e8f0; }
+        .mono { font-family: 'Fira Code', monospace; }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .status-glow {
+            box-shadow: 0 0 15px var(--cloud-cyan);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .glass-panel { border: 1px solid #000; box-shadow: none; background: white; }
+            .course-section { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body class="py-10 px-6">
+
+    <nav class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center mb-12 p-6 glass-panel rounded-3xl no-print">
+        <div class="flex items-center gap-4">
+            <div class="w-3 h-3 rounded-full bg-cyan-400 status-glow"></div>
+            <div>
+                <h1 class="text-xl font-extrabold tracking-tight uppercase">Cloud Computing <span class="text-cyan-400">HND II</span></h1>
+                <p class="mono text-[9px] text-cyan-400/60 uppercase tracking-widest">Network Architecture Department</p>
+            </div>
+        </div>
+        <div class="flex gap-3 mt-4 md:mt-0">
+            <button onclick="window.print()" class="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold text-xs rounded-full transition-all">
+                Generate Infrastructure PDF
+            </button>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto glass-panel rounded-[2.5rem] p-10 md:p-16">
+        
+        <div class="text-center border-b border-cyan-500/20 pb-10 mb-10">
+            <h2 class="text-3xl font-black uppercase mb-2">Internal Technical Review</h2>
+            <p class="mono text-cyan-400 text-xs tracking-widest uppercase">Semester I Examination Prep — Session 2026</p>
+        </div>
+
+        <div id="course-container" class="space-y-16">
+            </div>
+
+        <footer class="mt-16 pt-10 border-t border-cyan-500/10 text-center">
+            <p class="mono text-[10px] text-slate-500 uppercase tracking-widest">Secure Node: HND-II-CNC-NODE-01</p>
+        </footer>
+    </main>
+
+    <script>
+        const networkingCourses = [
+            {
+                code: "COM 414",
+                title: "Advanced Computer Networks",
+                questions: [
+                    "Compare <b>BGP (Border Gateway Protocol)</b> and <b>OSPF</b>. In what layer of the OSI model do they function, and how do they handle path selection?",
+                    "Discuss the transition from IPv4 to <b>IPv6</b>. Explain 'Dual Stack' and 'Tunneling' as migration strategies."
+                ]
+            },
+            {
+                code: "COM 416",
+                title: "Cloud Computing Infrastructure",
+                questions: [
+                    "Define <b>IaaS, PaaS, and SaaS</b>. Provide a real-world enterprise example for each service model.",
+                    "Analyze the <b>Shared Responsibility Model</b> in cloud security. What are the specific duties of the Cloud Provider vs. the Customer?"
+                ]
+            },
+            {
+                code: "COM 417",
+                title: "Network Security & Cryptography",
+                questions: [
+                    "Explain the difference between <b>Symmetric and Asymmetric Encryption</b>. How does RSA facilitate secure key exchange over public networks?",
+                    "Define a <b>DDoS attack</b>. Propose a multi-layered defense strategy involving Firewalls, IPS, and Content Delivery Networks (CDNs)."
+                ]
+            },
+            {
+                code: "COM 418",
+                title: "Virtualization Technology",
+                questions: [
+                    "Differentiate between <b>Type-1 (Bare Metal)</b> and <b>Type-2 (Hosted)</b> Hypervisors. Give examples of each.",
+                    "Explain <b>Containerization</b> (Docker) vs. Virtual Machines. How do containers achieve higher density and faster boot times?"
+                ]
+            },
+            {
+                code: "COM 419",
+                title: "Management Information Systems",
+                questions: [
+                    "How does <b>Big Data Analytics</b> assist network administrators in predictive maintenance of data center hardware?",
+                    "Discuss the impact of <b>Cloud ERP</b> systems on organizational decision-making processes."
+                ]
+            }
+        ];
+
+        function loadCourses() {
+            const container = document.getElementById('course-container');
+            container.innerHTML = networkingCourses.map((c, i) => `
+                <div class="course-section">
+                    <div class="flex items-center gap-4 mb-6">
+                        <span class="mono text-cyan-400 font-bold border border-cyan-400/30 px-3 py-1 rounded text-sm">${c.code}</span>
+                        <h3 class="text-xl font-bold uppercase tracking-wide text-white">${c.title}</h3>
+                    </div>
+                    <div class="space-y-8 pl-6 border-l border-cyan-500/20">
+                        ${c.questions.map((q, qIndex) => `
+                            <div class="group">
+                                <p class="text-cyan-400/50 text-[10px] font-bold mb-1 mono uppercase">Task ${i+1}.${qIndex+1}</p>
+                                <p class="text-lg leading-relaxed text-slate-300 group-hover:text-white transition-colors">${q}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.onload = loadCourses;
+    </script>
+</body>
+</html>

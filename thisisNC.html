@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> NC Hub | Tech Archives</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-gold: #8f8407;
+            --bg-forest: #20042b;
+            --glass: rgba(30, 41, 59, 0.7);
+        }
+
+        body { 
+            background: var(--bg-forest);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #f1f5f9;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(117, 3, 3, 0.4);
+        }
+
+        #notebook {
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+        }
+
+        .spread { scroll-snap-align: start; }
+
+        /* White paper for clear image viewing */
+        .clean-paper {
+            background: #ffffff;
+            transition: transform 0.3s ease;
+        }
+
+        .active-dot {
+            width: 32px;
+            background: var(--brand-gold);
+            box-shadow: 0 0 15px var(--brand-gold);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-6">
+
+    <header class="w-full max-w-6xl flex justify-between items-center mb-10 border-b border-white/10 pb-6">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tighter text-white">
+                Advanced<span class="text-[#8f8407]">Tech</span> Archive
+            </h1>
+            <p id="subject-label" class="mono text-[10px] text-green-200/60 uppercase tracking-widest mt-1">Networking // Cloud Computing</p>
+        </div>
+        <button onclick="window.print()" class="px-5 py-2.5 bg-[#8f8407] hover:brightness-110 text-white text-xs font-bold rounded-xl transition-all">
+            Download Page
+        </button>
+    </header>
+
+    <div class="relative w-full max-w-6xl">
+        <button onclick="slide('prev')" class="absolute -left-4 md:-left-16 top-1/2 -translate-y-1/2 z-50 p-4 glass-card rounded-2xl text-white hover:text-yellow-400 transition-all">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+
+        <button onclick="slide('next')" class="absolute -right-4 md:-right-16 top-1/2 -translate-y-1/2 z-50 p-4 glass-card rounded-2xl text-white hover:text-yellow-400 transition-all">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <div id="notebook" class="flex overflow-x-auto no-scrollbar rounded-[2rem] glass-card">
+            </div>
+    </div>
+
+    <div class="mt-10 flex flex-col items-center gap-4">
+        <div id="dots" class="flex gap-2">
+            </div>
+        <p class="mono text-[9px] text-green-200/40 tracking-[0.3em] uppercase">Networking & Cloud Stream</p>
+    </div>
+
+    <script>
+        const notebook = document.getElementById('notebook');
+        const dotsContainer = document.getElementById('dots');
+
+        // --- CONFIGURATION ---
+        // Change these numbers based on your uploads
+        const startNum = 60;
+        const endNum = 110; 
+
+        // Generate the Pages
+        for (let i = startNum; i <= endNum; i += 2) {
+            const hasSecondImage = (i + 1) <= endNum;
+            
+            notebook.innerHTML += `
+                <div class="spread flex-shrink-0 w-full flex flex-col md:flex-row min-h-[75vh] p-4 gap-4">
+                    <div class="flex-1 clean-paper rounded-2xl p-6 flex flex-col shadow-xl">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="mono text-[10px] text-slate-400 bg-slate-100 px-2 py-1 rounded">IMAGE_${i}</span>
+                        </div>
+                        <div class="flex-grow rounded-xl overflow-hidden flex items-center justify-center">
+                            <img src="${i}.jpg" class="max-h-full object-contain" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="flex-1 clean-paper rounded-2xl p-6 flex flex-col shadow-xl ${hasSecondImage ? '' : 'invisible'}">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="mono text-[10px] text-slate-400 bg-slate-100 px-2 py-1 rounded">IMAGE_${i+1}</span>
+                        </div>
+                        <div class="flex-grow rounded-xl overflow-hidden flex items-center justify-center">
+                            ${hasSecondImage ? `<img src="${i+1}.jpg" class="max-h-full object-contain" loading="lazy">` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Generate dots
+            dotsContainer.innerHTML += `<div class="w-3 h-1.5 rounded-full bg-white/10 transition-all duration-300"></div>`;
+        }
+
+        // Logic for sliding and dots
+        const dots = dotsContainer.children;
+        if(dots.length > 0) dots[0].classList.add('active-dot');
+
+        function slide(direction) {
+            const scrollAmt = notebook.clientWidth;
+            notebook.scrollBy({ left: direction === 'next' ? scrollAmt : -scrollAmt, behavior: 'smooth' });
+        }
+
+        notebook.addEventListener('scroll', () => {
+            const index = Math.round(notebook.scrollLeft / notebook.clientWidth);
+            Array.from(dots).forEach((dot, i) => {
+                i === index ? dot.classList.add('active-dot') : dot.classList.remove('active-dot');
+            });
+        });
+    </script>
+</body>
+</html>

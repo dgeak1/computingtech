@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HND II S1 | Prep Vault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+    <style>
+        body { background: #020617; font-family: 'Space Grotesk', sans-serif; }
+        .serif { font-family: 'Instrument Serif', serif; }
+        
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .exam-paper { box-shadow: none !important; border: none !important; width: 100%; margin: 0; padding: 0; }
+            .course-card { break-inside: avoid; border-bottom: 1px solid #eee; padding-bottom: 2rem; }
+        }
+
+        .exam-paper {
+            background: #ffffff;
+            color: #000;
+            box-shadow: 0 0 60px rgba(59, 130, 246, 0.15);
+        }
+    </style>
+</head>
+<body class="py-10 px-4">
+
+    <div class="max-w-4xl mx-auto no-print mb-8 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-900/80 p-6 rounded-3xl border border-white/10 backdrop-blur-xl">
+        <div>
+            <h1 class="text-xl font-bold text-white italic tracking-tighter">HND II: FIRST SEMESTER <span class="text-blue-500">2026</span></h1>
+            <p class="text-slate-500 text-[10px] uppercase tracking-widest mt-1">Unified Examination Prep</p>
+        </div>
+        <button onclick="window.print()" class="bg-white text-black px-6 py-2.5 rounded-full font-bold text-sm transition-all hover:bg-blue-500 hover:text-white flex items-center gap-2">
+            Export to PDF
+        </button>
+    </div>
+
+    <main class="max-w-4xl mx-auto exam-paper rounded-sm p-12 md:p-20 min-h-screen">
+        
+        <header class="text-center border-b-[6px] border-double border-black pb-8 mb-12">
+            <h2 class="text-4xl font-black uppercase serif tracking-tight">Department of Software and Web Development </h2>
+            <p class="font-bold text-xs tracking-[0.3em] mt-3 uppercase">HND II First Semester — Mock Assessment</p>
+            <div class="flex justify-between mt-10 text-[10px] font-black uppercase">
+                <span class="border-b-2 border-black">Course: SW & WEB DEV</span>
+                <span class="border-b-2 border-black">Session: 2025/2026</span>
+                <span class="border-b-2 border-black">Duration: 3.5 HOURS</span>
+            </div>
+        </header>
+
+        <div id="first-semester-content" class="space-y-12">
+            </div>
+
+        <a href="two.html"> CLICK ME </a>
+        <a href="Cs.html"> CLICK ME </a>
+        <a href="PDF.html"> CLICK ME </a>
+        <footer class="mt-20 pt-8 border-t border-black/5 text-center">
+            <p class="text-[9px] font-bold uppercase tracking-widest text-slate-400">Strictly for Academic Preparation • Compiled by Dolp Grace </p>
+        </footer>
+    </main>
+
+    <script>
+        const firstSemesterData = [
+            {
+                code: "COM 411",
+                title: "Advanced Java Programming",
+                desc: "Focus on Enterprise Java Beans (EJB) and Distributed Systems.",
+                questions: [
+                    "Explain the concept of <b>Object Serialization</b> in Java. Why is it critical for data transmission in distributed networks?",
+                    "Discuss the <b>Model-View-Controller (MVC)</b> architecture. How does the Spring DispatcherServlet facilitate this in a web environment?"
+                ]
+            },
+            {
+                code: "COM 412",
+                title: "Project Management",
+                desc: "Focus on IT project lifecycles and resource allocation.",
+                questions: [
+                    "Using a practical example, explain <b>Scope Creep</b>. Suggest three professional strategies to prevent it during software development.",
+                    "Develop a <b>Work Breakdown Structure (WBS)</b> for a University Portal development project."
+                ]
+            },
+            {
+                code: "COM 413",
+                title: "Human-Computer Interaction (HCI)",
+                desc: "Focus on Cognitive Models and User-Centered Design.",
+                questions: [
+                    "Define <b>User Personas</b>. How do they influence the wireframing phase of a web application?",
+                    "Analyze <b>Fitts's Law</b> in the context of mobile UI button placement. Why is 'Thumb-zone' design crucial today?"
+                ]
+            },
+            {
+                code: "COM 414",
+                title: "Data Communication & Networks",
+                desc: "Focus on Network Protocols and Security.",
+                questions: [
+                    "Compare and contrast <b>TCP</b> and <b>UDP</b> protocols. Provide two specific use-cases for each.",
+                    "Explain the concept of <b>Virtual Private Networks (VPN)</b>. How does 'Tunneling' ensure data integrity over a public network?"
+                ]
+            },
+            {
+                code: "COM 415",
+                title: "Technopreneurship",
+                desc: "Focus on Startup scaling and IT Business Law.",
+                questions: [
+                    "Draft a <b>Value Proposition Canvas</b> for a new AI-driven local delivery startup.",
+                    "Explain the legal steps required to register a <b>Tech Trademark</b> and protect source code under Copyright law."
+                ]
+            }
+        ];
+
+        function renderSemesterOne() {
+            const container = document.getElementById('first-semester-content');
+            container.innerHTML = firstSemesterData.map((course, idx) => `
+                <section class="course-card">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-black uppercase">${course.code}</h3>
+                        <p class="text-blue-600 font-bold text-sm tracking-tight">${course.title}</p>
+                        <p class="text-[10px] italic text-slate-500 mt-1">${course.desc}</p>
+                    </div>
+                    <div class="space-y-8 pl-8 border-l-2 border-black">
+                        ${course.questions.map((q, qIdx) => `
+                            <div class="flex gap-4">
+                                <span class="font-black text-lg">${qIdx + 1}.</span>
+                                <p class="text-lg leading-snug">${q}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `).join('');
+        }
+
+        window.onload = renderSemesterOne;
+    </script>
+</body>
+</html>
+
+
+
