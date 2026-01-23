@@ -234,26 +234,28 @@
     </style>
 </head>
 <body>
+    
 <section></section>
 <div class="app-container">
     <section id="auth-screen" style="padding-top: 80px;">
-        <div class="glass-card" style="text-align: center;">
-            <h1 class="heading-font" style="color: var(--primary-gold); font-size: 1.6rem;"> EQUITY HUB </h1>
-            <p style="font-size: 0.6rem; opacity: 0.5; margin-top: 5px; letter-spacing: 4px;">CLASS OF 2026</p>
-            
-            <div id="auth-ui" style="margin-top: 40px;">
-                <button class="btn-gold" onclick="showForm()">Sync Identity</button>
-                <button class="btn-gold" style="background: transparent; border: 1px solid var(--primary-gold); color: var(--primary-gold); margin-top: 15px;" onclick="gate()">Executive Access</button>
-            </div>
-
-            <div id="reg-form" class="hidden" style="margin-top: 30px;">
-                <input type="text" id="reg-name" class="glass-input" placeholder="Full Name">
-                <input type="text" id="reg-matric" class="glass-input" placeholder="Matric Number (e.g. 2026/001)">
-                <button class="btn-gold" onclick="handleAuth()">Access Hub</button>
-                <p onclick="location.reload()" style="font-size: 0.6rem; margin-top: 15px; opacity: 0.5; cursor: pointer;">← Back</p>
-            </div>
+    <div class="glass-card" style="text-align: center;">
+        <h1 class="heading-font" style="color: var(--primary-gold); font-size: 1.6rem;"> STUDENT HUB </h1>
+        <p style="font-size: 0.6rem; opacity: 0.5; margin-top: 5px; letter-spacing: 4px;">CLASS OF 2026</p>
+        
+        <div id="auth-ui" style="margin-top: 40px;">
+            <button class="btn-gold" onclick="showForm()">Sync Identity</button>
+            <button class="btn-gold" style="background: transparent; border: 1px solid var(--primary-gold); color: var(--primary-gold); margin-top: 15px;" onclick="gate()">Executive Access</button>
         </div>
-    </section>
+
+        <div id="reg-form" class="hidden" style="margin-top: 30px;">
+            <input type="text" id="reg-name" class="glass-input" placeholder="Username">
+            <input type="email" id="reg-email" class="glass-input" placeholder="Gmail Address">
+            <input type="text" id="reg-matric" class="glass-input" placeholder="Matric Number (2026/...)">
+            <button class="btn-gold" onclick="handleAuth()">Access Hub</button>
+            <p onclick="location.reload()" style="font-size: 0.6rem; margin-top: 15px; opacity: 0.5; cursor: pointer;">← Back</p>
+        </div>
+    </div>
+</section>
         
 
     <main id="main-app" class="hidden">
@@ -387,7 +389,8 @@
     <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
         <div class="glass-card" style="padding: 15px; text-align: center; margin: 0;">
             <i data-lucide="edit-3" size="20" style="color: var(--primary-gold); margin-bottom: 8px;"></i>
-            <p style="font-size: 0.7rem;">Edit Profile</p>
+            
+            <div class="glass-card" onclick="openEditModal()"> <i data-lucide="edit-3" style="width: 14px; margin-right: 8px;"></i> EDIT PROFILE</div>
         </div>
         <div class="glass-card" style="padding: 15px; text-align: center; margin: 0;" onclick="logout()">
             <i data-lucide="log-out" size="20" style="color: #ef4444; margin-bottom: 8px;"></i>
@@ -506,27 +509,7 @@
         document.getElementById('reg-form').classList.remove('hidden');
     }
 
-    async function handleAuth() {
-        const name = document.getElementById('reg-name').value.trim();
-        const matric = document.getElementById('reg-matric').value.trim().toUpperCase();
-        if(!name || !matric) return;
-
-        const userData = {
-            id: matric.replace(/\//g, '_'),
-            name, matric,
-            role: matric.startsWith('EXEC') ? "Executive" : "Student",
-            pic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`,
-            cgpa: user ? user.cgpa : "0.00"
-        };
-
-        try {
-            await db.collection("users").doc(userData.id).set(userData, {merge: true});
-            localStorage.setItem('ec26_user', JSON.stringify(userData));
-            user = userData;
-            showMainApp();
-        } catch(e) { alert("Permission Error: Check Firestore Rules"); }
-    }
-
+    
     function showMainApp() {
         document.getElementById('auth-screen').classList.add('hidden');
         document.getElementById('main-app').classList.remove('hidden');
@@ -550,7 +533,123 @@
     }
 
     
+async function handleAuth() {
+        const name = document.getElementById('reg-name').value.trim();
+        const email = document.getElementById('reg-email').value.trim().toLowerCase();
+        const matric = document.getElementById('reg-matric').value.trim().toUpperCase();
+        
+        if(!name || !email || !matric) {
+            alert("All fields required for sync.");
+            return;
+        }
 
+        if(!email.includes('@gmail.com')) {
+            alert("Please use a valid Gmail address.");
+            return;
+        }
+
+        // Use email as the Unique ID (cleaning dots for firestore safety)
+        const userId = email.replace(/[^a-zA-Z0-9]/g, '_');
+
+        // Check if user already exists
+        const userDoc = await db.collection("users").doc(userId).get();
+        let userData;
+
+        if(userDoc.exists) {
+            userData = userDoc.data();
+            // Update name/matric if they changed, but keep the record
+            userData.name = name;
+            userData.matric = matric;
+        } else {
+            userData = {
+                id: userId,
+                email: email,
+                name: name,
+                matric: matric,
+                role: (matric.startsWith('EXEC') || name.includes('Obidare')) ? "Executive" : "Student",
+                pic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`,
+                bio: "Elite Member since 2026",
+                cgpa: "0.00",
+                standing: "N/A"
+            };
+        }
+
+        try {
+            await db.collection("users").doc(userId).set(userData, {merge: true});
+            localStorage.setItem('ec26_user', JSON.stringify(userData));
+            user = userData;
+            showMainApp();
+        } catch(e) { 
+            alert("Auth Error: " + e.message); 
+        }
+    }
+
+    // --- ENHANCED PROFILE LOGIC ---
+
+    function updateProfileUI() {
+        if (!user) return;
+
+        // Card Image & Name
+        document.getElementById('u-pfp-top').src = user.pic;
+        document.getElementById('p-card-img').src = user.pic;
+        document.getElementById('p-card-name').innerText = user.name;
+        
+        // Dynamic Bio & Matric display
+        const bioText = user.bio || "Elite Member";
+        document.getElementById('p-card-uid').innerHTML = `
+            ${user.matric} <br> 
+            <span style="font-size: 0.55rem; color: white; opacity: 0.5; font-family: 'Poppins'; font-style: italic;">
+                "${bioText}"
+            </span>`;
+        
+        // Stats
+        document.getElementById('p-card-gp').innerText = user.cgpa || "0.00";
+        document.getElementById('p-card-standing').innerText = user.standing || "N/A";
+
+        // Role Handling
+        const roleBadge = document.getElementById('role-badge');
+        if (user.role === "Executive") {
+            roleBadge.innerText = "EXECUTIVE";
+            roleBadge.style.background = "var(--primary-gold)";
+            document.getElementById('digital-id-card').style.boxShadow = "0 0 25px rgba(212, 175, 55, 0.2)";
+        } else {
+            roleBadge.innerText = "MEMBER";
+            roleBadge.style.background = "rgba(255,255,255,0.2)";
+        }
+        lucide.createIcons();
+    }
+
+    async function saveProfileChanges() {
+        const newName = document.getElementById('edit-username').value.trim();
+        const newBio = document.getElementById('edit-bio').value.trim();
+        
+        if (!newName) return alert("Name is required.");
+
+        const updateData = {
+            name: newName,
+            bio: newBio
+        };
+
+        if (newProfilePicBase64) {
+            updateData.pic = newProfilePicBase64;
+        }
+
+        try {
+            // Update Firestore
+            await db.collection("users").doc(user.id).update(updateData);
+
+            // Update local memory
+            user = { ...user, ...updateData };
+            localStorage.setItem('ec26_user', JSON.stringify(user));
+
+            // Refresh UI
+            updateProfileUI();
+            closeEditModal();
+            alert("Identity Synced.");
+        } catch (e) {
+            alert("Update Failed: " + e.message);
+        }
+    }
     async function publishPost() {
     const txt = document.getElementById('post-text').value.trim();
     if (!txt && !postImageBase64) return;
@@ -789,8 +888,7 @@ async function deletePost(postId, postOwnerId) {
 
 let newProfilePicBase64 = "";
 
-function updateProfileUI() {
-    if (!user) return;
+
 
     // 1. Core Profile Data
     document.getElementById('p-card-img').src = user.pic;
@@ -826,7 +924,7 @@ function updateProfileUI() {
     }
 
     lucide.createIcons();
-}
+
 
 // OPEN MODAL
 function openEditModal() {
@@ -867,32 +965,6 @@ function handleProfilePicChange(input) {
 }
 
 // SAVE TO FIRESTORE
-async function saveProfileChanges() {
-    const newName = document.getElementById('edit-username').value.trim();
-    const newBio = document.getElementById('edit-bio').value.trim();
-    const newPass = document.getElementById('edit-pass').value.trim();
-
-    if (!newName) return alert("Name is required.");
-
-    try {
-        let updateData = { name: newName, bio: newBio };
-        if (newPass) updateData.password = newPass;
-        if (newProfilePicBase64) updateData.pic = newProfilePicBase64;
-
-        await db.collection("users").doc(user.id).update(updateData);
-
-        // Update local state
-        user = { ...user, ...updateData };
-        localStorage.setItem('ec26_user', JSON.stringify(user));
-
-        updateProfileUI();
-        closeEditModal();
-        alert("Identity Resynced Successfully.");
-    } catch (e) {
-        alert("Update Error: " + e.message);
-    }
-}
-
 
     // RESTORED MARKETPLACE LOGIC
     function renderMarket() {
