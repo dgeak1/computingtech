@@ -3,123 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SWD Department Timetable</title>
+    <title>Fed Poly Ede - SWD Timetable</title>
     <style>
         :root {
-            --primary-blue: #1a5f7a;
-            --accent-green: #2d8b57;
-            --bg-gray: #f4f7f6;
-            --text-dark: #333;
+            --dark-green: #004d40;
+            --mid-green: #00796b;
+            --light-green: #e0f2f1;
+            --gold-accent: #ffc107;
+            --text-gray: #444;
+            --white: #ffffff;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-gray);
-            color: var(--text-dark);
+            background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
+            color: var(--text-gray);
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
-        header {
+        /* Header Styling */
+        .main-header {
+            background-color: var(--dark-green);
+            color: var(--white);
             text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 3px solid var(--primary-blue);
-            padding-bottom: 10px;
+            padding: 30px 20px;
+            border-radius: 12px 12px 0 0;
+            border-bottom: 5px solid var(--gold-accent);
         }
 
-        h1 { font-size: 1.4rem; margin: 5px 0; color: var(--primary-blue); }
-        h2 { font-size: 1.1rem; margin: 5px 0; }
-        h3 { font-size: 1rem; color: #555; }
+        .main-header h1 { margin: 0; font-size: 1.6rem; letter-spacing: 1px; }
+        .main-header h2 { margin: 10px 0 5px; font-size: 1.2rem; font-weight: 300; }
+        .main-header .session { 
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
 
-        .timetable-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 50px;
+        /* Table Card */
+        .timetable-wrap {
+            background: var(--white);
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 0 0 12px 12px;
             overflow: hidden;
         }
 
-        .level-header {
-            background: var(--primary-blue);
+        .level-bar {
+            background: var(--mid-green);
             color: white;
-            padding: 15px;
-            text-align: center;
+            padding: 12px;
             font-weight: bold;
-            font-size: 1.2rem;
+            text-align: center;
+            font-size: 1.1rem;
+            text-transform: uppercase;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: center;
-            word-wrap: break-word;
+            background: white;
         }
 
         th {
-            background-color: #f8f9fa;
-            color: var(--primary-blue);
+            background-color: var(--light-green);
+            color: var(--dark-green);
+            padding: 15px;
+            font-size: 0.9rem;
+            border: 1px solid #cce2e1;
+        }
+
+        td {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            text-align: center;
+            height: 80px;
+            vertical-align: middle;
+        }
+
+        .day-label {
+            background-color: #f9f9f9;
+            color: var(--dark-green);
+            font-weight: 700;
+            width: 120px;
+            border-right: 3px solid var(--mid-green);
+        }
+
+        /* Course Item Styles */
+        .course-item {
+            display: block;
+            padding: 10px;
+            border-radius: 6px;
             font-weight: 600;
-        }
-
-        .day-column {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            width: 15%;
-        }
-
-        .practical {
-            color: var(--accent-green);
-            font-weight: bold;
+            font-size: 0.95rem;
+            line-height: 1.2;
         }
 
         .lecture {
-            color: #d9534f;
-            font-weight: bold;
+            background-color: #f1f8e9;
+            color: #2e7d32;
+            border: 1px solid #c5e1a5;
         }
 
-        .footer-info {
-            padding: 15px;
-            background: #eee;
-            font-size: 0.9rem;
+        .practical {
+            background-color: #e0f2f1;
+            color: #00695c;
+            border: 1px solid #b2dfdb;
+        }
+
+        .gns {
+            background-color: #fffde7;
+            color: #f57f17;
+            border: 1px solid #fff9c4;
+        }
+
+        .sub-time {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: normal;
+            margin-top: 4px;
+            color: #666;
+        }
+
+        .empty {
+            color: #ccc;
             font-style: italic;
         }
 
-        .time-sub {
-            display: block;
-            font-size: 0.8rem;
-            color: #666;
-            font-weight: normal;
+        /* Footer Info */
+        .footer-note {
+            background: #fdfdfd;
+            padding: 15px 25px;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
         }
+
+        .footer-note b { color: var(--dark-green); }
 
         @media (max-width: 768px) {
             table { font-size: 0.8rem; }
-            th, td { padding: 5px; }
+            .day-label { width: 80px; }
+            .footer-note { flex-direction: column; gap: 5px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
+    <header class="main-header">
         <h1>THE FEDERAL POLYTECHNIC EDE, OSUN STATE</h1>
-        <h2>SCHOOL OF COMPUTING</h2>
-        <h3>DEPARTMENT OF SOFTWARE AND WEB DEVELOPMENT</h3>
-        <p>TIMETABLE FOR 2025/2026 ACADEMIC SESSION</p>
+        <h2>Department of Software and Web Development</h2>
+        <div class="session">2025/2026 ACADEMIC SESSION</div>
     </header>
 
-    <div class="timetable-card">
-        <div class="level-header">HND I SWD</div>
+    <div class="timetable-wrap">
+        <div class="level-bar">HND I SWD</div>
         <table>
             <thead>
                 <tr>
@@ -132,50 +180,50 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="day-column">MONDAY</td>
-                    <td><span class="lecture">SWD 311 (L)</span></td>
-                    <td><span class="lecture">SWD 316 (L)</span></td>
-                    <td><span class="lecture">SWD 313 (L)</span></td>
-                    <td><span class="practical">AIT 313 (P)</span></td>
+                    <td class="day-label">MONDAY</td>
+                    <td><span class="course-item lecture">SWD 311 (L)</span></td>
+                    <td><span class="course-item lecture">SWD 316 (L)</span></td>
+                    <td><span class="course-item lecture">SWD 313 (L)</span></td>
+                    <td><span class="course-item practical">AIT 313 (P)</span></td>
                 </tr>
                 <tr>
-                    <td class="day-column">TUESDAY</td>
-                    <td><span class="lecture">SWD 314 (L)</span><span class="time-sub">(8am-9am)</span></td>
-                    <td><span class="lecture">AIT 313 (L)</span></td>
-                    <td><span class="practical">SWD 311 (P)</span></td>
-                    <td><span class="practical">SWD 312 (P)</span></td>
+                    <td class="day-label">TUESDAY</td>
+                    <td><span class="course-item lecture">SWD 314 (L)<br><small class="sub-time">8am – 9am</small></span></td>
+                    <td><span class="course-item lecture">AIT 313 (L)</span></td>
+                    <td><span class="course-item practical">SWD 311 (P)</span></td>
+                    <td><span class="course-item practical">SWD 312 (P)</span></td>
                 </tr>
                 <tr>
-                    <td class="day-column">WEDNESDAY</td>
-                    <td><span class="lecture">SWD 315 (L)</span></td>
-                    <td><span class="lecture">SWD 312 (L)</span></td>
-                    <td><span class="practical">SWD 316 (P)</span></td>
-                    <td><span class="practical">SWD 314 (P)</span></td>
+                    <td class="day-label">WEDNESDAY</td>
+                    <td><span class="course-item lecture">SWD 315 (L)</span></td>
+                    <td><span class="course-item lecture">SWD 312 (L)</span></td>
+                    <td><span class="course-item practical">SWD 316 (P)</span></td>
+                    <td><span class="course-item practical">SWD 314 (P)</span></td>
                 </tr>
                 <tr>
-                    <td class="day-column">THURSDAY</td>
-                    <td><span class="lecture">GNS 301</span></td>
-                    <td><span class="lecture">AIT 311 (L)</span></td>
-                    <td><span class="practical">SWD 315 (P)</span></td>
-                    <td><span class="lecture">SWD 316 (L)</span><span class="time-sub">(2pm-3pm)</span></td>
+                    <td class="day-label">THURSDAY</td>
+                    <td><span class="course-item gns">GNS 301</span></td>
+                    <td><span class="course-item lecture">AIT 311 (L)</span></td>
+                    <td><span class="course-item practical">SWD 315 (P)</span></td>
+                    <td><span class="course-item lecture">SWD 316 (L)<br><small class="sub-time">2pm – 3pm</small></span></td>
                 </tr>
                 <tr>
-                    <td class="day-column">FRIDAY</td>
-                    <td><span class="practical">SWD 313 (P)</span></td>
-                    <td><span class="practical">AIT 311 (P)</span></td>
-                    <td>-</td>
-                    <td>-</td>
+                    <td class="day-label">FRIDAY</td>
+                    <td><span class="course-item practical">SWD 313 (P)</span></td>
+                    <td><span class="course-item practical">AIT 311 (P)</span></td>
+                    <td class="empty">-</td>
+                    <td class="empty">-</td>
                 </tr>
             </tbody>
         </table>
-        <div class="footer-info">
-            <strong>VENUE:</strong> HND I SWD LECTURE ROOM <br>
-            <strong>NOTE:</strong> ALL PRACTICALS MUST BE HELD IN THE LABORATORY
+        <div class="footer-note">
+            <span><b>VENUE:</b> HND I SWD LECTURE ROOM</span>
+            <span><b>NOTE:</b> ALL PRACTICALS MUST BE HELD IN THE LABORATORY</span>
         </div>
     </div>
 
-    <div class="timetable-card">
-        <div class="level-header">HND II SWD</div>
+    <div class="timetable-wrap">
+        <div class="level-bar">HND II SWD</div>
         <table>
             <thead>
                 <tr>
@@ -188,45 +236,45 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="day-column">MONDAY</td>
-                    <td><span class="lecture">SWD 416 (L)</span></td>
-                    <td><span class="lecture">SWD 411 (L)</span></td>
-                    <td><span class="lecture">SWD 413 (L)</span></td>
-                    <td>-</td>
+                    <td class="day-label">MONDAY</td>
+                    <td><span class="course-item lecture">SWD 416 (L)</span></td>
+                    <td><span class="course-item lecture">SWD 411 (L)</span></td>
+                    <td><span class="course-item lecture">SWD 413 (L)</span></td>
+                    <td class="empty">-</td>
                 </tr>
                 <tr>
-                    <td class="day-column">TUESDAY</td>
-                    <td><span class="practical">SWD 411 (P)</span><span class="time-sub">(8am-9am)</span></td>
-                    <td><span class="lecture">SWD 414 (L)</span></td>
-                    <td><span class="lecture">SWD 415 (L)</span></td>
-                    <td><span class="practical">ENT 416 (P)</span></td>
+                    <td class="day-label">TUESDAY</td>
+                    <td><span class="course-item practical">SWD 411 (P)<br><small class="sub-time">8am – 9am</small></span></td>
+                    <td><span class="course-item lecture">SWD 414 (L)</span></td>
+                    <td><span class="course-item lecture">SWD 415 (L)</span></td>
+                    <td><span class="course-item practical">ENT 416 (P)</span></td>
                 </tr>
                 <tr>
-                    <td class="day-column">WEDNESDAY</td>
-                    <td><span class="lecture">SWD 412 (L)</span></td>
-                    <td><span class="practical">SWD 413 (P)</span></td>
-                    <td><span class="practical">SWD 414 (P)</span></td>
-                    <td><span class="practical">SWD 417 (P)</span></td>
+                    <td class="day-label">WEDNESDAY</td>
+                    <td><span class="course-item lecture">SWD 412 (L)</span></td>
+                    <td><span class="course-item practical">SWD 413 (P)</span></td>
+                    <td><span class="course-item practical">SWD 414 (P)</span></td>
+                    <td><span class="course-item practical">SWD 417 (P)</span></td>
                 </tr>
                 <tr>
-                    <td class="day-column">THURSDAY</td>
-                    <td><span class="lecture">ENT 416 (L)</span></td>
-                    <td><span class="practical">SWD 412 (P)</span></td>
-                    <td><span class="practical">SWD 416 (P)</span></td>
-                    <td>-</td>
+                    <td class="day-label">THURSDAY</td>
+                    <td><span class="course-item lecture">ENT 416 (L)</span></td>
+                    <td><span class="course-item practical">SWD 412 (P)</span></td>
+                    <td><span class="course-item practical">SWD 416 (P)</span></td>
+                    <td class="empty">-</td>
                 </tr>
                 <tr>
-                    <td class="day-column">FRIDAY</td>
-                    <td><span class="practical">SWD 417 (P)</span></td>
-                    <td><span class="practical">SWD 415 (P)</span></td>
-                    <td>-</td>
-                    <td>-</td>
+                    <td class="day-label">FRIDAY</td>
+                    <td><span class="course-item practical">SWD 417 (P)</span></td>
+                    <td><span class="course-item practical">SWD 415 (P)</span></td>
+                    <td class="empty">-</td>
+                    <td class="empty">-</td>
                 </tr>
             </tbody>
         </table>
-        <div class="footer-info">
-            <strong>VENUE:</strong> HND II SWD LECTURE ROOM <br>
-            <strong>NOTE:</strong> ALL PRACTICALS MUST BE HELD IN THE LABORATORY
+        <div class="footer-note">
+            <span><b>VENUE:</b> HND II SWD LECTURE ROOM</span>
+            <span><b>NOTE:</b> ALL PRACTICALS MUST BE HELD IN THE LABORATORY</span>
         </div>
     </div>
 </div>
