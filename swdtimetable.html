@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWD Department Timetable</title>
+    <style>
+        :root {
+            --primary-blue: #1a5f7a;
+            --accent-green: #2d8b57;
+            --bg-gray: #f4f7f6;
+            --text-dark: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid var(--primary-blue);
+            padding-bottom: 10px;
+        }
+
+        h1 { font-size: 1.4rem; margin: 5px 0; color: var(--primary-blue); }
+        h2 { font-size: 1.1rem; margin: 5px 0; }
+        h3 { font-size: 1rem; color: #555; }
+
+        .timetable-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 50px;
+            overflow: hidden;
+        }
+
+        .level-header {
+            background: var(--primary-blue);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .day-column {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            width: 15%;
+        }
+
+        .practical {
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .lecture {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        .footer-info {
+            padding: 15px;
+            background: #eee;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .time-sub {
+            display: block;
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: normal;
+        }
+
+        @media (max-width: 768px) {
+            table { font-size: 0.8rem; }
+            th, td { padding: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>THE FEDERAL POLYTECHNIC EDE, OSUN STATE</h1>
+        <h2>SCHOOL OF COMPUTING</h2>
+        <h3>DEPARTMENT OF SOFTWARE AND WEB DEVELOPMENT</h3>
+        <p>TIMETABLE FOR 2025/2026 ACADEMIC SESSION</p>
+    </header>
+
+    <div class="timetable-card">
+        <div class="level-header">HND I SWD</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>DAY</th>
+                    <th>8am - 10am</th>
+                    <th>10am - 12pm</th>
+                    <th>12pm - 2pm</th>
+                    <th>2pm - 4pm</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="day-column">MONDAY</td>
+                    <td><span class="lecture">SWD 311 (L)</span></td>
+                    <td><span class="lecture">SWD 316 (L)</span></td>
+                    <td><span class="lecture">SWD 313 (L)</span></td>
+                    <td><span class="practical">AIT 313 (P)</span></td>
+                </tr>
+                <tr>
+                    <td class="day-column">TUESDAY</td>
+                    <td><span class="lecture">SWD 314 (L)</span><span class="time-sub">(8am-9am)</span></td>
+                    <td><span class="lecture">AIT 313 (L)</span></td>
+                    <td><span class="practical">SWD 311 (P)</span></td>
+                    <td><span class="practical">SWD 312 (P)</span></td>
+                </tr>
+                <tr>
+                    <td class="day-column">WEDNESDAY</td>
+                    <td><span class="lecture">SWD 315 (L)</span></td>
+                    <td><span class="lecture">SWD 312 (L)</span></td>
+                    <td><span class="practical">SWD 316 (P)</span></td>
+                    <td><span class="practical">SWD 314 (P)</span></td>
+                </tr>
+                <tr>
+                    <td class="day-column">THURSDAY</td>
+                    <td><span class="lecture">GNS 301</span></td>
+                    <td><span class="lecture">AIT 311 (L)</span></td>
+                    <td><span class="practical">SWD 315 (P)</span></td>
+                    <td><span class="lecture">SWD 316 (L)</span><span class="time-sub">(2pm-3pm)</span></td>
+                </tr>
+                <tr>
+                    <td class="day-column">FRIDAY</td>
+                    <td><span class="practical">SWD 313 (P)</span></td>
+                    <td><span class="practical">AIT 311 (P)</span></td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="footer-info">
+            <strong>VENUE:</strong> HND I SWD LECTURE ROOM <br>
+            <strong>NOTE:</strong> ALL PRACTICALS MUST BE HELD IN THE LABORATORY
+        </div>
+    </div>
+
+    <div class="timetable-card">
+        <div class="level-header">HND II SWD</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>DAY</th>
+                    <th>8am - 10am</th>
+                    <th>10am - 12pm</th>
+                    <th>12pm - 2pm</th>
+                    <th>2pm - 4pm</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="day-column">MONDAY</td>
+                    <td><span class="lecture">SWD 416 (L)</span></td>
+                    <td><span class="lecture">SWD 411 (L)</span></td>
+                    <td><span class="lecture">SWD 413 (L)</span></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="day-column">TUESDAY</td>
+                    <td><span class="practical">SWD 411 (P)</span><span class="time-sub">(8am-9am)</span></td>
+                    <td><span class="lecture">SWD 414 (L)</span></td>
+                    <td><span class="lecture">SWD 415 (L)</span></td>
+                    <td><span class="practical">ENT 416 (P)</span></td>
+                </tr>
+                <tr>
+                    <td class="day-column">WEDNESDAY</td>
+                    <td><span class="lecture">SWD 412 (L)</span></td>
+                    <td><span class="practical">SWD 413 (P)</span></td>
+                    <td><span class="practical">SWD 414 (P)</span></td>
+                    <td><span class="practical">SWD 417 (P)</span></td>
+                </tr>
+                <tr>
+                    <td class="day-column">THURSDAY</td>
+                    <td><span class="lecture">ENT 416 (L)</span></td>
+                    <td><span class="practical">SWD 412 (P)</span></td>
+                    <td><span class="practical">SWD 416 (P)</span></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="day-column">FRIDAY</td>
+                    <td><span class="practical">SWD 417 (P)</span></td>
+                    <td><span class="practical">SWD 415 (P)</span></td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="footer-info">
+            <strong>VENUE:</strong> HND II SWD LECTURE ROOM <br>
+            <strong>NOTE:</strong> ALL PRACTICALS MUST BE HELD IN THE LABORATORY
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
