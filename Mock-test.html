@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Test Center | CS Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a1a05; /* Deep Green */
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent: #8f8407; /* Gold */
+            --text-main: #f1f5f9;
+        }
+
+        .light-mode {
+            --bg-color: #f8fafc;
+            --card-bg: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Animated Grid Cards */
+        .test-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .test-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .test-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .test-card:hover::before {
+            left: 100%;
+        }
+
+        .icon-box {
+            background: var(--accent);
+            width: 50px; height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.05);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .nav-btn:hover { background: var(--accent); color: white; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="max-w-6xl mx-auto p-6 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="flex flex-col">
+            <h1 class="text-3xl font-extrabold tracking-tighter">
+                School of <span class="text-[#8f8407]">Computing Technology</span>
+            </h1>
+            <p class="text-[10px] opacity-60 tracking-[0.4em] font-mono">EXAM PREP // MOCK TEST CENTER</p>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <button onclick="history.back()" class="nav-btn">← Back</button>
+            <button onclick="window.location.href='index.html'" class="nav-btn">Home</button>
+            <button onclick="toggleDarkMode()" class="p-2 rounded-full border border-white/10 hover:bg-white/10 transition">
+                <span id="mode-icon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-12 text-center">
+        <h2 class="text-4xl md:text-5xl font-black mb-4">Take Mock Test Now Champ!</h2>
+        <p class="opacity-60 mb-16">Select your track and test your readiness for the upcoming examinations.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <div onclick="window.location.href='test-networking.html'" class="test-card p-10 flex flex-col items-center text-center">
+                <div class="icon-box">🌐</div>
+                <h3 class="text-xl font-bold mb-2">Networking and Cloud Computing </h3>
+                <p class="text-sm opacity-50">OSI Layers, Subnetting, TCP/IP & Network Security protocols.</p>
+                <span class="mt-6 text-xs font-bold text-[#8f8407] uppercase tracking-widest">Start Quiz →</span>
+            </div>
+
+            <div onclick="window.location.href='test-cs.html'" class="test-card p-10 flex flex-col items-center text-center border-2 border-[#8f8407]/30">
+                <div class="icon-box">☁️</div>
+                <h3 class="text-xl font-bold mb-2">Computer Science</h3>
+                <p class="text-sm opacity-50">AWS, Azure, Deployment models, and Virtualization tech.</p>
+                <span class="mt-6 text-xs font-bold text-[#8f8407] uppercase tracking-widest">Start Quiz →</span>
+            </div>
+
+            <div onclick="window.location.href='test-sw.html'" class="test-card p-10 flex flex-col items-center text-center">
+                <div class="icon-box">⚡</div>
+                <h3 class="text-xl font-bold mb-2"> Software and Web Development </h3>
+                <p class="text-sm opacity-50">Get Prepared for whats coming .</p>
+                <span class="mt-6 text-xs font-bold text-[#8f8407] uppercase tracking-widest">Start Quiz →</span>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.getElementById('mode-icon');
+            icon.innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+        }
+    </script>
+</body>
+</html>
