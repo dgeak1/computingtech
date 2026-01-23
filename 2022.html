@@ -1,39 +1,169 @@
-<style>
-    .coming-soon-box {
-        margin: 80px auto;
-        max-width: 400px;
-        background: #e0ffe6;
-        border: 2px solid #22c55e;
-        border-radius: 12px;
-        padding: 48px 0;
-        text-align: center;
-        font-size: 2rem;
-        color: #145a32;
-        font-weight: bold;
-        box-shadow: 0 2px 12px #22c55e33;
-    }
-</style>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Past Question 2022 Details</title>
-    <link rel="stylesheet" href="../style.css">
+    <title>2022 Archive | Verified</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #010a08;
+            --emerald: #10b981;
+            --forest: #064e3b;
+            --glass: rgba(16, 185, 129, 0.05);
+        }
+
+        body { 
+            background: var(--bg); 
+            color: #f1f5f9; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Blueprint Background */
+        .blueprint {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px);
+            background-size: 100px 100px;
+            z-index: -1;
+        }
+
+        .main-card {
+            max-width: 800px;
+            width: 90%;
+            background: var(--glass);
+            border: 1px solid var(--emerald);
+            border-radius: 40px;
+            padding: 60px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            text-align: center;
+        }
+
+        .check-circle {
+            width: 100px;
+            height: 100px;
+            border: 2px solid var(--emerald);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 3rem;
+            color: var(--emerald);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+        }
+
+        .title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 0 0 10px;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            font-family: 'JetBrains Mono';
+            color: var(--emerald);
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        /* Status List */
+        .integrity-check {
+            text-align: left;
+            background: rgba(0,0,0,0.4);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .integrity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-family: 'JetBrains Mono';
+            font-size: 0.75rem;
+        }
+
+        .integrity-item:last-child { border-bottom: none; }
+
+        .btn-ready {
+            display: inline-block;
+            background: var(--emerald);
+            color: var(--bg);
+            padding: 18px 45px;
+            border-radius: 15px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-ready:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">School <span>Hub</span></div>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="library.html" class="active">Digital Library</a></li>
-        </ul>
-    </nav>
-    <main class="details-container">
-        <h1>Past Question (2022)</h1>
-        <p>This page contains details about the 2022 examination past question. You can download the PDF below.</p>
-        <a href="#" download>Download PDF</a>
-            <div class="coming-soon-box">COMING SOON</div>
+
+    <div class="blueprint"></div>
+
+    <main class="main-card">
+        <div class="check-circle">
+            <i class="ph ph-shield-check"></i>
+        </div>
+
+        <h1 class="title">2022 Archive</h1>
+        <p class="subtitle">Integrity Verification: 98%</p>
+
+        <div class="integrity-check">
+            <div class="integrity-item">
+                <span><i class="ph ph-file-pdf"></i> Past Questions</span>
+                <span style="color: var(--emerald)">VERIFIED</span>
+            </div>
+            <div class="integrity-item">
+                <span><i class="ph ph-image"></i> Diagrams & Schemes</span>
+                <span style="color: var(--emerald)">OPTIMIZED</span>
+            </div>
+            <div class="integrity-item">
+                <span><i class="ph ph-list-numbers"></i> Resource Verification</span>
+                <span style="color: #fbbf24">FINALIZING...</span>
+            </div>
+        </div>
+
+        <button class="btn-ready" onclick="showAccess()">
+            INITIALIZE DOWNLOAD
+        </button>
+
+        <p style="margin-top: 30px; font-size: 0.7rem; opacity: 0.4; font-family: 'JetBrains Mono';">
+            SECURE ACCESS VIA SCHOOL OF COMPUTING TECHNOLOGY SECRETARIAT
+        </p>
     </main>
+
+    <script>
+        function showAccess() {
+            const code = prompt("Enter Secretariat Public Access Key:");
+            if(code === "1234") {
+                alert("ACCESS GRANTED. The 2022 Database is now decrypting on your local machine.");
+                // You can add your download links here
+            } else {
+                alert("Standard access only. Please contact Comr. Obidare for the full decrypt key.");
+            }
+        }
+    </script>
 </body>
 </html>

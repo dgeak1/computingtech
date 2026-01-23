@@ -3,232 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Office of the General Secretary | 2026 Hub</title>
+    <title>The General Secretary | Profile</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
         :root {
             --deep-green: #04241c;
             --forest: #064e3b;
             --emerald: #10b981;
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --gold: #8f8407;
             --pure-white: #ffffff;
-            --black: #000000;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        body { background-color: var(--deep-green); color: var(--pure-white); font-family: 'Inter', sans-serif; margin: 0; line-height: 1.6; }
+        body { background-color: var(--deep-green); color: var(--pure-white); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
-        .action-bar { padding: 30px; display: flex; justify-content: space-between; max-width: 1100px; margin: 0 auto; align-items: center; }
-        .nav-pill { background: var(--black); border: 1px solid var(--emerald); color: white; padding: 10px 22px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; transition: var(--transition); }
-        .nav-pill:hover { background: var(--emerald); color: var(--black); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+        /* Navigation Bar */
+        .action-bar { padding: 30px; display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto; align-items: center; }
+        .nav-pill { background: rgba(255,255,255,0.05); border: 1px solid rgba(16, 185, 129, 0.3); color: white; padding: 10px 22px; border-radius: 50px; cursor: pointer; text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: var(--transition); }
+        .nav-pill:hover { background: var(--emerald); color: var(--deep-green); }
 
-        .wide-container { max-width: 1100px; margin: 0 auto 40px; padding: 0 20px; }
+        /* Main Profile Layout */
+        .profile-container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1.5fr; gap: 80px; align-items: start; }
 
-        /* --- Executive Profile --- */
-        .executive-box { background: linear-gradient(145deg, var(--forest), var(--deep-green)); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 32px; display: flex; align-items: center; padding: 50px; gap: 50px; margin-bottom: 50px; }
-        .ornate-frame { width: 260px; height: 340px; background: var(--black); border: 8px solid var(--black); outline: 2px solid var(--emerald); overflow: hidden; position: relative; flex-shrink: 0; cursor: pointer; transition: var(--transition); border-radius: 4px; }
-        .image-overlay { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, #04241c, #04241c 10px, #000 10px, #000 20px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; transition: opacity 0.5s; }
-        .profile-img { width: 100%; height: 100%; object-fit: cover; filter: blur(25px); transition: filter 0.8s ease; }
+        @keyframes scan {
+    0% { top: -10%; }
+    100% { top: 110%; }
+}
 
-        /* --- Forms & Portals --- */
-        .portal-toggle { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 35px; }
-        .option-card { background: var(--card-bg); border: 1px solid rgba(16, 185, 129, 0.1); padding: 25px; border-radius: 20px; cursor: pointer; text-align: center; transition: var(--transition); }
-        .option-card.active { border-color: var(--emerald); background: rgba(16, 185, 129, 0.12); transform: translateY(-5px); }
-        .request-form { background: var(--card-bg); padding: 45px; border-radius: 28px; border: 1px solid rgba(255,255,255,0.05); }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
-        label { display: block; font-size: 0.75rem; color: var(--emerald); text-transform: uppercase; margin-bottom: 10px; font-weight: 700; }
-        input, textarea { width: 100%; padding: 16px; background: var(--black); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; color: white; box-sizing: border-box; }
-        .btn-submit { width: 100%; padding: 20px; background: var(--emerald); color: var(--deep-green); border: none; border-radius: 14px; font-weight: 800; cursor: pointer; margin-top: 25px; }
+.scanner-line {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: var(--emerald);
+    box-shadow: 0 0 15px var(--emerald);
+    z-index: 25;
+    opacity: 0.5;
+    animation: scan 3s linear infinite;
+    display: none; /* Only shows when unlocked */
+}
 
-        .legislative-section { background: rgba(255, 255, 255, 0.02); padding: 40px; border-radius: 28px; border: 1px solid rgba(16, 185, 129, 0.1); margin-top: 60px; }
-        .section-title { font-family: 'Playfair Display'; font-size: 1.8rem; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
-        .section-title i { color: var(--emerald); }
+.ornate-frame {
+    transition: var(--transition);
+    border: 2px solid rgba(16, 185, 129, 0.2);
+}
+
+.ornate-frame:hover {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+    transform: scale(1.01);
+}
+
+        /* Left Side: Visuals */
+        .sticky-side { position: sticky; top: 40px; }
+        .ornate-frame { width: 100%; aspect-ratio: 3/4; background: #000; border: 1px solid var(--emerald); border-radius: 20px; overflow: hidden; position: relative; }
+        .profile-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(40%); transition: 0.8s; }
+        .image-overlay { position: absolute; inset: 0; background: var(--deep-green); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 20; transition: 0.5s; cursor: pointer; }
+
+        /* Right Side: Content */
+        .tagline { font-family: 'JetBrains Mono'; color: var(--emerald); font-size: 0.75rem; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 20px; display: block; }
+        .name-title { font-family: 'Playfair Display'; font-size: 4rem; line-height: 1; margin: 0 0 20px 0; }
+        .role-badge { font-family: 'JetBrains Mono'; font-size: 0.9rem; color: var(--gold); margin-bottom: 40px; display: block; border-left: 2px solid var(--gold); padding-left: 15px; }
+
+        .bio-text { font-size: 1.1rem; opacity: 0.8; line-height: 1.8; margin-bottom: 50px; }
         
-        .download-card { background: var(--black); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px 30px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; transition: var(--transition); }
-        .download-card:hover { border-color: var(--emerald); background: rgba(16, 185, 129, 0.03); }
-        .file-info h4 { margin: 0; font-size: 1.05rem; }
-        .file-info p { margin: 5px 0 0; font-size: 0.8rem; opacity: 0.6; }
-        
-        .btn-download { background: transparent; border: 1px solid var(--emerald); color: var(--emerald); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
-        .btn-download:hover { background: var(--emerald); color: var(--black); }
+        /* Stats/Expertise Grid */
+        .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 60px; }
+        .skill-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(16, 185, 129, 0.1); padding: 25px; border-radius: 16px; }
+        .skill-item i { color: var(--emerald); font-size: 1.5rem; margin-bottom: 15px; display: block; }
+        .skill-item h4 { margin: 0 0 10px 0; font-family: 'Playfair Display'; font-size: 1.2rem; }
+        .skill-item p { margin: 0; font-size: 0.85rem; opacity: 0.6; }
 
-        .hidden { display: none; }
+        /* Quote Section */
+        .vision-box { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; position: relative; }
+        .vision-box::before { content: '"'; position: absolute; top: 10px; left: -20px; font-family: 'Playfair Display'; font-size: 5rem; color: var(--emerald); opacity: 0.2; }
+        .vision-text { font-family: 'Playfair Display'; font-style: italic; font-size: 1.5rem; opacity: 0.9; }
 
-        @media print {
-            body { display: none !important; }
+        @media (max-width: 900px) {
+            .profile-container { grid-template-columns: 1fr; gap: 40px; }
+            .name-title { font-size: 2.8rem; }
         }
-
-        .screenshot-guard {
-            position: absolute; inset: 0; pointer-events: none;
-            background: repeating-linear-gradient(45deg, rgba(16, 185, 129, 0.02), rgba(16, 185, 129, 0.02) 10px, transparent 10px, transparent 20px);
-            display: none; z-index: 5;
-        }
-
-        .secure-mode { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
     </style>
 </head>
 <body>
 
     <nav class="action-bar">
-        <h2 style="font-family: 'Playfair Display'; margin:0; cursor: pointer;" onclick="location.reload()">EQUITY <span style="color:var(--emerald)">'26</span></h2>
-        <div class="nav-right-group" style="display: flex; gap:12px;">
-             <a href="index.html" style="color: white; text-decoration: none; padding: 10px; border-radius: 10px; font-size: small; background-color: #04241c; border: 1px solid white;"> Back to Home </a>
-            <button onclick="switchView('admin')" class="nav-pill"><i class="ph ph-shield-check"></i> Secretariat Vault</button>
+        <h2 style="font-family: 'Playfair Display'; margin:0; cursor: pointer;" onclick="window.location.href='index.html'">EQUITY <span style="color:var(--emerald)">'26</span></h2>
+        <div style="display: flex; gap:12px;">
+            <a href="index.html" class="nav-pill"><i class="ph ph-house"></i> Home</a>
+            <a href="secretariat.html" class="nav-pill"><i class="ph ph-briefcase"></i> The Office</a>
         </div>
     </nav>
 
-    <main class="wide-container">
-        <header class="executive-box">
-            <div class="ornate-frame" id="secureContainer">
-                <div id="imageLock" class="image-overlay" onclick="requestImageAccess()">
-                    <i class="ph ph-lock-key" style="font-size: 2rem; color: var(--emerald); margin-bottom: 10px;"></i>
-                    <div style="color: var(--emerald); font-family: monospace; font-size: 0.7rem; font-weight: bold;">CLICK TO UNLOCK</div>
-                </div>
-                
-                <img src="newbg.JPG" 
-                     class="profile-img secure-mode" 
-                     id="secret-img" 
-                     oncontextmenu="return false;" 
-                     ondragstart="return false;">
-                
-                <div id="screenshotGuard" class="screenshot-guard"></div>
+    <main class="profile-container">
+        <aside class="sticky-side">
+    <div class="ornate-frame" id="secureBox">
+        <div id="scanner" class="scanner-line"></div>
+        
+        <div id="imageLock" class="image-overlay" onclick="handleUnlockSequence()">
+            <i class="ph ph-fingerprint" id="lockIcon" style="font-size: 3rem; color: var(--emerald); margin-bottom: 15px;"></i>
+            <span id="lockText" style="font-family: 'JetBrains Mono'; font-size: 0.6rem; letter-spacing: 2px;">VIEW IMAGE </span>
+        </div>
+
+        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000" 
+             id="fakeImg" 
+             class="profile-img" 
+             style="display: none; filter: brightness(0.3) blur(2px);">
+             
+        <img src="newbg.JPG" 
+             id="profileImg" 
+             class="profile-img" 
+             style="display: block; filter: blur(25px);" 
+             alt="Obidare Ibrahim">
+    </div>
+</aside>
+
+        <section class="content-side">
+            <span class="tagline">Profile Spotlight</span>
+            <h1 class="name-title">Obidare Ibrahim Boluwatife</h1>
+            <span class="role-badge">General Secretary, School of Computing Technology</span>
+
+            <div class="bio-text">
+                Comr. Obidare Ibrahim is a dedicated leader and administrative strategist known for his commitment to institutional integrity. As the General Secretary for the 2026 Academic Session, he serves as the backbone of the executive council, bridging the gap between legislative policy and student welfare. 
+                <br><br>
+                With a background in Computer Science, Ibrahim integrates technical precision into administrative tasks, ensuring that the "STUDENT HUB" and student archives remain accessible and secure for all.
             </div>
 
-            <div class="info-side">
-                <span style="color:var(--emerald); text-transform:uppercase; font-size:0.75rem; letter-spacing:3px; font-weight:700;">Administrative Head</span>
-                <h1 style="font-family:'Playfair Display'; font-size:2.5rem; margin:10px 0;">Office of the General Secretary</h1>
-                <h2 style="color: var(--emerald); font-weight: 400;">Comr. Obidare Ibrahim Boluwatife</h2>
-                <p style="opacity: 0.7; max-width: 600px;">Ensuring institutional integrity and administrative excellence for the 2026 Academic Session.</p>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <i class="ph ph-strategy"></i>
+                    <h4>Administration</h4>
+                    <p>Streamlining secretariat operations and official documentation with 100% accuracy.</p>
+                </div>
+                <div class="skill-item">
+                    <i class="ph ph-code"></i>
+                    <h4>Digital Strategy</h4>
+                    <p>Leveraging tech to automate student requests and legislative repositories.</p>
+                </div>
+                <div class="skill-item">
+                    <i class="ph ph-scales"></i>
+                    <h4>Institutional Integrity</h4>
+                    <p>Upholding the constitution and ensuring fair representation for every student.</p>
+                </div>
+                <div class="skill-item">
+                    <i class="ph ph-users-three"></i>
+                    <h4>Public Relations</h4>
+                    <p>Facilitating clear communication between the executive arm and the student body.</p>
+                </div>
             </div>
-        </header>
 
-        <section id="studentPortal">
-            <div class="portal-toggle">
-                <div class="option-card active" onclick="setDoc('Introductory Letter', this)">
-                    <i class="ph ph-envelope-open"></i>
-                    <div>Introductory Letter</div>
-                </div>
-                <div class="option-card active" onclick="setDoc('Proficiency Cert', this)">
-                    <i class="ph ph-certificate"></i>
-                    <div>Proficiency Cert</div>
-                </div>
-                <div class="option-card acive" onclick="setDoc('General Request', this)">
-                    <i class="ph ph-file-text"></i>
-                    <div>General Request</div>
-                </div>
+            <div class="vision-box">
+                <p class="vision-text">
+                    "My mission is to transform the Secretariat into a transparent, digital-first office where every student's request is handled with the speed of light and the weight of law."
+                </p>
+                <p style="color: var(--emerald); font-family: 'JetBrains Mono'; font-size: 0.8rem; margin-top: 20px;">— DOLP GRACE 2026</p>
             </div>
-
-            <form class="request-form" id="mainForm">
-                <input type="hidden" id="selectedType" value="Introductory Letter">
-                <div class="form-grid">
-                    <div><label>Full Name</label><input type="text" id="sName" placeholder="Legal Name" required></div>
-                    <div><label>Matric No</label><input type="text" id="sMatric" placeholder="SW2026/..." required></div>
-                </div>
-                <div id="introBox" style="display: block; margin-top:20px;">
-                    <label>Addressed To (Organization & Address)</label>
-                    <textarea id="sAddress" rows="4" placeholder="To: The Manager..."></textarea>
-                </div>
-                <button type="submit" class="btn-submit">Submit Official Request</button>
-            </form>
-        </section>
-
-        <section id="adminPortal" class="hidden">
-            <div id="adminTable"></div>
-        </section>
-
-        <section class="legislative-section">
-            <div class="section-title"><i class="ph ph-books"></i><span>Legislative Repository</span></div>
-            <div id="repoList">
-                <div class="download-card">
-                    <div class="file-info">
-                        <h4>Constitution Draft (2026 Version)</h4>
-                        <p>PDF Document • Official Governing Protocols & Student Rights</p>
-                    </div>
-                    <button class="btn-download" onclick="downloadFile('Constitution_Draft_2026.pdf')">
-                        <i class="ph ph-download-simple"></i> Download
-                    </button>
-                </div>
-                </div>
         </section>
     </main>
 
     <script>
-        const MASTER_PASS = "DolapoAdmin";
+        function unlockProfile() {
+            const lock = document.getElementById('imageLock');
+            const img = document.getElementById('profileImg');
+            
+            lock.style.opacity = '0';
+            setTimeout(() => {
+                lock.style.display = 'none';
+                img.style.filter = 'grayscale(0%)';
+            }, 500);
+        }
 
-        function switchView(view) {
-            if(view === 'admin') {
-                const pass = prompt("Enter Gen Sec Access Key:");
-                if(pass === MASTER_PASS) {
-                    document.getElementById('studentPortal').classList.add('hidden');
-                    document.getElementById('adminPortal').classList.remove('hidden');
-                    loadAdminData();
-                } else if (pass !== null) { alert("You cant access this page."); }
+        // Security: Disable right click on image
+        document.getElementById('profileImg').oncontextmenu = function() { return false; };
+const CORRECT_PASS = "1234";
+
+function handleUnlockSequence() {
+    const lockText = document.getElementById('lockText');
+    const lockIcon = document.getElementById('lockIcon');
+    const fakeImg = document.getElementById('fakeImg');
+    const profileImg = document.getElementById('profileImg');
+
+    // Step 1: Fake Scan
+    lockText.innerText = "SCANNING BIOMETRICS...";
+    lockIcon.classList.replace('ph-fingerprint', 'ph-arrows-clockwise');
+    lockIcon.style.animation = "spin 2s linear infinite";
+
+    setTimeout(() => {
+        // Step 2: Display the Unsplash image (The Fake Out)
+        profileImg.style.display = "none";
+        fakeImg.style.display = "block";
+        lockIcon.style.animation = "none";
+        lockIcon.classList.replace('ph-arrows-clockwise', 'ph-smiley-wink');
+        lockText.innerText = "LOL! YOU NEED A PASSCODE...";
+
+        // Step 3: Prompt for real passcode
+        setTimeout(() => {
+            const pass = prompt("SECURE VAULT ACCESS\nEnter 4-Digit Passcode:");
+
+            if (pass === CORRECT_PASS) {
+                // Success
+                document.getElementById('imageLock').style.opacity = '0';
+                document.getElementById('scanner').style.display = 'block';
+                
+                setTimeout(() => {
+                    document.getElementById('imageLock').style.display = 'none';
+                    fakeImg.style.display = "none";
+                    profileImg.style.display = "block";
+                    profileImg.style.filter = "blur(0px)";
+                }, 500);
             } else {
-                document.getElementById('studentPortal').classList.remove('hidden');
-                document.getElementById('adminPortal').classList.add('hidden');
+                alert("ACCESS DENIED. SYSTEM REBOOTING.");
+                location.reload();
             }
-        }
+        }, 1000);
 
-        function requestImageAccess() {
-            const password = prompt("Subscription Password Required:");
-            if (password === MASTER_PASS) {
-                document.getElementById('imageLock').style.display = 'none';
-                document.getElementById('secret-img').style.filter = 'blur(0px)';
-                document.getElementById('screenshotGuard').style.display = 'block';
-                startSecurityMonitor();
-            } else if (password !== null) { alert("Access Denied."); }
-        }
+    }, 2000);
+}
 
-        function startSecurityMonitor() {
-            document.addEventListener('keydown', (e) => {
-                if ((e.ctrlKey && (e.key === 'p' || e.key === 's' || e.key === 'u')) || e.key === 'PrintScreen') {
-                    e.preventDefault();
-                    alert("Security Violation: Action Blocked");
-                    location.reload();
-                }
-            });
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) location.reload();
-            });
-        }
+// Simple spinning animation for the loading icon
+const style = document.createElement('style');
+style.innerHTML = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
+document.head.appendChild(style);
 
-        function setDoc(type, el) {
-            document.getElementById('selectedType').value = type;
-            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById('introBox').style.display = (type === 'Introductory Letter') ? 'block' : 'none';
-        }
-
-        document.getElementById('mainForm').onsubmit = function(e) {
-            e.preventDefault();
-            const data = {
-                name: document.getElementById('sName').value,
-                matric: document.getElementById('sMatric').value,
-                type: document.getElementById('selectedType').value,
-                address: document.getElementById('sAddress').value,
-                date: new Date().toLocaleDateString()
-            };
-            let db = JSON.parse(localStorage.getItem('secretariat_db') || '[]');
-            db.push(data);
-            localStorage.setItem('secretariat_db', JSON.stringify(db));
-            alert("Request Filed Successfully!");
-            this.reset();
-        };
-
-        function loadAdminData() {
-            const db = JSON.parse(localStorage.getItem('secretariat_db') || '[]');
-            const container = document.getElementById('adminTable');
-            container.innerHTML = db.length === 0 ? "<p style='text-align:center; opacity:0.5;'>No student requests found.</p>" : 
-                db.map(req => `<div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:15px; margin-bottom:10px; border-left:4px solid var(--emerald);">
-                    <h4 style="margin:0">${req.name} (${req.matric})</h4>
-                    <p style="margin:5px 0; font-size:0.85rem; color:var(--emerald)">${req.type} | ${req.date}</p>
-                </div>`).join('');
-        }
-
-        function downloadFile(fileName) {
-            alert("Preparing download for: " + fileName);
-        }
-    </script>
+</script>
 </body>
 </html>

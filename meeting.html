@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secretariat Desk | Equity Crew 26</title>
     
-    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -21,17 +21,11 @@
             --danger: #ef4444;
         }
 
-        [data-theme="dark"] {
-            --bg-gradient: radial-gradient(circle at top, #020617, #000000);
-            --glass-bg: rgba(30, 41, 59, 0.4);
-        }
-
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: var(--bg-gradient);
             color: var(--text-main);
             margin: 0; padding: 0;
-            transition:  0.5s ease;
             min-height: 100vh;
         }
 
@@ -43,31 +37,13 @@
         }
 
         .ATTENDANCE {
-    background-color: #10b981; /* Primary Emerald Green */
-    color: #000000;            /* Black text for high contrast */
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 800;
-    padding: 20px 40px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    width: 100%;               /* Makes it big/full-width */
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-}
-
-.ATTENDANCE:hover {
-    background-color: #ffffff;  /* Turns white on hover */
-    transform: scale(1.02);     /* Slight grow effect */
-    box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
-}
-
-.ATTENDANCE:active {
-    transform: scale(0.98);     /* Click effect */
-}
+            background-color: #10b981; color: #000000;
+            font-family: 'Poppins', sans-serif; font-size: 1.25rem; font-weight: 800;
+            padding: 20px 40px; border: none; border-radius: 12px;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
+            width: 100%; transition: 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
 
         .container { padding: 40px 8%; max-width: 1200px; margin: auto; }
 
@@ -75,94 +51,79 @@
         .section-header h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; margin: 0; color: var(--primary-green); }
         .line { flex-grow: 1; height: 1px; background: var(--glass-border); }
 
-        /* --- ATTENDANCE BOARD --- */
-        .attendance-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-            gap: 15px; margin-bottom: 40px;
-        }
-        .member-card {
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
-            padding: 15px 20px; border-radius: 16px;
-            display: flex; justify-content: space-between; align-items: center;
-            transition: 0.3s;
-        }
-        .member-card:hover { border-color: var(--primary-green); }
-        .member-info span { font-size: 0.7rem; color: var(--text-muted); display: block; }
-        .member-info b { font-size: 0.9rem; }
-        .attendance-check { 
-            width: 20px; height: 20px; accent-color: var(--primary-green); cursor: pointer;
-        }
-
-        /* --- MINUTES DESK --- */
         .minutes-desk {
             background: var(--glass-bg); border: 1px solid var(--glass-border);
             padding: 40px; border-radius: 32px; backdrop-filter: blur(20px);
         }
+
         input, textarea {
             width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
-            padding: 16px; border-radius: 14px; color: white; outline: none; transition: 0.3s;
+            padding: 16px; border-radius: 14px; color: white; outline: none;
             box-sizing: border-box; font-family: inherit; margin-bottom: 15px;
         }
-        input:focus, textarea:focus { border-color: var(--primary-green); background: rgba(0,0,0,0.5); }
+
         textarea { min-height: 300px; line-height: 1.6; resize: vertical; }
 
         .btn-commit {
             background: var(--primary-green); color: black; border: none; 
             border-radius: 14px; font-weight: 800; padding: 18px; width: 100%;
             cursor: pointer; font-size: 1rem; text-transform: uppercase;
-            letter-spacing: 1px;
         }
-        .btn-commit:hover { transform: scale(1.01); filter: brightness(1.1); }
 
-        /* --- MODAL / ADMIN --- */
+        /* Modal Styles */
         .modal {
             position: fixed; inset: 0; background: rgba(0,0,0,0.95);
             z-index: 5000; display: none; justify-content: center; align-items: center; padding: 20px;
         }
-        .admin-content { background: var(--bg-gradient); border: 1px solid var(--primary-green); width: 100%; max-width: 900px; padding: 40px; border-radius: 32px; max-height: 80vh; overflow-y: auto; }
-        table { width: 100%; border-collapse: collapse; }
+        .admin-content { background: #022c22; border: 1px solid var(--primary-green); width: 100%; max-width: 900px; padding: 40px; border-radius: 32px; max-height: 80vh; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th { text-align: left; color: var(--primary-green); padding: 12px; border-bottom: 1px solid var(--primary-green); }
-        td { padding: 12px; border-bottom: 1px solid var(--glass-border); font-size: 0.85rem; color: var(--text-muted); }
+        td { padding: 12px; border-bottom: 1px solid var(--glass-border); font-size: 0.85rem; color: #fff; }
 
+        /* PDF HIDDEN TEMPLATE */
+        #pdfTemplate {
+            display: none; /* Keep hidden from UI */
+            width: 210mm; background: white; color: black; padding: 80px; font-family: 'Cambria', serif;
+        }
     </style>
 </head>
-<body data-theme="dark">
+<body>
+
+    <div id="pdfTemplate">
+        <div style="text-align: center; border-bottom: 3px solid #064e3b; padding-bottom: 20px; margin-bottom: 30px;">
+            <h1 style="font-family: 'Poppins'; font-size: 18pt; color: #064e3b; margin: 0;">EQUITY CREW 2026</h1>
+            <p style="font-family: 'Poppins'; font-size: 10pt; letter-spacing: 3px; margin: 5px 0;">OFFICE OF THE GENERAL SECRETARY</p>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 30px;">
+            <span>DATE: <span id="pdfDate"></span></span>
+            <span>REF: EC26/SEC/MINS</span>
+        </div>
+        <h2 id="pdfTitle" style="font-family: 'Poppins'; text-align: center; text-decoration: underline; font-size: 14pt;"></h2>
+        <div id="pdfBody" style="font-size: 12pt; line-height: 1.8; text-align: justify; margin-top: 20px;"></div>
+        <div style="margin-top: 50px; display: flex; justify-content: space-between;">
+            <div style="text-align: center;">_______________________<br><b>General Secretary</b></div>
+            <div style="text-align: center;">_______________________<br><b>Executive President</b></div>
+        </div>
+    </div>
 
     <nav class="navbar">
         <div class="logo" style="font-size: 1.2rem; font-weight: 800;">SECRETARY<span style="color:var(--primary-green)">DESK</span></div>
         <div style="display: flex; gap: 20px; align-items: center;">
-            <button onclick="toggleTheme()" style="background:none; border:none; color:var(--primary-green); font-size:1.1rem; cursor:pointer;"><i class="fas fa-moon"></i></button>
             <button onclick="openAdmin()" style="background:var(--glass-bg); border:1px solid var(--glass-border); color:white; padding:8px 15px; border-radius:10px; font-size:0.75rem; cursor:pointer;">GENSEC ARCHIVE</button>
         </div>
     </nav>
 
     <div class="container">
-        
         <div class="section-header"><h2><i class="fas fa-users"></i> Executive Attendance Board</h2><div class="line"></div></div>
         <div class="attendance-grid">
-<button class="ATTENDANCE" onclick="window.location.href='attendancepage.html'">
-    TAKE ATTENDANCE
-</button>            
+            <button class="ATTENDANCE" onclick="window.location.href='attendancepage.html'">TAKE ATTENDANCE</button>
         </div>
 
         <div class="section-header"><h2><i class="fas fa-pen-nib"></i> Live Meeting Minutes Desk </h2><div class="line"></div></div>
         <div class="minutes-desk">
-            <div style="margin-bottom: 25px;">
-                <h3 style="margin: 0 0 10px; font-size: 1.5rem;">Commence Documenting </h3>
-                <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">Ensure quorum is met before committing resolutions to the GENSEC.</p>
-            </div>
-
             <input type="text" id="mTitle" placeholder="Meeting Subject (e.g., Q1 Budget Review Sitting)">
-            <textarea id="mContent" placeholder="Record deliberations, motions moved, and final resolutions here..."></textarea>
-            
-            <button class="btn-commit" onclick="saveMinutes()">COMMIT TO GENSEC ARCHIVE</button>
-
-            <div style="margin-top: 20px; text-align: center;">
-                <button onclick="window.location.href='handbook.html'" style="background:none; border:none; color:var(--primary-green); padding:0; font-size:0.8rem; cursor:pointer; font-weight:bold;">
-                    OPEN STATUTE BOOK →
-                </button>
-            </div>
+            <textarea id="mContent" placeholder="Draft your notes here. The AI engine will format this into a formal PDF once committed..."></textarea>
+            <button class="btn-commit" id="commitBtn" onclick="saveMinutes()">COMMIT TO GENSEC ARCHIVE</button>
         </div>
     </div>
 
@@ -170,7 +131,6 @@
         <div class="admin-content">
             <div id="authZone">
                 <h2 style="color:var(--primary-green)">Secretariat Authorization</h2>
-                <p>Enter your authorization code to view previous minutes:</p>
                 <input type="password" id="adminPass" placeholder="••••••••">
                 <button onclick="verifyAdmin()" style="background:var(--primary-green); color:black; width:100%; padding:15px; margin-top:10px; border-radius:12px; font-weight:800;">VERIFY IDENTITY</button>
                 <button onclick="closeAdmin()" style="background:none; color:var(--text-muted); width:100%; margin-top:10px; cursor:pointer; border:none;">Return to Desk</button>
@@ -178,74 +138,91 @@
             
             <div id="dataZone" style="display:none;">
                 <h2 style="color:var(--primary-green)">Meeting Archive (Gensec)</h2>
-                <div id="logTable">
-                    <table>
-                        <thead>
-                            <tr><th>Code</th><th>Timestamp</th><th>Resolution Summary</th></tr>
-                        </thead>
-                        <tbody id="logBody"></tbody>
-                    </table>
-                </div>
-                <button onclick="closeAdmin()" style="background:var(--danger); color:white; padding:12px 25px; margin-top:20px; border-radius:12px; cursor:pointer; border:none; font-weight:700;">Close Logs</button>
+                <table>
+                    <thead><tr><th>Date</th><th>Subject</th><th>Action</th></tr></thead>
+                    <tbody id="logBody"></tbody>
+                </table>
+                <button onclick="closeAdmin()" style="background:var(--danger); color:white; padding:12px 25px; margin-top:20px; border-radius:12px; border:none;">Close Archive</button>
             </div>
         </div>
     </div>
 
-    <footer style="text-align:center; padding:40px; color:var(--text-muted); border-top:1px solid var(--glass-border); font-size: 0.8rem;">
-        Official Desk of the General Secretary | <b>Equity Crew 26</b> &copy; 2026
-    </footer>
-
     <script>
-        // 1. Theme Toggle
-        function toggleTheme() {
-            const b = document.body;
-            b.setAttribute('data-theme', b.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-        }
-
-        // 2. Hansard (Minutes) Logic - Preserving 'equity_logs' directory
-        function saveMinutes() {
-            const t = document.getElementById('mTitle').value;
-            const c = document.getElementById('mContent').value;
-            if(!t || !c) return alert("Secretariat Error: Subject and Resolutions cannot be empty.");
-
-            const entry = { type: "GENSEC", date: new Date().toLocaleString(), title: t, content: c };
-            let logs = JSON.parse(localStorage.getItem('equity_logs') || '[]');
-            logs.push(entry);
-            localStorage.setItem('equity_logs', JSON.stringify(logs));
-            
-            alert("Success: Meeting minutes have been committed to the GENSEC archive.");
-            document.getElementById('mTitle').value = '';
-            document.getElementById('mContent').value = '';
-        }
-
-        // 3. Admin Portal Logic
         function openAdmin() { document.getElementById('adminModal').style.display = 'flex'; }
-        function closeAdmin() { 
-            document.getElementById('adminModal').style.display = 'none';
-            document.getElementById('authZone').style.display = 'block';
-            document.getElementById('dataZone').style.display = 'none';
-        }
+        function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; }
 
         function verifyAdmin() {
-            const p = document.getElementById('adminPass').value;
-            // Password updated to dolpgrace01
-            if(p === "DolapoAdmin") {
+            if(document.getElementById('adminPass').value === "DolapoAdmin") {
                 document.getElementById('authZone').style.display = 'none';
                 document.getElementById('dataZone').style.display = 'block';
                 loadLogs();
-            } else {
-                alert("Unauthorized Access Attempt.");
+            } else { alert("Unauthorized."); }
+        }
+
+        async function saveMinutes() {
+            const title = document.getElementById('mTitle').value;
+            const content = document.getElementById('mContent').value;
+            const btn = document.getElementById('commitBtn');
+
+            if(!title || !content) return alert("Fields cannot be empty.");
+            
+            btn.innerText = "AI GENERATING PDF...";
+            btn.disabled = true;
+
+            // 1. Prepare PDF Template (AI Expansion Simulation)
+            document.getElementById('pdfTitle').innerText = "MINUTES OF MEETING: " + title.toUpperCase();
+            document.getElementById('pdfDate').innerText = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric'});
+            
+            // Formal AI expansion of the content
+            document.getElementById('pdfBody').innerHTML = `
+                <p><b>Commencement:</b> The meeting regarding <i>${title}</i> was called to order on this day. The General Secretary presided over the documentation of proceedings.</p>
+                <p><b>Deliberations:</b> <br>${content.replace(/\n/g, '<br>')}</p>
+                <p><b>Resolutions:</b> It was resolved by the Executive Council that the points stated above be adopted as official working policy for the Equity Crew 2026 tenure.</p>
+            `;
+
+            // 2. Convert to PDF Data String
+            const element = document.getElementById('pdfTemplate');
+            element.style.display = "block"; // Momentarily show for capture
+            
+            try {
+                const pdfBase64 = await html2pdf().set({
+                    margin: 0.5,
+                    filename: title + '.pdf',
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                }).from(element).output('datauristring');
+
+                element.style.display = "none";
+
+                // 3. Save to Logs
+                const entry = { 
+                    date: new Date().toLocaleString(), 
+                    title: title, 
+                    pdf: pdfBase64 
+                };
+                
+                let logs = JSON.parse(localStorage.getItem('equity_logs') || '[]');
+                logs.push(entry);
+                localStorage.setItem('equity_logs', JSON.stringify(logs));
+
+                alert("SUCCESS: Minutes expanded and archived as PDF.");
+                document.getElementById('mTitle').value = '';
+                document.getElementById('mContent').value = '';
+            } catch (e) {
+                alert("PDF Error: " + e.message);
+            } finally {
+                btn.innerText = "COMMIT TO GENSEC ARCHIVE";
+                btn.disabled = false;
             }
         }
 
         function loadLogs() {
             const logs = JSON.parse(localStorage.getItem('equity_logs') || '[]');
             const table = document.getElementById('logBody');
-            table.innerHTML = logs.reverse().map(l => `
+            table.innerHTML = logs.reverse().map((l, index) => `
                 <tr>
-                    <td style="font-weight:800; color:var(--primary-green)">${l.type}</td>
                     <td>${l.date}</td>
-                    <td><b>${l.title}</b>: ${l.content.substring(0, 50)}...</td>
+                    <td><b>${l.title}</b></td>
+                    <td><a href="${l.pdf}" download="${l.title}.pdf" style="color:var(--primary-green); text-decoration:none;"><i class="fas fa-file-pdf"></i> Download PDF</a></td>
                 </tr>
             `).join('');
         }

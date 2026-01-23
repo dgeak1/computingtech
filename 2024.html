@@ -3,37 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Past Question 2024 Details</title>
-    <link rel="stylesheet" href="../style.css">
-<style>
-    .coming-soon-box {
-        margin: 80px auto;
-        max-width: 400px;
-        background: #e0ffe6;
-        border: 2px solid #22c55e;
-        border-radius: 12px;
-        padding: 48px 0;
-        text-align: center;
-        font-size: 2rem;
-        color: #145a32;
-        font-weight: bold;
-        box-shadow: 0 2px 12px #22c55e33;
-    }
-</style>
+    <title>Resource Status | CS Hub</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #020f0c;
+            --emerald: #10b981;
+            --gold: #8f8407;
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        body { 
+            background: var(--bg-deep); 
+            color: #f1f5f9; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        /* --- Navigation --- */
+        .navbar {
+            padding: 25px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+        }
+        .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; }
+        .logo span { color: var(--emerald); }
+        .nav-links { list-style: none; display: flex; gap: 30px; margin: 0; }
+        .nav-links a { color: #fff; text-decoration: none; font-size: 0.9rem; opacity: 0.7; transition: 0.3s; }
+        .nav-links a:hover { opacity: 1; color: var(--emerald); }
+
+        /* --- Content Area --- */
+        .details-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .status-badge {
+            font-family: 'JetBrains Mono';
+            font-size: 0.7rem;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 5px 15px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        h1 { font-size: 3.5rem; margin: 0; font-weight: 800; letter-spacing: -2px; }
+
+        /* --- Animated Coming Soon Box --- */
+        .resource-card {
+            margin-top: 40px;
+            background: var(--glass);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 32px;
+            padding: 60px;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .pulse-icon {
+            font-size: 4rem;
+            color: var(--emerald);
+            margin-bottom: 20px;
+            animation: pulse-glow 2s infinite;
+        }
+
+        .coming-soon-text {
+            font-family: 'JetBrains Mono';
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .status-subtext {
+            opacity: 0.6;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto 30px;
+        }
+
+        .notify-btn {
+            background: var(--emerald);
+            color: var(--bg-deep);
+            border: none;
+            padding: 15px 35px;
+            border-radius: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+            transition: 0.3s;
+        }
+
+        .notify-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1); opacity: 0.5; filter: drop-shadow(0 0 0px var(--emerald)); }
+            50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 15px var(--emerald)); }
+            100% { transform: scale(1); opacity: 0.5; filter: drop-shadow(0 0 0px var(--emerald)); }
+        }
+
+        /* --- Grid Background Decoration --- */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+    </style>
 </head>
 <body>
+
+    <div class="grid-bg"></div>
+
     <nav class="navbar">
         <div class="logo">School <span>Hub</span></div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
-            <li><a href="library.html" class="active">Digital Library</a></li>
+            <li><a href="library.html">Digital Library</a></li>
+            <li><a href="secretariat.html">Secretariat</a></li>
         </ul>
     </nav>
-        <main class="details-container">
-            <h1>Past Question (2024)</h1>
-            <p>This page contains details about the 2024 examination past question. You can download the PDF below.</p>
-            <a href="#" download>Download PDF</a>
-            <div class="coming-soon-box">COMING SOON</div>
-        </main>
+
+    <main class="details-container">
+        <div class="status-badge">ARCHIVE PENDING</div>
+        <h1>Past Question <span style="color:var(--emerald)">(2024)</span></h1>
+        
+        <div class="resource-card">
+            <div class="pulse-icon">
+                <i class="ph-duotone ph-hard-drives"></i>
+            </div>
+            <div class="coming-soon-text">COLLECTING DATA...</div>
+            <p class="status-subtext">
+                The 2024 Examination Repository is currently being digitized by the Secretariat. Resources will be available once the process is complete.
+            </p>
+            
+            <button class="notify-btn" onclick="notifyMe()">
+                <i class="ph ph-bell-ringing"></i> Notify Me On Release
+            </button>
+        </div>
+
+        <a href="library.html" style="margin-top: 40px; color: var(--emerald); text-decoration: none; font-size: 0.8rem; font-family: 'JetBrains Mono';">
+            ← RETURN TO REPOSITORY
+        </a>
+    </main>
+
+    <script>
+        function notifyMe() {
+            const email = prompt("Enter your Matric No or Email to be notified:");
+            if(email) {
+                alert("Request Logged! The Secretariat will ping you once the 2024 files are live.");
+            }
+        }
+    </script>
 </body>
 </html>

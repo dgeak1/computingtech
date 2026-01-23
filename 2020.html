@@ -3,37 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Past Question 2020 Details</title>
-    <link rel="stylesheet" href="../style.css">
+    <title>2020 Archive | Foundation</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;800&family=Space+Mono&display=swap" rel="stylesheet">
     <style>
-      .coming-soon-box {
-        margin: 80px auto;
-        max-width: 400px;
-        background: #e0ffe6;
-        border: 2px solid #22c55e;
-        border-radius: 12px;
-        padding: 48px 0;
-        text-align: center;
-        font-size: 2rem;
-        color: #145a32;
-        font-weight: bold;
-        box-shadow: 0 2px 12px #22c55e33;
-      }
+        :root {
+            --deep-navy: #01060a;
+            --sonar-cyan: #0891b2;
+            --hazard-orange: #f59e0b;
+            --glass-cyan: rgba(8, 145, 178, 0.05);
+        }
+
+        body { 
+            background: var(--deep-navy); 
+            color: #ecfeff; 
+            font-family: 'Space Mono', monospace;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sonar Pulse Animation */
+        .sonar-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: -1;
+        }
+
+        .pulse {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border: 1px solid var(--sonar-cyan);
+            border-radius: 50%;
+            animation: sonar-ping 4s infinite linear;
+            opacity: 0;
+        }
+
+        @keyframes sonar-ping {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        /* Main Container */
+        .vault-core {
+            max-width: 650px;
+            width: 90%;
+            background: rgba(0, 15, 20, 0.9);
+            border: 2px solid var(--sonar-cyan);
+            padding: 50px;
+            clip-path: polygon(0% 5%, 5% 0%, 95% 0%, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0% 95%);
+            box-shadow: inset 0 0 50px rgba(8, 145, 178, 0.2);
+        }
+
+        .core-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--sonar-cyan);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .core-id {
+            background: var(--sonar-cyan);
+            color: var(--deep-navy);
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+        }
+
+        /* File Slots */
+        .file-slot {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--glass-cyan);
+            border: 1px solid rgba(8, 145, 178, 0.2);
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .file-slot:hover {
+            border-color: var(--hazard-orange);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .btn-access {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--hazard-orange);
+            color: var(--hazard-orange);
+            padding: 15px;
+            font-family: 'Space Mono';
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-access:hover {
+            background: var(--hazard-orange);
+            color: var(--deep-navy);
+        }
+
+        .nav-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.65rem;
+            color: var(--sonar-cyan);
+            text-decoration: none;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">School <span>Hub</span></div>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="library.html" class="active">Digital Library</a></li>
-        </ul>
-    </nav>
-    <main class="details-container">
-        <h1>Past Question (2020)</h1>
-        <p>This page contains details about the 2020 examination past question. You can download the PDF below.</p>
-        <a href="#" download>Download PDF</a>
-        <div class="coming-soon-box">COMING SOON</div>
+
+    <div class="sonar-container">
+        <div class="pulse" style="animation-delay: 0s"></div>
+        <div class="pulse" style="animation-delay: 2s"></div>
+    </div>
+
+    <main class="vault-core">
+        <div class="core-header">
+            <div>
+                <h1 style="margin: 0; font-size: 1.5rem; letter-spacing: 2px;">CORE_ARCHIVE_2020</h1>
+                <p style="margin: 5px 0 0; font-size: 0.6rem; opacity: 0.7;">DEEP_LAYER_ENCRYPTION // SECTOR: 0x2020</p>
+            </div>
+            <div class="core-id">FOUNDATION_LVL</div>
+        </div>
+
+        <div class="file-grid">
+            <div class="file-slot">
+                <i class="ph ph-database" style="color: var(--hazard-orange)"></i>
+                <span>Database_Mgmt_2020.sql</span>
+            </div>
+            <div class="file-slot">
+                <i class="ph ph-shield-check" style="color: var(--hazard-orange)"></i>
+                <span>Cyber_Ethics_Global_2020.pdf</span>
+            </div>
+            <div class="file-slot">
+                <i class="ph ph-code-block" style="color: var(--hazard-orange)"></i>
+                <span>Algorithms_Data_Struct.cpp</span>
+            </div>
+        </div>
+
+        <div style="background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--hazard-orange); padding: 15px; font-size: 0.7rem; margin-top: 25px;">
+            <strong style="color: var(--hazard-orange)">SYSTEM ADVISORY:</strong> These files represent the primary foundation of the current CS curriculum. Data integrity is 100%. Contact Gen-Sec for decryption keys.
+        </div>
+
+        <button class="btn-access" onclick="requestAccess()">
+            Initialize Foundation Access
+        </button>
+
+        <a href="library.html" class="nav-link">RETURN_TO_PRIMARY_INTERFACE</a>
     </main>
+
+    <script>
+        function requestAccess() {
+            const auth = prompt("ENTER GEN-SEC OVERRIDE CODE [2020_FOUNDATION]:");
+            if (auth === "1234") {
+                alert("FOUNDATION PROTOCOL ACTIVATED. Files decrypted.");
+            } else {
+                alert("ERROR: UNAUTHORIZED SECTOR ACCESS.");
+            }
+        }
+    </script>
 </body>
 </html>

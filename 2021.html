@@ -3,37 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Past Question 2021 Details</title>
-    <link rel="stylesheet" href="../style.css">
+    <title>2021 Legacy | Archive</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-      .coming-soon-box {
-        margin: 80px auto;
-        max-width: 400px;
-        background: #e0ffe6;
-        border: 2px solid #22c55e;
-        border-radius: 12px;
-        padding: 48px 0;
-        text-align: center;
-        font-size: 2rem;
-        color: #145a32;
-        font-weight: bold;
-        box-shadow: 0 2px 12px #22c55e33;
-      }
+        :root {
+            --bg: #010806;
+            --emerald: #10b981;
+            --muted-green: #064e3b;
+            --crt-glow: rgba(16, 185, 129, 0.15);
+        }
+
+        body { 
+            background: var(--bg); 
+            color: var(--emerald); 
+            font-family: 'JetBrains Mono', monospace;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Scanline Effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 10;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .vault-container {
+            max-width: 700px;
+            width: 90%;
+            border: 1px solid var(--emerald);
+            padding: 40px;
+            position: relative;
+            background: rgba(0, 20, 15, 0.8);
+            box-shadow: 0 0 20px var(--crt-glow);
+        }
+
+        .header-section {
+            border-bottom: 1px solid var(--emerald);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .flicker { animation: flicker 0.15s infinite; }
+        @keyframes flicker {
+            0% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+
+        .file-entry {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .file-entry:hover {
+            background: var(--emerald);
+            color: var(--bg);
+        }
+
+        .tag-legacy {
+            background: var(--emerald);
+            color: var(--bg);
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            font-weight: bold;
+        }
+
+        .btn-vault {
+            display: block;
+            width: 100%;
+            margin-top: 30px;
+            padding: 15px;
+            background: transparent;
+            border: 1px solid var(--emerald);
+            color: var(--emerald);
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-vault:hover {
+            background: var(--crt-glow);
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">School <span>Hub</span></div>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="library.html" class="active">Digital Library</a></li>
-        </ul>
-    </nav>
-    <main class="details-container">
-        <h1>Past Question (2021)</h1>
-        <p>This page contains details about the 2021 examination past question. You can download the PDF below.</p>
-        <a href="#" download>Download PDF</a>
-        <div class="coming-soon-box">COMING SOON</div>
+
+    <main class="vault-container flicker">
+        <div class="header-section">
+            <h1 style="margin: 0; font-size: 1.8rem;">LEGACY_ARCHIVE_2021</h1>
+            <p style="font-size: 0.7rem; opacity: 0.8;">LOCATION: COLD_STORAGE_B3 // STATUS: READ-ONLY</p>
+        </div>
+
+        <div class="content">
+            <div class="file-entry">
+                <span>> CS_NETWORKING_2021.DAT</span>
+                <span class="tag-legacy">ARCHIVED</span>
+            </div>
+            <div class="file-entry">
+                <span>> CLOUD_INFRA_2021.DAT</span>
+                <span class="tag-legacy">ARCHIVED</span>
+            </div>
+            <div class="file-entry">
+                <span>> PROG_JAVA_LEVEL2.DAT</span>
+                <span class="tag-legacy">ARCHIVED</span>
+            </div>
+            <div class="file-entry">
+                <span>> OS_ARCHITECTURE.DAT</span>
+                <span class="tag-legacy">ARCHIVED</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding: 15px; border: 1px dashed var(--emerald); font-size: 0.75rem; line-height: 1.5;">
+            <i class="ph ph-warning-octagon"></i> NOTE: These resources are from the 2021 academic session. Some curriculum standards may have been updated. Please consult the 2026 handbook.
+        </div>
+
+        <button class="btn-vault" onclick="accessVault()">
+            [ UNLOCK ACCESS ]
+        </button>
+
+        <a href="library.html" style="display:block; text-align:center; margin-top:20px; font-size:0.6rem; color:var(--emerald); opacity:0.6; text-decoration:none;">
+            EXIT_VAULT_AND_RETURN
+        </a>
     </main>
+
+    <script>
+        function accessVault() {
+            const pass = prompt("SECRETARIAT CRYPTO-KEY REQUIRED:");
+            if(pass === "1234") {
+                alert("DE-ARCHIVING REQUESTED. Files are being moved to primary cache.");
+            } else {
+                alert("UNAUTHORIZED ACCESS DETECTED. Terminal Locked.");
+            }
+        }
+    </script>
 </body>
 </html>
